@@ -22,13 +22,16 @@ namespace Core.TurnSystem
 
         void OnEnable()
         {
-            _onTurnChangedCallback = StartEnemyTurn;
-            this.AddListener(EventType.OnTurnChanged, _onTurnChangedCallback);
+            this.Subscribe<OnTurnChangedEvent>(StartEnemyTurn);
+            
         }
 
         void OnDisable()
         {
-            this.RemoveListener(EventType.OnTurnChanged, _onTurnChangedCallback);
+            if (NewEventDispatcher.Instance != null)
+            {
+                this.Unsubscribe<OnTurnChangedEvent>(StartEnemyTurn);
+            }
         }
 
 
@@ -45,17 +48,18 @@ namespace Core.TurnSystem
             _activeEnemiesList.Remove(enemy);
         }
 
-        private void StartEnemyTurn(object param)
+        private void StartEnemyTurn(OnTurnChangedEvent eventData)
         {
-            if (param is not TurnType turnType || turnType != TurnType.EnemyPlanning)
-                return;
+            TurnType turnType = eventData.NewTurn;
+            if (turnType != TurnType.EnemyPlanning) return;
             
             _finishedCount = 0;
             _activeEnemiesListTmp = new List<EnemyController>(_activeEnemiesList);
             foreach (var enemy in _activeEnemiesListTmp)
             {
-                enemy.StartAction(param);
+                enemy.StartAction();
             }
+            TurnManager.Instance.StartActionPhase();
         }
 
         public void OnEnemyFinished(EnemyController enemy)

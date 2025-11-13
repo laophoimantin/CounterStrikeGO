@@ -13,17 +13,13 @@ namespace Characters.Player
     {
         #region Private Fields
 
-        [Header("Movement")] 
-        [SerializeField] private Node _currentNode;
-        
-        [Range(0f, 10f)]
-        [SerializeField] protected float _actionDurationModifier = 0f;
+        [Header("Movement")] [SerializeField] private Node _currentNode;
+
+        [Range(0f, 10f)] [SerializeField] protected float _actionDurationModifier = 0f;
         private float _actionDuration;
 
-        
+
         private bool _isMoving = false;
-        
-        
 
         #endregion
 
@@ -35,13 +31,15 @@ namespace Characters.Player
 
         void OnEnable()
         {
-            _onTurnChangedCallback = OnTurnChangedEvent;
-            this.AddListener(EventType.OnTurnChanged, _onTurnChangedCallback);
+            this.Subscribe<OnTurnChangedEvent>(HandleTurnChanged);
         }
 
         void OnDisable()
         {
-            this.RemoveListener(EventType.OnTurnChanged, _onTurnChangedCallback);
+            if (NewEventDispatcher.Instance != null)
+            {
+                this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChanged);
+            }
         }
 
         void Start()
@@ -51,22 +49,15 @@ namespace Characters.Player
 
         private void Update()
         {
-            
         }
 
-        private void OnTurnChangedEvent(object param)
+        private void HandleTurnChanged(OnTurnChangedEvent eventData)
         {
-            if (param is not TurnType turnType) return;
-            HandleTurnChanged(turnType);
-        }
-
-        private void HandleTurnChanged(TurnType turn)
-        {
-            //if (turn != TurnType.PlayerPlanning) return;
+            TurnType turnType = eventData.NewTurn;
+            if (turnType != TurnType.PlayerAction) return;
         }
 
 
-        
         public void HighlightAvailableNodes(bool highlight)
         {
             if (_currentNode == null) return;
@@ -88,7 +79,7 @@ namespace Characters.Player
         private IEnumerator MoveToNode(Node target)
         {
             TurnManager.Instance.StartActionPhase();
-            
+
             _isMoving = true;
 
             _currentNode.UnassignPlayer(this);
@@ -96,7 +87,7 @@ namespace Characters.Player
 
             Vector3 start = transform.position;
             Vector3 end = new Vector3(target.transform.position.x, transform.position.y, target.transform.position.z);
-            
+
 
             float t = 0f;
             while (t < 1f)

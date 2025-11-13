@@ -1,5 +1,7 @@
 using System.Collections;
 using Core.TurnSystem;
+using Grid;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Characters.Enemy.EnemyBehaviors
@@ -9,20 +11,26 @@ namespace Characters.Enemy.EnemyBehaviors
         #region Private Fields
 
         [SerializeField] private Transform _target;
+        private Node _nodeToScan;         
 
         #endregion
 
         public override IEnumerator Execute(EnemyController enemy)
         {
-            TurnManager.Instance.StartActionPhase();
-            Quaternion startRot = _target.rotation;
-            Quaternion endRot = startRot * Quaternion.Euler(0f, 180f, 0f);
-            float t = 0f;
-            while (t < 1f)
+            Node target = enemy.GetNodeInDirection(enemy.CurrentNode, enemy.FacingDirection);
+
+            if (target != null && !target.IsObstacle)
             {
-                t += Time.deltaTime * (_actionDuration + _actionDurationModifier);
-                _target.rotation = Quaternion.Slerp(startRot, endRot, t);
-                yield return null;
+                enemy.UpdateNodeData(target);
+                
+                float duration = TurnManager.Instance.ActionDuration * _actionDurationModifier;
+                yield return enemy.StartCoroutine(enemy.MoveOverTime(target, duration));
+            }
+            else
+            {
+                float duration = TurnManager.Instance.ActionDuration * _actionDurationModifier;
+                Quaternion targetRot = enemy.GetRotationTurnAround();
+                yield return enemy.StartCoroutine(enemy.RotateOverTime(targetRot, duration));
             }
         }
     }

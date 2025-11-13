@@ -241,10 +241,13 @@ MonoBehaviour:
   - {fileID: 639369632}
   - {fileID: 1070621291}
   - {fileID: 2048920397}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies:
-  - {fileID: 2115866048}
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &87231763
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -450,9 +453,13 @@ MonoBehaviour:
   - {fileID: 985727998}
   - {fileID: 1115128635}
   - {fileID: 1186492716}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &93640550
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -650,7 +657,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b43db0116245a580a0ec31652a1882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionDurationModifier: 0
+  _actionDurationModifier: 1.27
   _target: {fileID: 455651314}
 --- !u!114 &152834691
 MonoBehaviour:
@@ -664,7 +671,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf178964feb454cba4cf67a62b1fcb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyModel: {fileID: 455651314}
   _currentBehavior: {fileID: 152834690}
+  _facingDirection: 0
+  _currentNode: {fileID: 2050640031}
 --- !u!4 &152834692
 Transform:
   m_ObjectHideFlags: 0
@@ -717,9 +727,13 @@ MonoBehaviour:
   - {fileID: 1070621291}
   - {fileID: 1154561551}
   - {fileID: 2048920397}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &222052488
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1127,7 +1141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b43db0116245a580a0ec31652a1882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionDurationModifier: 0
+  _actionDurationModifier: 1.27
   _target: {fileID: 2003931918}
 --- !u!114 &327179703
 MonoBehaviour:
@@ -1141,7 +1155,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf178964feb454cba4cf67a62b1fcb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyModel: {fileID: 2003931918}
   _currentBehavior: {fileID: 327179702}
+  _facingDirection: 0
+  _currentNode: {fileID: 1216419661}
 --- !u!4 &327179704
 Transform:
   m_ObjectHideFlags: 0
@@ -1199,7 +1216,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 334999286}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c49d8bffe40c4349aa6a26041296ee98, type: 3}
+  m_Script: {fileID: 11500000, guid: ff8f958737d1446ab90e6edb67041b3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _dontDestroyOnLoad: 0
@@ -1238,9 +1255,13 @@ MonoBehaviour:
   _connectedNodes:
   - {fileID: 985727998}
   - {fileID: 1484193737}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &433241310
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1511,9 +1532,13 @@ MonoBehaviour:
   - {fileID: 1671725069}
   - {fileID: 1932443624}
   - {fileID: 1967253230}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &477619175
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2273,9 +2298,13 @@ MonoBehaviour:
   - {fileID: 87231762}
   - {fileID: 1484193737}
   - {fileID: 1920748398}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &639369633
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3069,9 +3098,13 @@ MonoBehaviour:
   - {fileID: 93640549}
   - {fileID: 433241309}
   - {fileID: 2050640031}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &985727999
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3308,9 +3341,13 @@ MonoBehaviour:
   _connectedNodes:
   - {fileID: 1932443624}
   - {fileID: 2118792998}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1010077392
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3434,9 +3471,13 @@ MonoBehaviour:
   - {fileID: 222052487}
   - {fileID: 1742594663}
   - {fileID: 1920748398}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1070621292
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3641,9 +3682,13 @@ MonoBehaviour:
   - {fileID: 1216419661}
   - {fileID: 1710475987}
   - {fileID: 2050640031}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1115128636
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3847,9 +3892,13 @@ MonoBehaviour:
   - {fileID: 222052487}
   - {fileID: 1742594663}
   - {fileID: 2118792998}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1154561552
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3972,9 +4021,13 @@ MonoBehaviour:
   - {fileID: 93640549}
   - {fileID: 1300253367}
   - {fileID: 1710475987}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1186492717
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4098,10 +4151,13 @@ MonoBehaviour:
   - {fileID: 1671725069}
   - {fileID: 1742594663}
   - {fileID: 1920748398}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies:
-  - {fileID: 327179703}
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1216419662
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4304,9 +4360,13 @@ MonoBehaviour:
   _connectedNodes:
   - {fileID: 1186492716}
   - {fileID: 1967253230}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1300253368
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4952,9 +5012,13 @@ MonoBehaviour:
   - {fileID: 433241309}
   - {fileID: 639369632}
   - {fileID: 2050640031}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1484193738
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5206,9 +5270,13 @@ MonoBehaviour:
   - {fileID: 1216419661}
   - {fileID: 1710475987}
   - {fileID: 2071867465}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1671725070
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5494,9 +5562,13 @@ MonoBehaviour:
   - {fileID: 1186492716}
   - {fileID: 1671725069}
   - {fileID: 1967253230}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1710475988
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5784,9 +5856,13 @@ MonoBehaviour:
   - {fileID: 1154561551}
   - {fileID: 1216419661}
   - {fileID: 2071867465}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1742594664
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6147,7 +6223,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dontDestroyOnLoad: 0
-  ActionDuration: 4
+  ActionDuration: 2
 --- !u!4 &1908737360
 Transform:
   m_ObjectHideFlags: 0
@@ -6213,9 +6289,13 @@ MonoBehaviour:
   - {fileID: 1070621291}
   - {fileID: 1216419661}
   - {fileID: 2050640031}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1920748399
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6421,9 +6501,13 @@ MonoBehaviour:
   - {fileID: 477619174}
   - {fileID: 1010077391}
   - {fileID: 2071867465}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1932443625
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6546,9 +6630,13 @@ MonoBehaviour:
   - {fileID: 477619174}
   - {fileID: 1300253367}
   - {fileID: 1710475987}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &1967253231
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6773,9 +6861,13 @@ MonoBehaviour:
   _connectedNodes:
   - {fileID: 87231762}
   - {fileID: 222052487}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 1
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &2048920398
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6899,10 +6991,13 @@ MonoBehaviour:
   - {fileID: 1115128635}
   - {fileID: 1484193737}
   - {fileID: 1920748398}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies:
-  - {fileID: 152834691}
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &2050640032
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7026,9 +7121,13 @@ MonoBehaviour:
   - {fileID: 1742594663}
   - {fileID: 1932443624}
   - {fileID: 2118792998}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &2071867466
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7161,7 +7260,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf178964feb454cba4cf67a62b1fcb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enemyModel: {fileID: 988673824}
   _currentBehavior: {fileID: 2115866049}
+  _facingDirection: 0
+  _currentNode: {fileID: 87231762}
 --- !u!114 &2115866049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7174,7 +7276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5b43db0116245a580a0ec31652a1882, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actionDurationModifier: 0
+  _actionDurationModifier: 1.27
   _target: {fileID: 988673824}
 --- !u!1 &2118792997
 GameObject:
@@ -7212,9 +7314,13 @@ MonoBehaviour:
   - {fileID: 1010077391}
   - {fileID: 1154561551}
   - {fileID: 2071867465}
+  _northNode: {fileID: 0}
+  _southNode: {fileID: 0}
+  _eastNode: {fileID: 0}
+  _westNode: {fileID: 0}
   _connectionRadius: 5.1
-  _occupyingEnemies: []
-  _isOccupiedByPlayerByPlayer: 0
+  _enemiesOnNode: []
+  _playerOnNode: {fileID: 0}
 --- !u!65 &2118792999
 BoxCollider:
   m_ObjectHideFlags: 0

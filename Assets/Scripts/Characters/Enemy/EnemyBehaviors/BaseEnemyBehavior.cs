@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using Core.TurnSystem;
+using Grid;
 
 namespace Characters.Enemy.EnemyBehaviors
 {

@@ -32,8 +32,7 @@ namespace Core.TurnSystem
                     _currentTurn = TurnType.EnemyAction;
                     break;
             }
-
-            this.FireEvent(EventType.OnTurnChanged, _currentTurn);
+            BroadcastTurnChange();
         }
 
         public void EndTurn()
@@ -49,8 +48,17 @@ namespace Core.TurnSystem
                 default:
                     return;
             }
-
-            this.FireEvent(EventType.OnTurnChanged, _currentTurn);
+            BroadcastTurnChange();
+        }
+        
+        private void BroadcastTurnChange()
+        {
+            OnTurnChangedEvent turnChangedEvent = new OnTurnChangedEvent
+            {
+                NewTurn = _currentTurn
+            };
+            this.SendEvent(turnChangedEvent);
         }
     }
+    
 }

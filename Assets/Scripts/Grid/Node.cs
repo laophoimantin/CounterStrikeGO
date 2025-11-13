@@ -11,33 +11,46 @@ namespace Grid
         #region Private Fields
 
         [SerializeField] private List<Node> _connectedNodes = new();
+        [SerializeField] private Node _northNode;
+        [SerializeField] private Node _southNode;
+        [SerializeField] private Node _eastNode;
+        [SerializeField] private Node _westNode;
         private Renderer _renderer;
 
         [Header("Connection Settings")]
         [SerializeField, Tooltip("Max distance to detect connected nodes")]
         private float _connectionRadius = 5.1f;
         
-        private PlayerController _occupyingPlayer;
-        //Test
-        [SerializeField] private List<EnemyController> _occupyingEnemies = new List<EnemyController>();
-
-        [SerializeField] private bool _isOccupiedByPlayerByPlayer = false;
+        [SerializeField] private List<EnemyController> _enemiesOnNode = new();
+        [SerializeField] private PlayerController _playerOnNode;
+        private bool _isObstacle= false;
         private bool _isHighlighted = false;
         #endregion
 
         #region Public Fields
+        
+        public Node NorthNode => _northNode;
+        public Node SouthNode => _southNode;
+        public Node EastNode => _eastNode;
+        public Node WestNode => _westNode;
+        
 
         public List<Node> ConnectedNodes => _connectedNodes;
-
-        public bool IsOccupiedByPlayer
+        
+        
+        public bool HasPlayer()
         {
-            get => _isOccupiedByPlayerByPlayer;
-            set
-            {
-                _isOccupiedByPlayerByPlayer = value;
-                UpdateColor();
-            }
+            return _playerOnNode != null;
         }
+        
+    
+        
+        public bool HasEnemy()
+        {
+            return _enemiesOnNode.Count > 0;
+        }
+        
+        public bool IsObstacle => _isObstacle;
 
         #endregion
 
@@ -56,6 +69,7 @@ namespace Grid
 #if UNITY_EDITOR
         private void OnValidate()
         {
+            //Testing
             if (!Application.isPlaying)
                 FindConnectedNodes();
         }
@@ -63,50 +77,47 @@ namespace Grid
 
         public void AssignPlayer(PlayerController player)
         {
-            _occupyingPlayer = player;
-            _isOccupiedByPlayerByPlayer = true;
+            _playerOnNode = player;
             UpdateColor();
             AttackEnemy();
         }
 
         public void UnassignPlayer(PlayerController player)
         {
-            _occupyingPlayer  = null;
-            _isOccupiedByPlayerByPlayer = false;
+            _playerOnNode = null;
             UpdateColor();
         }
 
 
-
-        private void AttackEnemy()
-        {
-            if (_occupyingEnemies != null && _occupyingEnemies.Count > 0)
-            {
-                foreach (var enemy in _occupyingEnemies)
-                    enemy.Die();
-            }
-            
-        }
-            
-            
             
             
         public void AssignEnemy(EnemyController enemy)
         {
-            if (!_occupyingEnemies.Contains(enemy))
+            if (!_enemiesOnNode.Contains(enemy))
             {
-                _occupyingEnemies.Add(enemy);
+                _enemiesOnNode.Add(enemy);
             }
         }
 
         public void UnAssignEnemy(EnemyController enemy)
         {
-            _occupyingEnemies.Remove(enemy);
+            _enemiesOnNode.Remove(enemy);
         }
         
+        private void AttackEnemy()
+        {
+            if (_enemiesOnNode != null && _enemiesOnNode.Count > 0)
+            {
+                foreach (var enemy in _enemiesOnNode)
+                    enemy.Die();
+            }
+        }
+            
         
 
 
+        
+        // Visualization
         public void Highlight(bool state)
         {
             _isHighlighted = state;
@@ -117,7 +128,7 @@ namespace Grid
         {
             if (_renderer == null) return;
 
-            if (_isOccupiedByPlayerByPlayer)
+            if (HasPlayer())
             {
                 _renderer.material.color = Color.cyan;
             }
@@ -131,6 +142,9 @@ namespace Grid
             }
         }
 
+        
+        
+        
 
         private void FindConnectedNodes()
         {

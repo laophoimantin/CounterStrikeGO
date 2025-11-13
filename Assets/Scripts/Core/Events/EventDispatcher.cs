@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Core.Events
 {
-        public class EventDispatcher : Singleton<EventDispatcher>
+    public class EventDispatcher : Singleton<EventDispatcher>
     {
         private Dictionary<EventType, Action<object>> _events = new();
 
@@ -59,7 +59,7 @@ namespace Core.Events
         {
             _events.Clear();
         }
-        
+
         public bool HasListener(EventType eventType)
         {
             return _events.ContainsKey(eventType);
@@ -93,4 +93,3 @@ namespace Core.Events
         }
     }
 }
-

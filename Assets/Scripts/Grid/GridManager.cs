@@ -25,16 +25,5 @@ namespace Grid
             base.Awake();
             _allNodes.AddRange(FindObjectsOfType<Node>());
         }
-
-        public Node GetNodeFromPosition(Vector3 position)
-        {
-            foreach (var node in _allNodes)
-            {
-                if (Vector3.Distance(node.transform.position, position) < 0.1f)
-                    return node;
-            }
-
-            return null;
-        }
     }
 }
