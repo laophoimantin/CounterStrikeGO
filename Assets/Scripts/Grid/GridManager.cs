@@ -9,13 +9,13 @@ namespace Grid
 
         #region Private Fields
 
-        private List<Node> _allNodes = new();
+        private List<OldNode> _allNodes = new();
 
         #endregion
 
         #region Public Fields
 
-        public List<Node> AllNodes => _allNodes;
+        public List<OldNode> AllNodes => _allNodes;
 
         #endregion
 
@@ -23,7 +23,7 @@ namespace Grid
         protected override void Awake()
         {
             base.Awake();
-            _allNodes.AddRange(FindObjectsOfType<Node>());
+            _allNodes.AddRange(FindObjectsOfType<OldNode>());
         }
     }
 }

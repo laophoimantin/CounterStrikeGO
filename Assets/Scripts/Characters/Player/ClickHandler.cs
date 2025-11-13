@@ -39,7 +39,7 @@ namespace Characters.Player
                     return;
                 }
 
-                if (hit.collider.TryGetComponent(out Node node))
+                if (hit.collider.TryGetComponent(out OldNode node))
                 {
                     if (_selectedPlayer != null)
                     {

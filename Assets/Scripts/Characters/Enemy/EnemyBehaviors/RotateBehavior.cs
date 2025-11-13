@@ -11,27 +11,25 @@ namespace Characters.Enemy.EnemyBehaviors
         #region Private Fields
 
         [SerializeField] private Transform _target;
-        private Node _nodeToScan;         
+        private OldNode _nodeToScan;         
 
         #endregion
 
         public override IEnumerator Execute(EnemyController enemy)
         {
-            Node target = enemy.GetNodeInDirection(enemy.CurrentNode, enemy.FacingDirection);
 
-            if (target != null && !target.IsObstacle)
+
+            if (enemy.CheckForPlayer(1))
             {
-                enemy.UpdateNodeData(target);
-                
-                float duration = TurnManager.Instance.ActionDuration * _actionDurationModifier;
-                yield return enemy.StartCoroutine(enemy.MoveOverTime(target, duration));
+                yield return enemy.StartCoroutine(enemy.Move(enemy.GetNodeInDirection(enemy.CurrentNode, enemy.CurrentFacingDirection), TurnManager.Instance.ActionDuration * _actionDurationModifier));
             }
             else
             {
                 float duration = TurnManager.Instance.ActionDuration * _actionDurationModifier;
                 Quaternion targetRot = enemy.GetRotationTurnAround();
-                yield return enemy.StartCoroutine(enemy.RotateOverTime(targetRot, duration));
+                yield return enemy.StartCoroutine(enemy.Rotate(targetRot, duration));
             }
+
         }
     }
 }

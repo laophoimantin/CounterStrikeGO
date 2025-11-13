@@ -6,15 +6,16 @@ using UnityEngine;
 namespace Grid
 {
     [RequireComponent(typeof(Collider))]
- public class Node : MonoBehaviour
+ public class OldNode
+        : MonoBehaviour
     {
         #region Private Fields
 
-        [SerializeField] private List<Node> _connectedNodes = new();
-        [SerializeField] private Node _northNode;
-        [SerializeField] private Node _southNode;
-        [SerializeField] private Node _eastNode;
-        [SerializeField] private Node _westNode;
+        [SerializeField] private List<OldNode> _connectedNodes = new();
+        [SerializeField] private OldNode _northNode;
+        [SerializeField] private OldNode _southNode;
+        [SerializeField] private OldNode _eastNode;
+        [SerializeField] private OldNode _westNode;
         private Renderer _renderer;
 
         [Header("Connection Settings")]
@@ -29,15 +30,16 @@ namespace Grid
 
         #region Public Fields
         
-        public Node NorthNode => _northNode;
-        public Node SouthNode => _southNode;
-        public Node EastNode => _eastNode;
-        public Node WestNode => _westNode;
+        public OldNode NorthNode => _northNode;
+        public OldNode SouthNode => _southNode;
+        public OldNode EastNode => _eastNode;
+        public OldNode WestNode => _westNode;
         
 
-        public List<Node> ConnectedNodes => _connectedNodes;
-        
-        
+        public List<OldNode> ConnectedNodes => _connectedNodes;
+        public PlayerController PlayerOnNode => _playerOnNode;
+
+
         public bool HasPlayer()
         {
             return _playerOnNode != null;
@@ -150,9 +152,9 @@ namespace Grid
         {
             _connectedNodes.Clear();
 
-            Node[] allNodes = FindObjectsOfType<Node>();
+            OldNode[] allNodes = FindObjectsOfType<OldNode>();
 
-            foreach (Node node in allNodes)
+            foreach (OldNode node in allNodes)
             {
                 if (node == this) continue;
 

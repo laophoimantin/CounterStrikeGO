@@ -26,16 +26,16 @@ namespace Characters.Enemy
         [SerializeField] private Transform _enemyModel;
         [SerializeField] private BaseEnemyBehavior _currentBehavior;
         [SerializeField] private Direction _facingDirection = Direction.None;
-        [SerializeField] private Node _currentNode;
-        private Node _nodeToScan;
+        [SerializeField] private OldNode _currentNode;
+        private OldNode _nodeToScan;
 
         #endregion
 
         #region Public Fields
 
         public BaseEnemyBehavior CurrentBehavior => _currentBehavior;
-        public Direction FacingDirection => _facingDirection;
-        public Node CurrentNode => _currentNode;
+        public Direction CurrentFacingDirection => _facingDirection;
+        public OldNode CurrentNode => _currentNode;
 
         #endregion
 
@@ -77,9 +77,9 @@ namespace Characters.Enemy
             EnemyTurnCoordinator.Instance.OnEnemyFinished(this);
         }
 
-        private bool CheckForPlayer(int range)
+        public bool CheckForPlayer(int range)
         {
-            Node nodeToScan = GetNodeInDirection(_currentNode, _facingDirection);
+            OldNode nodeToScan = GetNodeInDirection(_currentNode, _facingDirection);
 
             while (nodeToScan != null && range > 0)
             {
@@ -102,19 +102,7 @@ namespace Characters.Enemy
             return false; 
         }
 
-        public Node GetNodeInDirection(Node node, Direction dir)
-        {
-            switch (dir)
-            {
-                case Direction.North: return node.NorthNode;
-                case Direction.South: return node.SouthNode;
-                case Direction.East: return node.EastNode;
-                case Direction.West: return node.WestNode;
-                default: return null;
-            }
-        }
-
-        public void UpdateNodeData(Node newNode)
+        public void UpdateNodeData(OldNode newNode)
         {
             if (newNode == null) return;
 
@@ -126,8 +114,21 @@ namespace Characters.Enemy
             _currentNode = newNode;
             _currentNode.AssignEnemy(this);
         }
+
+        public OldNode GetNodeInDirection(OldNode node, Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.North: return node.NorthNode;
+                case Direction.South: return node.SouthNode;
+                case Direction.East: return node.EastNode;
+                case Direction.West: return node.WestNode;
+                default: return null;
+            }
+        }
+
         
-        public Direction GetDirectionOfNode(Node targetNode)
+        public Direction GetDirectionOfNode(OldNode targetNode)
         {
             if (targetNode == null) return _facingDirection; 
 
@@ -162,7 +163,9 @@ namespace Characters.Enemy
             return RotationDirection(dirs[newIndex]); 
         }
 
-        public Quaternion GetRotationTowardsNode(Node targetNode)    
+
+
+        public Quaternion GetRotationTowardsNode(OldNode targetNode)    
         {
             Direction dirToNode = GetDirectionOfNode(targetNode);
             return RotationDirection(dirToNode);
@@ -184,7 +187,7 @@ namespace Characters.Enemy
             return GetRotationByStep(-1);
         }
         
-        public IEnumerator RotateOverTime(Quaternion targetRotation, float duration)
+        public IEnumerator Rotate(Quaternion targetRotation, float duration)
         {
             Quaternion startRot = _enemyModel.rotation; 
             float elapsed = 0f;
@@ -201,7 +204,13 @@ namespace Characters.Enemy
         
         
         
-        
+        public void Attack()
+        {
+            if (_currentNode.HasPlayer())
+            {
+                //Destroy(_currentNode.Cu)
+            }
+        }
         
         public void Die()
         {
@@ -209,7 +218,7 @@ namespace Characters.Enemy
             Destroy(gameObject);    
         }
         
-        public IEnumerator MoveOverTime(Node targetNode, float duration)
+        public IEnumerator Move(OldNode targetNode, float duration)
         {
             Vector3 startPos = transform.position;
             Vector3 endPos = targetNode.transform.position;
@@ -224,6 +233,7 @@ namespace Characters.Enemy
             }
     
             transform.position = endPos;
+            UpdateNodeData(targetNode);
         }
     }
 }

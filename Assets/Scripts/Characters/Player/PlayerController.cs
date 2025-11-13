@@ -4,7 +4,6 @@ using UnityEngine;
 using Core.Events;
 using Core.TurnSystem;
 using Grid;
-using EventType = Core.Events.EventType;
 
 
 namespace Characters.Player
@@ -13,7 +12,7 @@ namespace Characters.Player
     {
         #region Private Fields
 
-        [Header("Movement")] [SerializeField] private Node _currentNode;
+        [Header("Movement")] [SerializeField] private OldNode _currentNode;
 
         [Range(0f, 10f)] [SerializeField] protected float _actionDurationModifier = 0f;
         private float _actionDuration;
@@ -25,7 +24,6 @@ namespace Characters.Player
 
         #region Event Handlers
 
-        private Action<object> _onTurnChangedCallback;
 
         #endregion
 
@@ -68,7 +66,7 @@ namespace Characters.Player
             }
         }
 
-        public void TryMoveTo(Node target)
+        public void TryMoveTo(OldNode target)
         {
             if (_isMoving || target == null) return;
             if (!_currentNode.ConnectedNodes.Contains(target)) return;
@@ -76,7 +74,7 @@ namespace Characters.Player
             StartCoroutine(MoveToNode(target));
         }
 
-        private IEnumerator MoveToNode(Node target)
+        private IEnumerator MoveToNode(OldNode target)
         {
             TurnManager.Instance.StartActionPhase();
 
