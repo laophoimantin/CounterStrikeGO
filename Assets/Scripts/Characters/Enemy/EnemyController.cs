@@ -26,8 +26,8 @@ namespace Characters.Enemy
         [SerializeField] private Transform _enemyModel;
         [SerializeField] private BaseEnemyBehavior _currentBehavior;
         [SerializeField] private Direction _facingDirection = Direction.None;
-        [SerializeField] private OldNode _currentNode;
-        private OldNode _nodeToScan;
+        [SerializeField] private Node _currentNode;
+        private Node _nodeToScan;
 
         #endregion
 
@@ -35,7 +35,7 @@ namespace Characters.Enemy
 
         public BaseEnemyBehavior CurrentBehavior => _currentBehavior;
         public Direction CurrentFacingDirection => _facingDirection;
-        public OldNode CurrentNode => _currentNode;
+        public Node CurrentNode => _currentNode;
 
         #endregion
 
@@ -79,7 +79,7 @@ namespace Characters.Enemy
 
         public bool CheckForPlayer(int range)
         {
-            OldNode nodeToScan = GetNodeInDirection(_currentNode, _facingDirection);
+            Node nodeToScan = GetNodeInDirection(_currentNode, _facingDirection);
 
             while (nodeToScan != null && range > 0)
             {
@@ -102,7 +102,7 @@ namespace Characters.Enemy
             return false; 
         }
 
-        public void UpdateNodeData(OldNode newNode)
+        public void UpdateNodeData(Node newNode)
         {
             if (newNode == null) return;
 
@@ -115,7 +115,7 @@ namespace Characters.Enemy
             _currentNode.AssignEnemy(this);
         }
 
-        public OldNode GetNodeInDirection(OldNode node, Direction dir)
+        public Node GetNodeInDirection(Node node, Direction dir)
         {
             switch (dir)
             {
@@ -128,7 +128,7 @@ namespace Characters.Enemy
         }
 
         
-        public Direction GetDirectionOfNode(OldNode targetNode)
+        public Direction GetDirectionOfNode(Node targetNode)
         {
             if (targetNode == null) return _facingDirection; 
 
@@ -165,7 +165,7 @@ namespace Characters.Enemy
 
 
 
-        public Quaternion GetRotationTowardsNode(OldNode targetNode)    
+        public Quaternion GetRotationTowardsNode(Node targetNode)    
         {
             Direction dirToNode = GetDirectionOfNode(targetNode);
             return RotationDirection(dirToNode);
@@ -218,7 +218,7 @@ namespace Characters.Enemy
             Destroy(gameObject);    
         }
         
-        public IEnumerator Move(OldNode targetNode, float duration)
+        public IEnumerator Move(Node targetNode, float duration)
         {
             Vector3 startPos = transform.position;
             Vector3 endPos = targetNode.transform.position;

@@ -11,7 +11,7 @@ namespace Characters.Enemy.EnemyBehaviors
         #region Private Fields
 
         [SerializeField] private Transform _target;
-        private OldNode _nodeToScan;         
+        private Node _nodeToScan;         
 
         #endregion
 

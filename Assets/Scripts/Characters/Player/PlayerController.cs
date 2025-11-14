@@ -12,7 +12,7 @@ namespace Characters.Player
     {
         #region Private Fields
 
-        [Header("Movement")] [SerializeField] private OldNode _currentNode;
+        [Header("Movement")] [SerializeField] private Node _currentNode;
 
         [Range(0f, 10f)] [SerializeField] protected float _actionDurationModifier = 0f;
         private float _actionDuration;
@@ -56,17 +56,7 @@ namespace Characters.Player
         }
 
 
-        public void HighlightAvailableNodes(bool highlight)
-        {
-            if (_currentNode == null) return;
-
-            foreach (var node in _currentNode.ConnectedNodes)
-            {
-                node.Highlight(highlight);
-            }
-        }
-
-        public void TryMoveTo(OldNode target)
+        public void TryMoveTo(Node target)
         {
             if (_isMoving || target == null) return;
             if (!_currentNode.ConnectedNodes.Contains(target)) return;
@@ -74,7 +64,7 @@ namespace Characters.Player
             StartCoroutine(MoveToNode(target));
         }
 
-        private IEnumerator MoveToNode(OldNode target)
+        private IEnumerator MoveToNode(Node target)
         {
             TurnManager.Instance.StartActionPhase();
 

@@ -35,16 +35,14 @@ namespace Characters.Player
                 if (hit.collider.TryGetComponent(out PlayerController player))
                 {
                     _selectedPlayer = player;
-                    _selectedPlayer.HighlightAvailableNodes(true);
                     return;
                 }
 
-                if (hit.collider.TryGetComponent(out OldNode node))
+                if (hit.collider.TryGetComponent(out Node node))
                 {
                     if (_selectedPlayer != null)
                     {
                         _selectedPlayer.TryMoveTo(node);
-                        _selectedPlayer.HighlightAvailableNodes(false);
                         _selectedPlayer = null;
                     }
                 }

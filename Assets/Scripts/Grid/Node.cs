@@ -5,38 +5,36 @@ using UnityEngine;
 
 namespace Grid
 {
-    [RequireComponent(typeof(Collider))]
- public class OldNode
+    [ExecuteInEditMode]
+    public class Node
         : MonoBehaviour
     {
         #region Private Fields
 
-        [SerializeField] private List<OldNode> _connectedNodes = new();
-        [SerializeField] private OldNode _northNode;
-        [SerializeField] private OldNode _southNode;
-        [SerializeField] private OldNode _eastNode;
-        [SerializeField] private OldNode _westNode;
-        private Renderer _renderer;
+        [SerializeField] private List<Node> _connectedNodes = new();
+        [SerializeField] private Node _northNode;
+        [SerializeField] private Node _southNode;
+        [SerializeField] private Node _eastNode;
+        [SerializeField] private Node _westNode;
 
-        [Header("Connection Settings")]
-        [SerializeField, Tooltip("Max distance to detect connected nodes")]
+        [Header("Connection Settings")] [SerializeField, Tooltip("Max distance to detect connected nodes")]
         private float _connectionRadius = 5.1f;
-        
+
         [SerializeField] private List<EnemyController> _enemiesOnNode = new();
         [SerializeField] private PlayerController _playerOnNode;
-        private bool _isObstacle= false;
-        private bool _isHighlighted = false;
+        private bool _isObstacle = false;
+
         #endregion
 
         #region Public Fields
-        
-        public OldNode NorthNode => _northNode;
-        public OldNode SouthNode => _southNode;
-        public OldNode EastNode => _eastNode;
-        public OldNode WestNode => _westNode;
-        
 
-        public List<OldNode> ConnectedNodes => _connectedNodes;
+        public Node NorthNode => _northNode;
+        public Node SouthNode => _southNode;
+        public Node EastNode => _eastNode;
+        public Node WestNode => _westNode;
+
+
+        public List<Node> ConnectedNodes => _connectedNodes;
         public PlayerController PlayerOnNode => _playerOnNode;
 
 
@@ -44,27 +42,24 @@ namespace Grid
         {
             return _playerOnNode != null;
         }
-        
-    
-        
+
+
         public bool HasEnemy()
         {
             return _enemiesOnNode.Count > 0;
         }
-        
+
         public bool IsObstacle => _isObstacle;
 
         #endregion
 
         void Awake()
         {
-            _renderer = GetComponent<Renderer>();
+            
         }
 
         void Start()
         {
-            if (_renderer != null)
-                _renderer.material.color = Color.green;
             FindConnectedNodes();
         }
 
@@ -80,19 +75,15 @@ namespace Grid
         public void AssignPlayer(PlayerController player)
         {
             _playerOnNode = player;
-            UpdateColor();
             AttackEnemy();
         }
 
         public void UnassignPlayer(PlayerController player)
         {
             _playerOnNode = null;
-            UpdateColor();
         }
 
 
-            
-            
         public void AssignEnemy(EnemyController enemy)
         {
             if (!_enemiesOnNode.Contains(enemy))
@@ -105,7 +96,7 @@ namespace Grid
         {
             _enemiesOnNode.Remove(enemy);
         }
-        
+
         private void AttackEnemy()
         {
             if (_enemiesOnNode != null && _enemiesOnNode.Count > 0)
@@ -114,47 +105,35 @@ namespace Grid
                     enemy.Die();
             }
         }
+
+        [ContextMenu("Auto-Link Neighbors")]
+        private void LinkNeighbors()
+        {
+            NodeManager.Instance.RegisterNodes();
             
-        
+            Vector2Int myPos = new Vector2Int(
+                Mathf.RoundToInt(transform.position.x),
+                Mathf.RoundToInt(transform.position.z)
+            );
 
-
+            _northNode = NodeManager.Instance.GetNodeAtPosition(myPos + Vector2Int.up);
+            _southNode = NodeManager.Instance.GetNodeAtPosition(myPos + Vector2Int.down);
+            _eastNode  = NodeManager.Instance.GetNodeAtPosition(myPos + new Vector2Int(1, 0));
+            _westNode  = NodeManager.Instance.GetNodeAtPosition(myPos + new Vector2Int(-1, 0));
         
-        // Visualization
-        public void Highlight(bool state)
-        {
-            _isHighlighted = state;
-            UpdateColor();
+            Debug.Log("Linked neighbors for " + name);
         }
         
-        private void UpdateColor()
-        {
-            if (_renderer == null) return;
-
-            if (HasPlayer())
-            {
-                _renderer.material.color = Color.cyan;
-            }
-            else if (_isHighlighted)
-            {
-                _renderer.material.color = Color.yellow;
-            }
-            else
-            {
-                _renderer.material.color = Color.green;
-            }
-        }
-
         
-        
-        
+      
 
         private void FindConnectedNodes()
         {
             _connectedNodes.Clear();
 
-            OldNode[] allNodes = FindObjectsOfType<OldNode>();
+            Node[] allNodes = FindObjectsOfType<Node>();
 
-            foreach (OldNode node in allNodes)
+            foreach (Node node in allNodes)
             {
                 if (node == this) continue;
 
@@ -167,7 +146,6 @@ namespace Grid
         }
 
 
-
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
@@ -177,6 +155,5 @@ namespace Grid
                 Gizmos.DrawLine(transform.position, connected.transform.position);
             }
         }
-
     }
 }
