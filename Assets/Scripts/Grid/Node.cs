@@ -6,10 +6,20 @@ using UnityEngine;
 namespace Grid
 {
     [ExecuteInEditMode]
-    public class Node
-        : MonoBehaviour
+    public class Node : MonoBehaviour
     {
+
+
+
         #region Private Fields
+
+        private int _xValue , _yValue;
+        private float _size;
+        private Vector3 _position;
+        
+
+
+
 
         [SerializeField] private List<Node> _connectedNodes = new();
         [SerializeField] private Node _northNode;
@@ -17,8 +27,6 @@ namespace Grid
         [SerializeField] private Node _eastNode;
         [SerializeField] private Node _westNode;
 
-        [Header("Connection Settings")] [SerializeField, Tooltip("Max distance to detect connected nodes")]
-        private float _connectionRadius = 5.1f;
 
         [SerializeField] private List<EnemyController> _enemiesOnNode = new();
         [SerializeField] private PlayerController _playerOnNode;
@@ -55,22 +63,20 @@ namespace Grid
 
         void Awake()
         {
-            
+
         }
 
         void Start()
         {
-            FindConnectedNodes();
-        }
 
-#if UNITY_EDITOR
-        private void OnValidate()
-        {
-            //Testing
-            if (!Application.isPlaying)
-                FindConnectedNodes();
         }
-#endif
+        public void AssignValue(int x, int y, float size, Vector3 pos)
+        {
+            _xValue = x;
+            _yValue = y;
+            _size = size;
+            _position = pos;
+        }
 
         public void AssignPlayer(PlayerController player)
         {
@@ -106,54 +112,10 @@ namespace Grid
             }
         }
 
-        [ContextMenu("Auto-Link Neighbors")]
-        private void LinkNeighbors()
+        public Vector2Int GetCoordinate()
         {
-            NodeManager.Instance.RegisterNodes();
-            
-            Vector2Int myPos = new Vector2Int(
-                Mathf.RoundToInt(transform.position.x),
-                Mathf.RoundToInt(transform.position.z)
-            );
-
-            _northNode = NodeManager.Instance.GetNodeAtPosition(myPos + Vector2Int.up);
-            _southNode = NodeManager.Instance.GetNodeAtPosition(myPos + Vector2Int.down);
-            _eastNode  = NodeManager.Instance.GetNodeAtPosition(myPos + new Vector2Int(1, 0));
-            _westNode  = NodeManager.Instance.GetNodeAtPosition(myPos + new Vector2Int(-1, 0));
-        
-            Debug.Log("Linked neighbors for " + name);
-        }
-        
-        
-      
-
-        private void FindConnectedNodes()
-        {
-            _connectedNodes.Clear();
-
-            Node[] allNodes = FindObjectsOfType<Node>();
-
-            foreach (Node node in allNodes)
-            {
-                if (node == this) continue;
-
-                float distance = Vector3.Distance(transform.position, node.transform.position);
-                if (distance <= _connectionRadius)
-                {
-                    _connectedNodes.Add(node);
-                }
-            }
-        }
-
-
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.yellow;
-            foreach (var connected in _connectedNodes)
-            {
-                if (connected == null) continue;
-                Gizmos.DrawLine(transform.position, connected.transform.position);
-            }
+            Vector2Int coordinate = new Vector2Int(_xValue, _yValue);
+            return coordinate;
         }
     }
 }

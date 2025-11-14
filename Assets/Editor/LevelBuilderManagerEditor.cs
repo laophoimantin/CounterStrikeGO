@@ -17,5 +17,11 @@ public class LevelBuilderManagerEditor : Editor
             Debug.Log("Saving Level...");
             script.SaveLevel();
         }
+
+        if (GUILayout.Button("Generate Level"))
+        {
+            script.GenerateLevel();
+        }
+        
     }
 }
