@@ -1,3 +1,4 @@
+using Characters.Player;
 using Core.TurnSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,61 @@ namespace Core.Events
     {
         public TurnType NewTurn;
     }
+
+    public struct OnPlayerDeadEvent
+    {
+        
+    }
+
+    public struct OnPlayerActionStartedEvent
+    {
+        
+    }
+    public struct OnPlayerActionFinishedEvent
+    {
+        
+    }
+
+    public struct OnEnemyActionStartedEvent
+    {
+        
+    }
+
+    public struct OnEnemyActionFinishedEvent
+    {
+        
+    }
+
+    public struct OnGameEndedEvent
+    {
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     

@@ -7,58 +7,79 @@ namespace Core.TurnSystem
 {
     public class TurnManager : Singleton<TurnManager>
     {
-        #region Private Fields
+        [Header("Timing")] public float GlobalActionDuration = 1f;
 
-        private TurnType _currentTurn = TurnType.PlayerPlanning;
-        private TurnType _nextTurn;
-
-        #endregion
-
-        #region Public Fields
+        private TurnType _currentTurn;
+        private bool _actionPhaseActive = false;
+        private bool _lock = false;
 
         public TurnType CurrentTurn => _currentTurn;
-        public float ActionDuration = 4f;
 
-        #endregion
+
+        void OnEnable()
+        {
+            this.Subscribe<OnGameEndedEvent>(Lock);
+        }
+
+        void OnDisable()
+        {
+            this.Unsubscribe<OnGameEndedEvent>(Lock);
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        void Start()
+        {
+            SetTurn(TurnType.PlayerPlanning);
+        }
+
+        private void Lock(OnGameEndedEvent eventData)
+        {
+            _lock = true;
+        }
 
         public void StartActionPhase()
         {
-            switch (_currentTurn)
-            {
-                case TurnType.PlayerPlanning:
-                    _currentTurn = TurnType.PlayerAction;
-                    break;
-                case TurnType.EnemyPlanning:
-                    _currentTurn = TurnType.EnemyAction;
-                    break;
-            }
-            BroadcastTurnChange();
+            if (_actionPhaseActive) return;
+            _actionPhaseActive = true;
+            
+            if (_currentTurn == TurnType.PlayerPlanning)
+                SetTurn(TurnType.PlayerAction);
+            else if (_currentTurn == TurnType.EnemyPlanning)
+                SetTurn(TurnType.EnemyAction);
         }
-
-        public void EndTurn()
+        
+        public void EndActionPhase()
         {
+            if (!_actionPhaseActive) return;
+            _actionPhaseActive = false;
+
             switch (_currentTurn)
             {
                 case TurnType.PlayerAction:
-                    _currentTurn = TurnType.EnemyPlanning;
+                    SetTurn(TurnType.EnemyPlanning);
                     break;
+
                 case TurnType.EnemyAction:
-                    _currentTurn = TurnType.PlayerPlanning;
+                    SetTurn(TurnType.PlayerPlanning);
                     break;
-                default:
-                    return;
             }
-            BroadcastTurnChange();
         }
-        
-        private void BroadcastTurnChange()
+
+        private void SetTurn(TurnType next)
         {
-            OnTurnChangedEvent turnChangedEvent = new OnTurnChangedEvent
-            {
-                NewTurn = _currentTurn
-            };
-            this.SendEvent(turnChangedEvent);
+            if (_lock) return;
+            _currentTurn = next;
+            this.SendEvent(new OnTurnChangedEvent { NewTurn = next });
         }
     }
-    
 }

@@ -1,0 +1,34 @@
+using System.Collections;
+using System.Collections.Generic;
+using Characters.Enemy.EnemyActions;
+using Core.TurnSystem;
+using Grid;
+using Unity.VisualScripting;
+using UnityEngine;
+
+namespace Characters.Enemy.EnemyBehaviors
+{
+    public class TurningBehavior : BaseEnemyBehavior
+    {
+        [Range(0.1f, 2f)] [SerializeField] private float _actionDuration = 1.0f;
+
+        public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
+        {
+            var plan = new List<BaseEnemyAction>();
+            
+            float duration = TurnManager.Instance.GlobalActionDuration * _actionDuration;
+
+            if (enemy.ScanForPlayerInFront(1))
+            {
+                Node targetNode = enemy.GetNodeInFront();
+                plan.Add(new MoveAction(targetNode, duration));
+            }
+            else
+            {
+                Quaternion targetRotation = enemy.GetRotationTurnAround();
+                plan.Add(new RotateAction(targetRotation, duration));
+            }
+            return plan;
+        }
+    }
+}

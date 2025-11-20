@@ -318,17 +318,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 639369632}
   - {fileID: 1070621291}
   - {fileID: 2048920397}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &87231763
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -415,89 +417,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &91750550
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 91750551}
-  - component: {fileID: 91750554}
-  - component: {fileID: 91750553}
-  m_Layer: 0
-  m_Name: Face
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &91750551
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 91750550}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.43, z: 0.319}
-  m_LocalScale: {x: 0.67431, y: 0.3, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 268062789}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &91750553
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 91750550}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 6ee42b39cf1f13d4bbd02d8124792a22, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &91750554
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 91750550}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &93640548
 GameObject:
   m_ObjectHideFlags: 0
@@ -530,17 +449,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 985727998}
   - {fileID: 1115128635}
   - {fileID: 1186492716}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &93640550
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -966,17 +887,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1070621291}
   - {fileID: 1154561551}
   - {fileID: 2048920397}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &222052488
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1063,54 +986,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &268062788
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 268062789}
-  - component: {fileID: 268062790}
-  m_Layer: 0
-  m_Name: Model
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &268062789
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 268062788}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1551844101}
-  - {fileID: 590157927}
-  - {fileID: 91750551}
-  m_Father: {fileID: 2008056497}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &268062790
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 268062788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2c0091109f3ec74faaf1f825e70d43c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _displayName: Terroris
 --- !u!21 &271980626
 Material:
   serializedVersion: 8
@@ -1657,16 +1532,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 985727998}
   - {fileID: 1484193737}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &433241310
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1933,17 +1810,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1671725069}
   - {fileID: 1932443624}
   - {fileID: 1967253230}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &477619175
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2135,89 +2014,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &590157926
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 590157927}
-  - component: {fileID: 590157930}
-  - component: {fileID: 590157929}
-  m_Layer: 0
-  m_Name: Cylinder
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &590157927
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590157926}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.761, z: 0}
-  m_LocalScale: {x: 1.4361943, y: 0.09585161, z: 1.4361943}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 268062789}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &590157929
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590157926}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: b85743ce98d9c5a409070ae9f28bb00a, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &590157930
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590157926}
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &590700440
 GameObject:
   m_ObjectHideFlags: 0
@@ -2375,16 +2171,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 87231762}
   - {fileID: 1484193737}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &639369633
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3401,6 +3199,10 @@ MonoBehaviour:
   m_LevelBuilder:
     size: 5
     nodes: []
+  m_NodeManager: {fileID: 0}
+  _mapWidth: 0
+  _mapHeight: 0
+  _cellSize: 0
 --- !u!1 &985727997
 GameObject:
   m_ObjectHideFlags: 0
@@ -3433,17 +3235,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 93640549}
   - {fileID: 433241309}
   - {fileID: 2050640031}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &985727999
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3677,16 +3481,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1932443624}
   - {fileID: 2118792998}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1010077392
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3886,17 +3692,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 87231762}
   - {fileID: 222052487}
   - {fileID: 1742594663}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1070621292
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4015,18 +3823,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 93640549}
   - {fileID: 1216419661}
   - {fileID: 1710475987}
   - {fileID: 2050640031}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1115128636
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4226,17 +4036,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 222052487}
   - {fileID: 1742594663}
   - {fileID: 2118792998}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1154561552
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4355,17 +4167,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 93640549}
   - {fileID: 1300253367}
   - {fileID: 1710475987}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1186492717
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4484,17 +4298,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1115128635}
   - {fileID: 1671725069}
   - {fileID: 1742594663}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1216419662
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4613,16 +4429,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1186492716}
   - {fileID: 1967253230}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1300253368
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5102,17 +4920,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 433241309}
   - {fileID: 639369632}
   - {fileID: 2050640031}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1484193738
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5199,89 +5019,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1551844100
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1551844101}
-  - component: {fileID: 1551844104}
-  - component: {fileID: 1551844103}
-  m_Layer: 0
-  m_Name: Capsule
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1551844101
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551844100}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 268062789}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!23 &1551844103
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551844100}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 3695cd73bd582874ab5b9af462cfacdd, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1551844104
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1551844100}
-  m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!21 &1623977759
 Material:
   serializedVersion: 8
@@ -5393,6 +5130,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _dontDestroyOnLoad: 0
+  _widthX: 0
+  _heightY: 0
+  _cellSize: 0
+  _cellContainer: {fileID: 0}
+  _nodePrefab: {fileID: 0}
 --- !u!4 &1641729307
 Transform:
   m_ObjectHideFlags: 0
@@ -5440,18 +5182,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 477619174}
   - {fileID: 1216419661}
   - {fileID: 1710475987}
   - {fileID: 2071867465}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1671725070
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5651,18 +5395,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1115128635}
   - {fileID: 1186492716}
   - {fileID: 1671725069}
   - {fileID: 1967253230}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1710475988
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5864,18 +5610,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1070621291}
   - {fileID: 1154561551}
   - {fileID: 1216419661}
   - {fileID: 2071867465}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1742594664
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6299,17 +6047,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 477619174}
   - {fileID: 1010077391}
   - {fileID: 2071867465}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1932443625
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6428,17 +6178,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 477619174}
   - {fileID: 1300253367}
   - {fileID: 1710475987}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &1967253231
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6559,75 +6311,6 @@ Transform:
   - {fileID: 57646000}
   m_Father: {fileID: 327179704}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2008056496
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2008056497}
-  - component: {fileID: 2008056498}
-  - component: {fileID: 2008056499}
-  m_Layer: 0
-  m_Name: Terrorist (Player)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2008056497
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008056496}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 268062789}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &2008056498
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008056496}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2, y: 2, z: 2}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2008056499
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2008056496}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6430f274b6894c658450ff781678a767, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _currentNode: {fileID: 2048920397}
-  _actionDurationModifier: 0
 --- !u!1 &2048920396
 GameObject:
   m_ObjectHideFlags: 0
@@ -6660,16 +6343,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 87231762}
   - {fileID: 222052487}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &2048920398
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6788,17 +6473,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 985727998}
   - {fileID: 1115128635}
   - {fileID: 1484193737}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &2050640032
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6917,18 +6604,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1671725069}
   - {fileID: 1742594663}
   - {fileID: 1932443624}
   - {fileID: 2118792998}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &2071867466
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7111,17 +6800,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _textMesh: {fileID: 0}
   _connectedNodes:
   - {fileID: 1010077391}
   - {fileID: 1154561551}
   - {fileID: 2071867465}
-  _northNode: {fileID: 0}
-  _southNode: {fileID: 0}
-  _eastNode: {fileID: 0}
-  _westNode: {fileID: 0}
-  _connectionRadius: 5.1
-  _enemiesOnNode: []
-  _playerOnNode: {fileID: 0}
+  _north: {fileID: 0}
+  _south: {fileID: 0}
+  _east: {fileID: 0}
+  _west: {fileID: 0}
+  _enemies: []
+  _player: {fileID: 0}
+  _isObstacle: 0
+  _nodeType: 0
 --- !u!65 &2118792999
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7208,6 +6899,67 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &7384294579065939696
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 751983764187884313, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: _currentNode
+      value: 
+      objectReference: {fileID: 2048920397}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602258866804015155, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5250013960275831423, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: m_Name
+      value: Player (Terrorist)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -7222,7 +6974,7 @@ SceneRoots:
   - {fileID: 590700442}
   - {fileID: 1641729307}
   - {fileID: 1450015901}
-  - {fileID: 2008056497}
+  - {fileID: 7384294579065939696}
   - {fileID: 2115866047}
   - {fileID: 327179704}
   - {fileID: 152834692}

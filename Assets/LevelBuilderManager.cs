@@ -9,22 +9,36 @@ public class LevelBuilderManager : MonoBehaviour
 {
     [SerializeField] private LevelBuilder m_LevelBuilder;
     [SerializeField] private NodeManager m_NodeManager;
+    public NodeManager NodeManager => m_NodeManager;
 
     [SerializeField] private int _mapWidth;
     [SerializeField] private int _mapHeight;
     [SerializeField] private float _cellSize;
 
-    public void GenerateLevel()
+    public void GenerateNodeMap()
     {
-        Debug.Log("Neee");
         m_NodeManager.GenerateMap(_mapWidth, _mapHeight, _cellSize);
+        
     }
 
+    public void DeleteMap()
+    {
+        m_NodeManager.DeleteAllNodes();
+    }
+
+    public void AssignNodeNeighbors()
+    {
+        m_NodeManager.AssignNodeNeighbour();
+    }
+
+    public void RebuildNodeGrid()
+    {
+        m_NodeManager.RebuildNodeGrid();
+    }
 
 
     public void SaveLevel()
     {
-        // do save level logic
 
         // must have to save ScriptableObject changes
         //EditorUtility.SetDirty(mySO);

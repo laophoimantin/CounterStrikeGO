@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using Grid;
 
 [CustomEditor(typeof(LevelBuilderManager))]
 public class LevelBuilderManagerEditor : Editor
@@ -12,16 +13,38 @@ public class LevelBuilderManagerEditor : Editor
 
         var script = (LevelBuilderManager)target;
 
-        if (GUILayout.Button("Save Level"))
+        NodeManager nodeManager = script.NodeManager;
+
+
+        if (GUILayout.Button("Assign Node"))
         {
-            Debug.Log("Saving Level...");
-            script.SaveLevel();
+            script.AssignNodeNeighbors();
+            EditorUtility.SetDirty(nodeManager);
         }
 
-        if (GUILayout.Button("Generate Level"))
+        if (GUILayout.Button("Generate Map"))
         {
-            script.GenerateLevel();
+            script.GenerateNodeMap();
+            EditorUtility.SetDirty(nodeManager);
+        }
+
+        if (GUILayout.Button("Delete Map"))
+        {
+            script.DeleteMap();
+            EditorUtility.SetDirty(nodeManager);
+        } 
+        if (GUILayout.Button("Rebuild Node"))
+        {
+            script.RebuildNodeGrid();
+            EditorUtility.SetDirty(nodeManager);
         }
         
+        
+
+        // if (GUILayout.Button("Save Level"))
+        // {
+        //     Debug.Log("Saving Level...");
+        //     script.SaveLevel();
+        // }
     }
 }

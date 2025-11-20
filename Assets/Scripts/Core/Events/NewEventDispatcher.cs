@@ -65,6 +65,7 @@ public static class NewEventDispatcherExtensions
     public static void Unsubscribe<T>(this MonoBehaviour instance, Action<T> callback) where T : struct
     {
         if (!Application.isPlaying) return;
+        if (NewEventDispatcher.Instance == null) return;
         NewEventDispatcher.Instance.Unsubscribe<T>(callback);
     }
     
