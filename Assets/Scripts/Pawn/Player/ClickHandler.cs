@@ -32,6 +32,8 @@ namespace Pawn
             if (!RaycastPlayer()) return;
             _dragging = true;
             _startPos = Input.mousePosition;
+            
+            _player.OnPickedUp();
         }
         
         private void TryEndDrag()
@@ -40,10 +42,13 @@ namespace Pawn
 
             _dragging = false;
 
+            _player.OnDropped();
+
             Vector2 endPos = Input.mousePosition;
             Vector2 delta = endPos - _startPos;
-            
+        
             float threshold = Screen.height * _dragThresholdPercent;
+        
             if (delta.magnitude < threshold) return;
 
             Vector2 dir = delta.normalized;
@@ -65,32 +70,5 @@ namespace Pawn
             Ray r = _cam.ScreenPointToRay(Input.mousePosition);
             return Physics.Raycast(r, out var hit) && hit.collider.CompareTag("Player");
         }
-
-        
-        
-        
-        // private void HandleClick()
-        // {
-        //     var ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
-        //     if (Physics.Raycast(ray, out RaycastHit hit))
-        //     {
-        //         if (TurnManager.Instance.CurrentTurn != TurnType.PlayerPlanning) return;
-        //
-        //         if (hit.collider.TryGetComponent(out PlayerController player))
-        //         {
-        //             _selectedPlayer = player;
-        //             return;
-        //         }
-        //
-        //         if (hit.collider.TryGetComponent(out Node node))
-        //         {
-        //             if (_selectedPlayer != null)
-        //             {
-        //                 _selectedPlayer.TryMoveTo(node);
-        //                 _selectedPlayer = null;
-        //             }
-        //         }
-        //     }
-        // }
     }
 }

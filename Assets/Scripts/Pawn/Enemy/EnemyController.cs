@@ -63,20 +63,30 @@ namespace Pawn
             if (_isDead) yield break;
 
             List<BaseEnemyAction> plan = _currentBehavior.PlanActions(this);
+            
             if (plan == null || plan.Count == 0)
             {
-                OnActionFinished();
+                EnemyManager.Instance.OnEnemyFinished(this);
                 yield break;
             }
-
             foreach (BaseEnemyAction action in plan)
             {
                 yield return action.Execute(this);
+
+                if (TryAttack(_currentNode))
+                {
+                    EnemyManager.Instance.OnEnemyFinished(this);
+                    yield break; 
+                }
             }
 
             OnActionFinished();
         }
 
+        private void OnActionFinished()
+        {
+            EnemyManager.Instance.OnEnemyFinished(this);
+        }
 
         // --- AI Action & Utility Methods ---
         // Actions ==============================================================================================
@@ -176,13 +186,9 @@ namespace Pawn
             _currentNode.AddUnit(this);
         }
 
-        private void OnActionFinished()
-        {
-            Attack(_currentNode);
-            EnemyManager.Instance.OnEnemyFinished(this);
-        }
+ 
 
-        private void Attack(Node targetNode)
+        private bool TryAttack(Node targetNode)
         {
             if (targetNode.HasPlayer())
             {
@@ -190,7 +196,9 @@ namespace Pawn
                 player.Die(() => {
                     Debug.Log("End!");
                 });
+                return true; // We killed someone!
             }
+            return false; // No one here
         }
 
         public override void Die(Action onDeathComplete = null)
@@ -218,6 +226,8 @@ namespace Pawn
             OnDestroyed?.Invoke(this);
             onDeathComplete?.Invoke();
         }
+        
+        
         
         
         #endregion

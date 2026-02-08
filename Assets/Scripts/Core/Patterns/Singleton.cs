@@ -73,7 +73,7 @@ namespace Core.Patterns
             }
             else if (_instance != this)
             {
-                Debug.LogWarning($"Duplicate singleton instance of {typeof(T).Name} detected, destroying duplicate.");
+                Debug.LogWarning($"Duplicate singleton instance of {typeof(T).Name} detected, destroying duplicate: {gameObject.name}");
                 Destroy(gameObject);
             }
         }

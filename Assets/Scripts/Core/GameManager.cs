@@ -78,8 +78,8 @@ namespace Core
         private void LoseGame(OnPlayerDeadEvent eventData)
         {
             if (_isGameOver) return;
-            this.SendEvent(new OnGameEndedEvent { });
             _isGameOver = true;
+            SceneController.Instance.ReloadCurrentScene();
             Debug.Log("GAME OVER");
         }
     }

@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Core.Events;
 using Core.TurnSystem;
+using DG.Tweening;
 using Grid;
 
 namespace Pawn
@@ -19,6 +20,9 @@ namespace Pawn
 
         private Direction _tempMoveDirection = Direction.None;
 
+        [Header("Visual Feedback")]
+        [SerializeField] private float _liftHeight = 0.5f;
+        [SerializeField] private float _liftDuration = 0.2f;
 
         void OnEnable()
         {
@@ -153,6 +157,21 @@ namespace Pawn
             this.SendEvent(new OnPlayerDeadEvent());
         }
 
+        // On Click
+        // On Click ====================================================================================
+        public void OnPickedUp()
+        {
+            _playerModel.DOKill();
+        
+            _playerModel.DOLocalMoveY(_liftHeight, _liftDuration).SetEase(Ease.OutBack);
+        }
+
+        public void OnDropped()
+        {
+            _playerModel.DOKill();
+        
+            _playerModel.DOLocalMoveY(0f, _liftDuration).SetEase(Ease.OutBounce);
+        }
 
         // Editor ====================================================================================
 

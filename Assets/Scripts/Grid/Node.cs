@@ -58,6 +58,7 @@ namespace Grid
 
             name = $"({x}, {y})";
             _textMesh.text = name;
+            _textMesh.gameObject.SetActive(false);
         }
 
         public Vector2Int Get2DCoordinate()

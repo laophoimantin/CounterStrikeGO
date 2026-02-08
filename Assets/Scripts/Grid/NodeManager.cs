@@ -44,22 +44,25 @@ namespace Grid
         private void SpawnNode(int x, int y, float cellSize)
         {
             Vector3 localPos = new Vector3(x, 0, y) * cellSize;
+            Node node; 
 
 #if UNITY_EDITOR
-            Node node = (Node)PrefabUtility.InstantiatePrefab(_nodePrefab, _cellContainer);
+            node = (Node)PrefabUtility.InstantiatePrefab(_nodePrefab, _cellContainer);
             Undo.RegisterCreatedObjectUndo(node.gameObject, "Spawn Node");
 #else
-        Node node = Instantiate(_nodePrefab, _cellContainer);
-        node.transform.localPosition = localPos;
+    // 1. Runtime Instantiation
+    node = Instantiate(_nodePrefab, _cellContainer);
 #endif
 
-            node.gameObject.name = $"Node ({x}, {y})";
+            node.transform.localPosition = localPos;
 
-            node.Initialize(x, y, cellSize);
+            node.gameObject.name = $"Node ({x}, {y})";
+            node.Initialize(x, y, cellSize); 
 
             _allNodes.Add(node);
             _nodeGrid.TryAdd(new Vector2Int(x, y), node);
         }
+        
 
         public void AssignNodeNeighbour()
         {
