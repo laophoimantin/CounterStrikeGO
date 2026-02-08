@@ -17,7 +17,6 @@ namespace Core.Patterns
                 {
                     return null;
                 }
-
                 lock (_lock)
                 {
                     if (_instance == null)
@@ -32,8 +31,6 @@ namespace Core.Patterns
                                 Destroy(instanceList[i]);
                             }
                         }
-
-
                         if (instanceList.Length > 0)
                         {
                             _instance = instanceList[0];
@@ -45,7 +42,6 @@ namespace Core.Patterns
                         }
                     }
                 }
-
                 return _instance;
             }
         }

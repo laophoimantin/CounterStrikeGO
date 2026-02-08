@@ -152,15 +152,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 917269315}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1321303892}
   _south: {fileID: 2012047852}
   _east: {fileID: 679890843}
   _west: {fileID: 1754003668}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &22433830
 Transform:
   m_ObjectHideFlags: 0
@@ -207,15 +207,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1491618644}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1275345566}
   _south: {fileID: 1765051132}
   _east: {fileID: 723410066}
   _west: {fileID: 1796437103}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &30113293
 Transform:
   m_ObjectHideFlags: 0
@@ -775,15 +775,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 282205411}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 752471192}
   _south: {fileID: 0}
   _east: {fileID: 1637156222}
   _west: {fileID: 330363205}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &77691046
 Transform:
   m_ObjectHideFlags: 0
@@ -830,15 +830,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1545326992}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1754003668}
   _east: {fileID: 1321303892}
   _west: {fileID: 197819928}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &83437279
 Transform:
   m_ObjectHideFlags: 0
@@ -1056,15 +1056,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1967204476}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 771140776}
   _south: {fileID: 1474997501}
   _east: {fileID: 1796437103}
   _west: {fileID: 1716047798}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &92373691
 Transform:
   m_ObjectHideFlags: 0
@@ -1282,15 +1282,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 110705952}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 429313691}
   _south: {fileID: 0}
   _east: {fileID: 0}
   _west: {fileID: 124636363}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &97164232
 Transform:
   m_ObjectHideFlags: 0
@@ -1508,15 +1508,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1453877619}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 299823509}
   _south: {fileID: 0}
   _east: {fileID: 97164231}
   _west: {fileID: 1375027538}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &124636364
 Transform:
   m_ObjectHideFlags: 0
@@ -1905,15 +1905,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 65468510}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1275345566}
   _east: {fileID: 83437278}
   _west: {fileID: 212898437}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &197819929
 Transform:
   m_ObjectHideFlags: 0
@@ -2131,15 +2131,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 161011367}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1582889415}
   _east: {fileID: 197819928}
   _west: {fileID: 1420435706}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &212898438
 Transform:
   m_ObjectHideFlags: 0
@@ -2186,15 +2186,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1155022072}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1536485085}
   _south: {fileID: 1858801786}
   _east: {fileID: 1595349465}
   _west: {fileID: 684218980}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &221214718
 Transform:
   m_ObjectHideFlags: 0
@@ -2241,15 +2241,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1983708834}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 749265662}
   _south: {fileID: 1375027538}
   _east: {fileID: 299823509}
   _west: {fileID: 285380057}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &230217472
 Transform:
   m_ObjectHideFlags: 0
@@ -2467,15 +2467,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 2008470160}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 680374130}
   _south: {fileID: 1287665928}
   _east: {fileID: 0}
   _west: {fileID: 343548666}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &252595431
 Transform:
   m_ObjectHideFlags: 0
@@ -2522,15 +2522,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1229087089}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 440257868}
   _south: {fileID: 729658950}
   _east: {fileID: 1301055922}
   _west: {fileID: 1450691786}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &264972677
 Transform:
   m_ObjectHideFlags: 0
@@ -2748,15 +2748,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1514581833}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1268685165}
   _east: {fileID: 230217471}
   _west: {fileID: 1595349465}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &285380058
 Transform:
   m_ObjectHideFlags: 0
@@ -2974,15 +2974,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 2025617878}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1841983208}
   _south: {fileID: 124636363}
   _east: {fileID: 429313691}
   _west: {fileID: 230217471}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &299823510
 Transform:
   m_ObjectHideFlags: 0
@@ -3029,15 +3029,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1122135443}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1690929042}
   _south: {fileID: 416953085}
   _east: {fileID: 2101722932}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &302968540
 Transform:
   m_ObjectHideFlags: 0
@@ -3426,15 +3426,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 295976919}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1716047798}
   _south: {fileID: 440257868}
   _east: {fileID: 1474997501}
   _west: {fileID: 447166944}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &330038356
 Transform:
   m_ObjectHideFlags: 0
@@ -3481,15 +3481,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1240929181}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1159732023}
   _south: {fileID: 0}
   _east: {fileID: 77691045}
   _west: {fileID: 1604938206}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &330363206
 Transform:
   m_ObjectHideFlags: 0
@@ -3536,15 +3536,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1777218118}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1912026045}
   _south: {fileID: 1922322140}
   _east: {fileID: 252595430}
   _west: {fileID: 750502381}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &343548667
 Transform:
   m_ObjectHideFlags: 0
@@ -3762,15 +3762,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1905402800}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1450691786}
   _south: {fileID: 1720679602}
   _east: {fileID: 729658950}
   _west: {fileID: 1255484576}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &353949417
 Transform:
   m_ObjectHideFlags: 0
@@ -4159,15 +4159,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1420458766}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 727325575}
   _south: {fileID: 657038911}
   _east: {fileID: 559992238}
   _west: {fileID: 663532737}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &373489646
 Transform:
   m_ObjectHideFlags: 0
@@ -4214,15 +4214,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1948945018}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1795288560}
   _south: {fileID: 1255484576}
   _east: {fileID: 1450691786}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &393802169
 Transform:
   m_ObjectHideFlags: 0
@@ -4440,15 +4440,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 999329169}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 302968539}
   _south: {fileID: 1795288560}
   _east: {fileID: 447166944}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &416953086
 Transform:
   m_ObjectHideFlags: 0
@@ -4495,15 +4495,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1638175102}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 97164231}
   _east: {fileID: 0}
   _west: {fileID: 299823509}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &429313692
 Transform:
   m_ObjectHideFlags: 0
@@ -4721,15 +4721,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1925465695}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 330038355}
   _south: {fileID: 264972676}
   _east: {fileID: 663532737}
   _west: {fileID: 1709458746}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &440257869
 Transform:
   m_ObjectHideFlags: 0
@@ -4776,15 +4776,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1445070374}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 2101722932}
   _south: {fileID: 1709458746}
   _east: {fileID: 330038355}
   _west: {fileID: 416953085}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &447166945
 Transform:
   m_ObjectHideFlags: 0
@@ -5203,7 +5203,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: afae99e41da558941abf0cfd9fb7fe35, type: 2}
+  - {fileID: 2100000, guid: 0394d799e9b621840a5436ae0651a3c8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5620,15 +5620,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 551353286}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1765051132}
   _south: {fileID: 1324134340}
   _east: {fileID: 772005430}
   _west: {fileID: 373489645}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &559992239
 Transform:
   m_ObjectHideFlags: 0
@@ -5846,15 +5846,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 773558742}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 729658950}
   _south: {fileID: 752471192}
   _east: {fileID: 1780233812}
   _west: {fileID: 1720679602}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &633246957
 Transform:
   m_ObjectHideFlags: 0
@@ -5901,15 +5901,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 247553879}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 373489645}
   _south: {fileID: 0}
   _east: {fileID: 1324134340}
   _west: {fileID: 1301055922}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &657038912
 Transform:
   m_ObjectHideFlags: 0
@@ -6298,15 +6298,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1910312010}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1474997501}
   _south: {fileID: 1301055922}
   _east: {fileID: 373489645}
   _west: {fileID: 440257868}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &663532738
 Transform:
   m_ObjectHideFlags: 0
@@ -6353,15 +6353,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 467856307}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1976736830}
   _south: {fileID: 1912026045}
   _east: {fileID: 1661025384}
   _west: {fileID: 22433829}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &679890844
 Transform:
   m_ObjectHideFlags: 0
@@ -6408,15 +6408,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1707653839}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1661025384}
   _south: {fileID: 252595430}
   _east: {fileID: 0}
   _west: {fileID: 1912026045}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &680374131
 Transform:
   m_ObjectHideFlags: 0
@@ -6463,15 +6463,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1588483806}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1780233812}
   _south: {fileID: 1637156222}
   _east: {fileID: 221214717}
   _west: {fileID: 752471192}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &684218981
 Transform:
   m_ObjectHideFlags: 0
@@ -6498,6 +6498,7 @@ GameObject:
   m_Component:
   - component: {fileID: 705507995}
   - component: {fileID: 705507994}
+  - component: {fileID: 705507996}
   m_Layer: 0
   m_Name: Directional Light
   m_TagString: Untagged
@@ -6582,6 +6583,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!114 &705507996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 705507993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &717234495
 GameObject:
   m_ObjectHideFlags: 0
@@ -6612,15 +6636,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 436381245}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1220781455}
   _south: {fileID: 749265662}
   _east: {fileID: 0}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &717234497
 Transform:
   m_ObjectHideFlags: 0
@@ -6667,15 +6691,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 933284288}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1754003668}
   _south: {fileID: 1981091008}
   _east: {fileID: 2012047852}
   _west: {fileID: 30113292}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &723410067
 Transform:
   m_ObjectHideFlags: 0
@@ -6722,15 +6746,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1609398419}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1301055922}
   _south: {fileID: 1780233812}
   _east: {fileID: 0}
   _west: {fileID: 729658950}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &726577587
 Transform:
   m_ObjectHideFlags: 0
@@ -6777,15 +6801,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1718888162}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1796437103}
   _south: {fileID: 373489645}
   _east: {fileID: 1765051132}
   _west: {fileID: 1474997501}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &727325576
 Transform:
   m_ObjectHideFlags: 0
@@ -6832,15 +6856,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1819802496}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 264972676}
   _south: {fileID: 633246956}
   _east: {fileID: 726577586}
   _west: {fileID: 353949416}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &729658951
 Transform:
   m_ObjectHideFlags: 0
@@ -7058,15 +7082,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1251801196}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 717234496}
   _south: {fileID: 230217471}
   _east: {fileID: 1841983208}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &749265663
 Transform:
   m_ObjectHideFlags: 0
@@ -7113,15 +7137,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1762876382}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 2012047852}
   _south: {fileID: 0}
   _east: {fileID: 343548666}
   _west: {fileID: 1981091008}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &750502382
 Transform:
   m_ObjectHideFlags: 0
@@ -7168,15 +7192,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1177062772}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 633246956}
   _south: {fileID: 77691045}
   _east: {fileID: 684218980}
   _west: {fileID: 1159732023}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &752471193
 Transform:
   m_ObjectHideFlags: 0
@@ -7394,15 +7418,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 844367861}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1420435706}
   _south: {fileID: 92373690}
   _east: {fileID: 1582889415}
   _west: {fileID: 1971148810}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &771140777
 Transform:
   m_ObjectHideFlags: 0
@@ -7449,15 +7473,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 162096905}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1981091008}
   _south: {fileID: 1481706266}
   _east: {fileID: 0}
   _west: {fileID: 559992238}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &772005431
 Transform:
   m_ObjectHideFlags: 0
@@ -8607,15 +8631,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1063370794}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1027002937}
   _east: {fileID: 1130591068}
   _west: {fileID: 1342941234}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &849784278
 Transform:
   m_ObjectHideFlags: 0
@@ -8833,15 +8857,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 809812382}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1595349465}
   _east: {fileID: 0}
   _west: {fileID: 1536485085}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &892200450
 Transform:
   m_ObjectHideFlags: 0
@@ -10160,10 +10184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d21e3aa89c377445ae82a45c183d9d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LevelBuilder:
-    size: 5
-    nodes: []
-  m_NodeManager: {fileID: 0}
+  _nodeManager: {fileID: 0}
   _mapWidth: 0
   _mapHeight: 0
   _cellSize: 0
@@ -10368,15 +10389,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 359344652}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 849784277}
   _south: {fileID: 2101722932}
   _east: {fileID: 1971148810}
   _west: {fileID: 1690929042}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1027002938
 Transform:
   m_ObjectHideFlags: 0
@@ -11278,15 +11299,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1143778824}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1971148810}
   _east: {fileID: 1420435706}
   _west: {fileID: 849784277}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1130591069
 Transform:
   m_ObjectHideFlags: 0
@@ -11675,15 +11696,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 662685243}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1720679602}
   _south: {fileID: 330363205}
   _east: {fileID: 752471192}
   _west: {fileID: 2049211683}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1159732024
 Transform:
   m_ObjectHideFlags: 0
@@ -12243,15 +12264,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 412773448}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 717234496}
   _east: {fileID: 1813889526}
   _west: {fileID: 1481706266}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1220781456
 Transform:
   m_ObjectHideFlags: 0
@@ -12469,15 +12490,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1260247517}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1304862941}
   _south: {fileID: 0}
   _east: {fileID: 0}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1234021157
 Transform:
   m_ObjectHideFlags: 0
@@ -12866,15 +12887,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 323063481}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 393802168}
   _south: {fileID: 1835335953}
   _east: {fileID: 353949416}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1255484577
 Transform:
   m_ObjectHideFlags: 0
@@ -13092,15 +13113,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 550123651}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 285380057}
   _south: {fileID: 0}
   _east: {fileID: 1375027538}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1268685166
 Transform:
   m_ObjectHideFlags: 0
@@ -13147,15 +13168,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1435201316}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 197819928}
   _south: {fileID: 30113292}
   _east: {fileID: 1754003668}
   _west: {fileID: 1582889415}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1275345567
 Transform:
   m_ObjectHideFlags: 0
@@ -13202,15 +13223,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1756382082}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 252595430}
   _south: {fileID: 1304862941}
   _east: {fileID: 0}
   _west: {fileID: 1922322140}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1287665929
 Transform:
   m_ObjectHideFlags: 0
@@ -13257,15 +13278,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 328294732}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 663532737}
   _south: {fileID: 726577586}
   _east: {fileID: 657038911}
   _west: {fileID: 264972676}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1301055923
 Transform:
   m_ObjectHideFlags: 0
@@ -13312,15 +13333,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 494196544}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1287665928}
   _south: {fileID: 1234021156}
   _east: {fileID: 0}
   _west: {fileID: 1813889526}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1304862942
 Transform:
   m_ObjectHideFlags: 0
@@ -13367,15 +13388,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 54750761}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 22433829}
   _east: {fileID: 1976736830}
   _west: {fileID: 83437278}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1321303893
 Transform:
   m_ObjectHideFlags: 0
@@ -13422,15 +13443,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 626986297}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 559992238}
   _south: {fileID: 0}
   _east: {fileID: 1481706266}
   _west: {fileID: 657038911}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1324134341
 Transform:
   m_ObjectHideFlags: 0
@@ -13477,15 +13498,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 899082344}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1690929042}
   _east: {fileID: 849784277}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1342941235
 Transform:
   m_ObjectHideFlags: 0
@@ -13532,15 +13553,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1870051087}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 230217471}
   _south: {fileID: 0}
   _east: {fileID: 124636363}
   _west: {fileID: 1268685165}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1375027539
 Transform:
   m_ObjectHideFlags: 0
@@ -13587,15 +13608,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 202072969}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 771140776}
   _east: {fileID: 212898437}
   _west: {fileID: 1130591068}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1420435707
 Transform:
   m_ObjectHideFlags: 0
@@ -14155,15 +14176,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 93031794}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1709458746}
   _south: {fileID: 353949416}
   _east: {fileID: 264972676}
   _west: {fileID: 393802168}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1450691787
 Transform:
   m_ObjectHideFlags: 0
@@ -14381,15 +14402,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 748094660}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 92373690}
   _south: {fileID: 663532737}
   _east: {fileID: 727325575}
   _west: {fileID: 330038355}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1474997502
 Transform:
   m_ObjectHideFlags: 0
@@ -14436,15 +14457,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1936203777}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 772005430}
   _south: {fileID: 0}
   _east: {fileID: 1220781455}
   _west: {fileID: 1324134340}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1481706267
 Transform:
   m_ObjectHideFlags: 0
@@ -14833,15 +14854,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1835690961}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 221214717}
   _east: {fileID: 892200449}
   _west: {fileID: 1780233812}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1536485086
 Transform:
   m_ObjectHideFlags: 0
@@ -15230,15 +15251,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1179907648}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 212898437}
   _south: {fileID: 1796437103}
   _east: {fileID: 1275345566}
   _west: {fileID: 771140776}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1582889416
 Transform:
   m_ObjectHideFlags: 0
@@ -15456,15 +15477,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1627236691}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 892200449}
   _south: {fileID: 0}
   _east: {fileID: 285380057}
   _west: {fileID: 221214717}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1595349466
 Transform:
   m_ObjectHideFlags: 0
@@ -15634,15 +15655,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 949448399}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 2049211683}
   _south: {fileID: 0}
   _east: {fileID: 330363205}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1604938207
 Transform:
   m_ObjectHideFlags: 0
@@ -16202,15 +16223,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1975251040}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 684218980}
   _south: {fileID: 0}
   _east: {fileID: 1858801786}
   _west: {fileID: 77691045}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1637156223
 Transform:
   m_ObjectHideFlags: 0
@@ -16428,15 +16449,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 2036418127}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 2122369356}
   _south: {fileID: 680374130}
   _east: {fileID: 0}
   _west: {fileID: 679890843}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1661025385
 Transform:
   m_ObjectHideFlags: 0
@@ -16483,15 +16504,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 768412935}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1342941234}
   _south: {fileID: 302968539}
   _east: {fileID: 1027002937}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1690929043
 Transform:
   m_ObjectHideFlags: 0
@@ -16709,15 +16730,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 901906304}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 447166944}
   _south: {fileID: 1450691786}
   _east: {fileID: 440257868}
   _west: {fileID: 1795288560}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1709458747
 Transform:
   m_ObjectHideFlags: 0
@@ -16764,15 +16785,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1867848877}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1971148810}
   _south: {fileID: 330038355}
   _east: {fileID: 92373690}
   _west: {fileID: 2101722932}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1716047799
 Transform:
   m_ObjectHideFlags: 0
@@ -16990,15 +17011,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 927448959}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 353949416}
   _south: {fileID: 1159732023}
   _east: {fileID: 633246956}
   _west: {fileID: 1835335953}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1720679603
 Transform:
   m_ObjectHideFlags: 0
@@ -17045,15 +17066,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 87484987}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 83437278}
   _south: {fileID: 723410066}
   _east: {fileID: 22433829}
   _west: {fileID: 1275345566}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1754003669
 Transform:
   m_ObjectHideFlags: 0
@@ -17442,15 +17463,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 924457044}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 30113292}
   _south: {fileID: 559992238}
   _east: {fileID: 1981091008}
   _west: {fileID: 727325575}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1765051133
 Transform:
   m_ObjectHideFlags: 0
@@ -17496,10 +17517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d21e3aa89c377445ae82a45c183d9d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_LevelBuilder:
-    size: 0
-    nodes: []
-  m_NodeManager: {fileID: 1818045905}
+  _nodeManager: {fileID: 0}
   _mapWidth: 10
   _mapHeight: 10
   _cellSize: 5
@@ -17719,15 +17737,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 373461058}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 726577586}
   _south: {fileID: 684218980}
   _east: {fileID: 1536485085}
   _west: {fileID: 633246956}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1780233813
 Transform:
   m_ObjectHideFlags: 0
@@ -17774,15 +17792,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 782828716}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 416953085}
   _south: {fileID: 393802168}
   _east: {fileID: 1709458746}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1795288561
 Transform:
   m_ObjectHideFlags: 0
@@ -17829,15 +17847,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 829587310}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1582889415}
   _south: {fileID: 727325575}
   _east: {fileID: 30113292}
   _west: {fileID: 92373690}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1796437104
 Transform:
   m_ObjectHideFlags: 0
@@ -17884,15 +17902,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1207949805}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1922322140}
   _south: {fileID: 0}
   _east: {fileID: 1304862941}
   _west: {fileID: 1220781455}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1813889527
 Transform:
   m_ObjectHideFlags: 0
@@ -17960,6 +17978,7 @@ MonoBehaviour:
   _cellSize: 5
   _cellContainer: {fileID: 1603557602}
   _nodePrefab: {fileID: 9014059609191413951, guid: 0aadea8f2711c1144b614c18b7665254, type: 3}
+  _allNodes: []
 --- !u!1 &1819802495
 GameObject:
   m_ObjectHideFlags: 0
@@ -18161,15 +18180,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1880260952}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1255484576}
   _south: {fileID: 2049211683}
   _east: {fileID: 1720679602}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1835335954
 Transform:
   m_ObjectHideFlags: 0
@@ -18387,15 +18406,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1107794468}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 299823509}
   _east: {fileID: 0}
   _west: {fileID: 749265662}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1841983209
 Transform:
   m_ObjectHideFlags: 0
@@ -18442,15 +18461,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1629495458}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 221214717}
   _south: {fileID: 0}
   _east: {fileID: 0}
   _west: {fileID: 1637156222}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1858801787
 Transform:
   m_ObjectHideFlags: 0
@@ -19352,15 +19371,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 885322867}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 679890843}
   _south: {fileID: 343548666}
   _east: {fileID: 680374130}
   _west: {fileID: 2012047852}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1912026046
 Transform:
   m_ObjectHideFlags: 0
@@ -19407,15 +19426,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 657350758}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 343548666}
   _south: {fileID: 1813889526}
   _east: {fileID: 1287665928}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1922322141
 Transform:
   m_ObjectHideFlags: 0
@@ -20146,15 +20165,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 2127688442}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1130591068}
   _south: {fileID: 1716047798}
   _east: {fileID: 771140776}
   _west: {fileID: 1027002937}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1971148811
 Transform:
   m_ObjectHideFlags: 0
@@ -20372,15 +20391,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 808208013}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 679890843}
   _east: {fileID: 2122369356}
   _west: {fileID: 1321303892}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1976736831
 Transform:
   m_ObjectHideFlags: 0
@@ -20427,15 +20446,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 72554873}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 723410066}
   _south: {fileID: 772005430}
   _east: {fileID: 750502381}
   _west: {fileID: 1765051132}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &1981091009
 Transform:
   m_ObjectHideFlags: 0
@@ -20824,15 +20843,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1062193006}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 22433829}
   _south: {fileID: 750502381}
   _east: {fileID: 1912026045}
   _west: {fileID: 723410066}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &2012047853
 Transform:
   m_ObjectHideFlags: 0
@@ -21221,15 +21240,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1066936397}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1835335953}
   _south: {fileID: 1604938206}
   _east: {fileID: 1159732023}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &2049211684
 Transform:
   m_ObjectHideFlags: 0
@@ -21276,15 +21295,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 1573975644}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 1027002937}
   _south: {fileID: 447166944}
   _east: {fileID: 1716047798}
   _west: {fileID: 302968539}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!4 &2101722933
 Transform:
   m_ObjectHideFlags: 0
@@ -21347,15 +21366,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 344850580}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  _worldPos: {x: 0, y: 0, z: 0}
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 1661025384}
   _east: {fileID: 0}
   _west: {fileID: 1976736830}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
 --- !u!1 &2127688441
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,21 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Characters.Enemy;
-using Characters.Player;
+using Pawn;
 using Core.Events;
 using Core.Patterns;
-using UnityEditor.Rendering;
 using UnityEngine;
-using EventType = Core.Events.EventType;
 
 namespace Core.TurnSystem
 {
     public class EnemyManager : Singleton<EnemyManager>
     {
-        private List<EnemyController> _activeEnemiesList = new();
-        private List<EnemyController> _pendingEnemies;
+        [SerializeField] private float _delayTime = 0.3f;
 
+        private readonly List<EnemyController> _activeEnemiesList = new();
+        public int GetActiveEnemyCount() => _activeEnemiesList.Count;
+        
+        private List<EnemyController> _pendingEnemies;
         private int _finishedCount = 0;
 
         void OnEnable()
@@ -25,12 +25,10 @@ namespace Core.TurnSystem
 
         void OnDisable()
         {
-            if (NewEventDispatcher.Instance != null)
-            {
-                this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChange);
-            }
+            this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChange);
+            
         }
-        
+
         // Enemy registration =======================================================
 
         public void RegisterEnemy(EnemyController enemy)
@@ -38,63 +36,29 @@ namespace Core.TurnSystem
             if (!_activeEnemiesList.Contains(enemy))
             {
                 _activeEnemiesList.Add(enemy);
+                enemy.OnDestroyed += UnregisterEnemy;
             }
         }
 
-        public void UnregisterEnemy(EnemyController enemy)
+        private void UnregisterEnemy(EnemyController enemy)
         {
-            _activeEnemiesList.Remove(enemy);
+            if (_activeEnemiesList.Contains(enemy))
+            {
+                _activeEnemiesList.Remove(enemy);
+        
+                GameManager.Instance.CheckEliminationWinCondition();
+            }
         }
-        
-        
+
+
         // Turn System =========================================================================
-        // private void HandleTurnChange(OnTurnChangedEvent eventData)
-        // {
-        //     if (eventData.NewTurn != TurnType.EnemyPlanning)
-        //         return;
-        //
-        //     StartEnemyTurn();
-        // }
-        //
-        // private void StartEnemyTurn()
-        // {
-        //     TurnManager.Instance.StartActionPhase();
-        //     InitializeEnemyTurnState();
-        //
-        //     if (!HasPendingEnemies())
-        //     {
-        //         _pendingEnemies.Clear();
-        //         TurnManager.Instance.EndActionPhase();
-        //         return;
-        //     }
-        //
-        //     StartPendingEnemiesActions();
-        // }
-        
         private void HandleTurnChange(OnTurnChangedEvent eventData)
         {
             if (eventData.NewTurn != TurnType.EnemyPlanning)
                 return;
             InitializeEnemyTurnState();
-            StartCoroutine(BeginEnemyActionNextFrame());
+            StartCoroutine(BeginEnemyAction());
         }
-
-        private IEnumerator BeginEnemyActionNextFrame()
-        {
-            yield return null; 
-            TurnManager.Instance.StartActionPhase();
-
-            if (!HasPendingEnemies())
-            {
-                _pendingEnemies.Clear();
-                TurnManager.Instance.EndActionPhase();
-                yield break;
-            }
-
-            StartPendingEnemiesActions();
-        }
-        
-        
 
         private void InitializeEnemyTurnState()
         {
@@ -102,16 +66,30 @@ namespace Core.TurnSystem
             _pendingEnemies = new List<EnemyController>(_activeEnemiesList);
         }
 
-        private bool HasPendingEnemies()
+        private IEnumerator BeginEnemyAction()
         {
-            return _pendingEnemies is { Count: > 0 };
-        }
+            yield return new WaitForSeconds(_delayTime);
+            TurnManager.Instance.StartActionPhase();
 
-        private void StartPendingEnemiesActions()
-        {
+            _pendingEnemies.RemoveAll(e => e == null);
+
+            if (_pendingEnemies.Count == 0)
+            {
+                _pendingEnemies.Clear();
+                TurnManager.Instance.EndActionPhase();
+                yield break;
+            }
+
             foreach (var enemy in _pendingEnemies)
             {
-                enemy.StartAction();
+                if (enemy != null)
+                {
+                    enemy.StartAction();
+                }
+                else
+                {
+                    OnEnemyFinished(null);
+                }
             }
         }
 
@@ -121,38 +99,52 @@ namespace Core.TurnSystem
             if (_finishedCount >= _pendingEnemies.Count)
             {
                 _pendingEnemies.Clear();
-                TurnManager.Instance.EndActionPhase();
-            }
-        }
-        
-        
-        
-        
-        private int _pendingKills  = 0;
-        private PlayerController _currentAttacker;
-        
-        public void ResolveAttack(List<EnemyController> enemies, PlayerController attacker)
-        {
-            if (enemies.Count == 0)
-            {
-                attacker.SendEvent(new OnPlayerActionFinishedEvent());
-                return;
-            }
-            _pendingKills = enemies.Count;
-            foreach (var enemy in enemies)
-            {
-                enemy.Die(OnEnemyDeathComplete);
+                StartCoroutine(EndEnemyActionPhase());
             }
         }
 
-        private void OnEnemyDeathComplete()
+        private IEnumerator EndEnemyActionPhase()
+        {
+            yield return new WaitForSeconds(_delayTime);
+            TurnManager.Instance.EndActionPhase();
+        }
+
+
+        private int _pendingKills = 0;
+        private Action _onAttackResolvedCallback;
+
+        public void ResolveAttack(List<GridUnit> enemies, Action onComplete)
+        {
+            if (enemies.Count == 0)
+            {
+                onComplete?.Invoke();
+                return;
+            }
+
+            _pendingKills = enemies.Count;
+            _onAttackResolvedCallback = onComplete;
+
+            foreach (var unit in enemies)
+            {
+                if (unit is EnemyController enemy)
+                {
+                    enemy.Die(() => OnEnemyDeathComplete(enemy));
+                }
+                else
+                {
+                    OnEnemyDeathComplete(null);
+                }
+            }
+        }
+
+        private void OnEnemyDeathComplete(EnemyController enemy)
         {
             _pendingKills--;
             if (_pendingKills <= 0)
-                _currentAttacker.SendEvent(new OnPlayerActionFinishedEvent());
+            {
+                _onAttackResolvedCallback?.Invoke();
+                _onAttackResolvedCallback = null;
+            }
         }
-        
-        
-        
     }
 }

@@ -1,6 +1,6 @@
 using System.Collections;
 
-namespace Characters.Enemy.EnemyActions
+namespace Pawn
 {
     public abstract class BaseEnemyAction
     {

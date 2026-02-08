@@ -1,26 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Characters.Enemy.EnemyBehaviors;
-using Characters.Enemy.EnemyActions;
-using Characters.Player;
 using Core.TurnSystem;
 using Grid;
 using UnityEngine;
 
-namespace Characters.Enemy
+namespace Pawn
 {
-    public class EnemyController : MonoBehaviour
+    public class EnemyController : GridUnit
     {
+
+        public override TeamSide Team => TeamSide.Enemy;
+
         private bool _isDead = false;
 
-        [Header("Component References")] [SerializeField]
-        private Transform _enemyModel;
+        [Header("Component References")] 
+        [SerializeField] private Transform _enemyModel;
 
         [SerializeField] private BaseEnemyBehavior _currentBehavior;
 
-        [Header("Enemy State")] [SerializeField]
-        private Direction _facingDirection = Direction.None;
+        [Header("Enemy State")] 
+        [SerializeField] private Direction _facingDirection = Direction.None;
 
         private readonly Direction[] _dirs =
         {
@@ -32,14 +32,11 @@ namespace Characters.Enemy
         public Direction CurrentFacingDirection => _facingDirection;
         public Node CurrentNode => _currentNode;
 
+        public Action<EnemyController> OnDestroyed;
 
         void OnEnable()
         {
             EnemyManager.Instance.RegisterEnemy(this);
-        }
-
-        void OnDisable()
-        {
         }
 
         void Start()
@@ -52,7 +49,7 @@ namespace Characters.Enemy
                 Debug.LogWarning($"{gameObject.name} has no facing direction assigned!!!");
 
             if (_currentNode != null)
-                _currentNode.AddEnemy(this);
+                _currentNode.AddUnit(this);
         }
 
 
@@ -98,7 +95,7 @@ namespace Characters.Enemy
 
             while (nodeToScan != null && range > 0)
             {
-                if (nodeToScan.HasPlayer)
+                if (nodeToScan.HasPlayer())
                 {
                     Debug.Log("Guard at " + _currentNode.name + " SPOTTED PLAYER at " + nodeToScan.name);
                     return true;
@@ -120,27 +117,18 @@ namespace Characters.Enemy
         /// <summary>
         /// Updates the enemy's current node. 
         /// </summary>
-        /// <param name="newNode">The new node the enemy is now occupying.</param>
-        public void UpdateNodeData(Node newNode)
-        {
-            if (newNode == null) return;
-
-            if (_currentNode != null)
-            {
-                _currentNode.UnAssignEnemy(this);
-            }
-
-            _currentNode = newNode;
-            _currentNode.AddEnemy(this);
-        }
-
 
         public IEnumerator Move(Node targetNode, float duration)
         {
+            // Logic
+            UpdateNodeData(targetNode);
+            
+            // Visual
+            // Vector3 endPos = targetNode.transform.position;
             Vector3 startPos = transform.position;
-            Vector3 endPos = targetNode.transform.position;
+            Vector3 endPos = targetNode.WorldPos;
+            
             float elapsed = 0f;
-
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
@@ -150,14 +138,18 @@ namespace Characters.Enemy
             }
 
             transform.position = endPos;
-            UpdateNodeData(targetNode);
         }
 
-        public IEnumerator Rotate(Quaternion targetRotation, float duration)
+        public IEnumerator Rotate(Direction newDirection, float duration)
         {
+            // Logic
+            SetFacingDirection(newDirection);
+            
+            // Visual
             Quaternion startRot = _enemyModel.rotation;
+            Quaternion targetRotation = GetRotationForDirection(newDirection);
+            
             float elapsed = 0f;
-
             while (elapsed < duration)
             {
                 elapsed += Time.deltaTime;
@@ -168,7 +160,21 @@ namespace Characters.Enemy
 
             _enemyModel.rotation = targetRotation;
         }
+        
+        
+        
+        private void UpdateNodeData(Node newNode)
+        {
+            if (newNode == null) return;
 
+            if (_currentNode != null)
+            {
+                _currentNode.RemoveUnit(this);
+            }
+
+            _currentNode = newNode;
+            _currentNode.AddUnit(this);
+        }
 
         private void OnActionFinished()
         {
@@ -176,15 +182,18 @@ namespace Characters.Enemy
             EnemyManager.Instance.OnEnemyFinished(this);
         }
 
-        public void Attack(Node targetNode)
+        private void Attack(Node targetNode)
         {
-            if (targetNode.HasPlayer)
+            if (targetNode.HasPlayer())
             {
-                targetNode.Player.Die();
+                GridUnit player = targetNode.GetPlayer();
+                player.Die(() => {
+                    Debug.Log("End!");
+                });
             }
         }
 
-        public void Die(Action onDeathComplete = null)
+        public override void Die(Action onDeathComplete = null)
         {
             if (_isDead) return;
             _isDead = true;
@@ -205,8 +214,8 @@ namespace Characters.Enemy
             }
             transform.localScale = Vector3.zero;
             
-            _currentNode.UnAssignEnemy(this);
-            EnemyManager.Instance.UnregisterEnemy(this);
+            _currentNode.RemoveUnit(this);
+            OnDestroyed?.Invoke(this);
             onDeathComplete?.Invoke();
         }
         
@@ -215,12 +224,33 @@ namespace Characters.Enemy
 
         #region Utility Methods
 
+        
+        // 1. STATE MANAGEMENT (Setters & Core Getters)
+        // ==============================================================================================
+        
         /// <summary>
-        /// Returns the node of the given node based on a direction.
+        /// STATE CHANGE: Updates the internal facing direction state
+        /// Call this only after a rotation action is complete
         /// </summary>
-        /// <param name="node">The origin node.</param>
-        /// <param name="dir">The direction to look in.</param>
-        /// <returns>The adjacent node, or null if there is none.</returns>
+        public void SetFacingDirection(Direction newDirection)
+        {
+            _facingDirection = newDirection;
+        }
+        
+        // 2. NODE QUERIES (Finding Neighbors)
+        // ==============================================================================================
+        
+        /// <summary>
+        /// Returns the node directly in front of the enemy based on current facing direction
+        /// </summary>
+        public Node GetNodeInFront()
+        {
+            return GetNodeInDirection(_currentNode, _facingDirection);
+        }
+        
+        /// <summary>
+        /// Returns the neighbor of a specific node in a specific direction
+        /// </summary>
         public Node GetNodeInDirection(Node node, Direction dir)
         {
             switch (dir)
@@ -232,13 +262,22 @@ namespace Characters.Enemy
                 default: return null;
             }
         }
+        
+        // 3. DIRECTION LOGIC (Calculating Directions)
+        // ==============================================================================================
 
         /// <summary>
-        /// Return the direction of the adjacent node based on the given node
+        /// Calculates the direction from the current node to a target node
         /// </summary>
-        /// <param name="from">The origin node.</param>
-        /// <param name="to">The adjacent node to check.</param>
-        /// <returns>The direction to the target node, or the current facing direction if not adjacent.</returns>
+        public Direction GetDirectionFromCurrentNode(Node targetNode)
+        {
+            if (targetNode == null) return _facingDirection;
+            return GetDirectionFromTargetNode(_currentNode, targetNode);
+        }
+        
+        /// <summary>
+        /// Calculates the direction between two adjacent nodes
+        /// </summary>
         public Direction GetDirectionFromTargetNode(Node from, Node to)
         {
             if (to == null) return _facingDirection;
@@ -248,26 +287,27 @@ namespace Characters.Enemy
             if (from.EastNode == to) return Direction.East;
             if (from.WestNode == to) return Direction.West;
 
-            return _facingDirection;
+            return _facingDirection; // Default if not adjacent
         }
-
-
+        
         /// <summary>
-        /// Set the facing direction of the model.
+        /// Returns the Direction enum for a step (+1 for Clockwise)
+        /// Useful for passing data to RotateActions
         /// </summary>
-        /// <param name="newDirection">The new direction to face.</param>
-        /// <returns>A Quaternion representing the new world rotation for the model.</returns>
-        public Quaternion SetAndGetWorldRotation(Direction newDirection)
+        private Direction GetDirectionByStep(int step)
         {
-            _facingDirection = newDirection;
-            return GetWorldRotation(newDirection);
+            int index = Array.IndexOf(_dirs, _facingDirection);
+            int newIndex = (index + step + _dirs.Length) % _dirs.Length;
+            return _dirs[newIndex];
         }
-
+        
+        // 4. ROTATION LOGIC (Math & Quaternions)
+        // ==============================================================================================
+   
         /// <summary>
-        /// Return the world rotation base on the direction.
+        /// Calculates the rotation needed to face a specific direction
         /// </summary>
-        /// <returns>A Quaternion representing the world rotation.</returns>
-        public Quaternion GetWorldRotation(Direction dir)
+        private Quaternion GetRotationForDirection(Direction dir)
         {
             switch (dir)
             {
@@ -278,70 +318,44 @@ namespace Characters.Enemy
                 default: return _enemyModel.rotation;
             }
         }
-
+        
         /// <summary>
-        /// Get Node In Front lul
+        /// Calculates the rotation needed to face an adjacent target node
         /// </summary>
-        /// <returns></returns>
-        public Node GetNodeInFront()
-        {
-            return GetNodeInDirection(_currentNode, _facingDirection);
-        }
-
-
-        /// <summary>
-        /// Return the direction of the adjacent node based on the current node
-        /// </summary>
-        /// <returns></returns>
-        public Direction GetDirectionFromCurrentNode(Node targetNode)
-        {
-            if (targetNode == null) return _facingDirection;
-            return GetDirectionFromTargetNode(_currentNode, targetNode);
-        }
-
-        /// <summary>
-        /// Gets a new rotation based on a number of clockwise "steps" from the current facing direction.
-        /// </summary>
-        /// <param name="step">The number of 90-degree clockwise steps (1 for clockwise, -1 for counter-clockwise, 2 for 180-degree turn).</param>
-        /// <returns>The new rotation.</returns>
-        public Quaternion GetRotationByStep(int step)
-        {
-            int index = Array.IndexOf(_dirs, _facingDirection);
-            int newIndex = (index + step + _dirs.Length) % _dirs.Length;
-            return SetAndGetWorldRotation(_dirs[newIndex]);
-        }
-
-
-        /// <summary>
-        /// Calculates the rotation needed to face an adjacent target node.
-        /// </summary>
-        /// <param name="targetNode">The node to face towards.</param>
-        /// <returns>The new rotation.</returns>
         public Quaternion GetRotationTowardsNode(Node targetNode)
         {
             Direction dirToNode = GetDirectionFromCurrentNode(targetNode);
-            return SetAndGetWorldRotation(dirToNode);
+            return GetRotationForDirection(dirToNode);
         }
-
-        /// <summary>Gets the rotation for a 180-degree turn.</summary>
-        public Quaternion GetRotationTurnAround()
+        
+        /// <summary>
+        /// Helper to get a rotation based on steps (90 degree increments)
+        /// </summary>
+        private Quaternion GetRotationByStep(int step)
         {
-            return GetRotationByStep(+2);
+            Direction futureDir = GetDirectionByStep(step);
+            return GetRotationForDirection(futureDir);
         }
 
-        /// <summary>Gets the rotation for a 90-degree clockwise turn.</summary>
-        public Quaternion GetRotationClockwise()
-        {
-            return GetRotationByStep(+1);
-        }
-
-        /// <summary>Gets the rotation for a 90-degree counter-clockwise turn.</summary>
-        public Quaternion GetRotationCounterClockwise()
-        {
-            return GetRotationByStep(-1);
-        }
-
+        
+        
+        // Rotation Presets ==============================================================================================
+        
+        public Quaternion GetRotationTurnAround() => GetRotationByStep(+2);
+        public Quaternion GetRotationClockwise() => GetRotationByStep(+1);
+        public Quaternion GetRotationCounterClockwise() => GetRotationByStep(-1);
+        
+        // Direction Presets ==============================================================================================
+        
+        public Direction GetDirectionTurnAround() => GetDirectionByStep(+2);
+        public Direction GetDirectionClockwise() => GetDirectionByStep(+1);
+        public Direction GetDirectionCounterClockwise() => GetDirectionByStep(-1);
+        
+        
         #endregion
+        
+
+
 
 
         // Editor ====================================================================================
@@ -350,11 +364,22 @@ namespace Characters.Enemy
 
         public void SetDirection(Direction dir)
         {
-            _enemyModel.rotation = SetAndGetWorldRotation(dir);
+            _enemyModel.rotation = GetRotationForDirection(dir);
+            SetFacingDirection(dir);
         }
 
         public void SetOrMoveNode(Direction? dir = null)
         {
+            NodeManager manager = NodeManager.Instance;
+            if (manager == null) 
+                manager = FindObjectOfType<NodeManager>();
+
+            if (manager == null)
+            {
+                Debug.LogError("No NodeManager found in scene. Cannot move.", this);
+                return;
+            }
+    
             Node newNode;
             string warningLog = dir.HasValue ? " No valid node to move to!" : " Invalid spot, couldn't find a node!";
 
@@ -364,41 +389,41 @@ namespace Characters.Enemy
             }
             else
             {
-                if (NodeManager.Instance == null)
-                {
-                    Debug.LogWarning("No NodeManager instance found!", this);
-                    newNode = null;
-                }
-                else
-                    newNode = NodeManager.Instance.GetNodeFromWorldPosition(_enemyModel.position);
+                newNode = manager.GetNodeFromWorldPosition(_enemyModel.position);
             }
-
-            if (_currentNode != null)
-                _currentNode.UnAssignEnemy(this);
-
-
+            
             if (newNode == null)
             {
                 Debug.LogWarning(name + " has no valid node!" + warningLog, this);
                 return;
             }
+            
+            if (_currentNode != null)
+                _currentNode.RemoveUnit(this);
 
             _currentNode = newNode;
-
+            _currentNode.AddUnit(this);
+    
             SnapPosition(_currentNode.transform.position);
-            _currentNode.AddEnemy(this);
+            
+#if UNITY_EDITOR
+            UnityEditor.EditorUtility.SetDirty(this);
+#endif
         }
 
         public void UnAssignNode()
         {
-            _currentNode.UnAssignEnemy(this);
+            if (_currentNode == null) return;
+            _currentNode.RemoveUnit(this);
             _currentNode = null;
         }
 
 
-        private void SnapPosition(Vector3 pos)
+        private void SnapPosition(Vector3 targetPos)
         {
-            _enemyModel.position = new Vector3(pos.x, transform.position.y, pos.z);
+            transform.position = new Vector3(targetPos.x, transform.position.y, targetPos.z);
+            if (_enemyModel != null)
+                _enemyModel.localPosition = Vector3.zero;
         }
 
         #endregion

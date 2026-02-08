@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
-using Characters.Enemy.EnemyActions;
 using UnityEngine;
 
-namespace Characters.Enemy.EnemyBehaviors
+namespace Pawn
 {
     public abstract class BaseEnemyBehavior: MonoBehaviour
     {

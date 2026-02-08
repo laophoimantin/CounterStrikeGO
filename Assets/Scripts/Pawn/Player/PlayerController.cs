@@ -1,17 +1,16 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using Characters.Enemy;
-using Core;
 using UnityEngine;
 using Core.Events;
 using Core.TurnSystem;
 using Grid;
 
-
-namespace Characters.Player
+namespace Pawn
 {
-    public class PlayerController : MonoBehaviour
+    public class PlayerController : GridUnit
     {
+        public override TeamSide Team => TeamSide.Player;
+
         [SerializeField] private Transform _playerModel;
         [SerializeField] private Node _currentNode;
         [Range(0.1f, 2f)] [SerializeField] private float _actionDurationModifier;
@@ -19,8 +18,8 @@ namespace Characters.Player
         private bool _canMove = true;
 
         private Direction _tempMoveDirection = Direction.None;
-        
-        
+
+
         void OnEnable()
         {
             this.Subscribe<OnTurnChangedEvent>(HandleTurnChanged);
@@ -28,17 +27,21 @@ namespace Characters.Player
 
         void OnDisable()
         {
-            if (NewEventDispatcher.Instance != null)
+            if (EventDispatcher.Instance != null)
                 this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChanged);
         }
 
         void Start()
         {
-            if (_currentNode == null)
-                Debug.LogWarning($"{gameObject.name} has no node assigned!!!");
-
             if (_currentNode != null)
-                _currentNode.PlacePlayer(this);
+            {
+                _currentNode.AddUnit(this);
+                transform.position = _currentNode.WorldPos;
+            }
+            else
+            {
+                Debug.LogWarning($"{gameObject.name} has no node assigned!");
+            }
         }
 
         // Turn System =========================================================================
@@ -49,7 +52,7 @@ namespace Characters.Player
                 TryMoveTo(_tempMoveDirection);
         }
 
-        // Actions ====================================================        
+        // Actions ====================================================
         public void TryMoveTo(Direction direction)
         {
             _tempMoveDirection = direction;
@@ -64,29 +67,33 @@ namespace Characters.Player
                 _ => null
             };
 
-            if (target == null) return;
+            if (target == null || target.IsObstacle)
+            {
+                _tempMoveDirection = Direction.None;
+                return;
+            }
+
             StartCoroutine(MoveRoutine(target));
             _tempMoveDirection = Direction.None;
         }
 
 
-        private IEnumerator MoveRoutine(Node target)
+        private IEnumerator MoveRoutine(Node targetNode)
         {
             this.SendEvent(new OnPlayerActionStartedEvent());
-            
+
             _isMoving = true;
             _canMove = false;
 
-            Node origin = _currentNode;
-            _currentNode = target;
+            Node originNode = _currentNode;
+            _currentNode = targetNode;
 
-            origin.RemovePlayer();
-            target.PlacePlayer(this);
+            originNode.RemoveUnit(this);
+            targetNode.AddUnit(this);
 
 
-            Vector3 start = _playerModel.position;
-            Vector3 end = new Vector3(target.transform.position.x, _playerModel.position.y,
-                target.transform.position.z);
+            Vector3 start = transform.position;
+            Vector3 end = targetNode.WorldPos;
 
             float duration = TurnManager.Instance.GlobalActionDuration * _actionDurationModifier;
             float elapsed = 0f;
@@ -94,37 +101,42 @@ namespace Characters.Player
             {
                 elapsed += Time.deltaTime;
                 float t = elapsed / duration;
-                _playerModel.position = Vector3.Lerp(start, end, t);
+                transform.position = Vector3.Lerp(start, end, t);
                 yield return null;
             }
 
-            _playerModel.position = end;
+            transform.position = end;
             _isMoving = false;
 
-            _currentNode.TriggerEffect(this);
+            _currentNode.TriggerNode(this);
             TryAttack(_currentNode);
         }
-        
+
 
         private void TryAttack(Node targetNode)
         {
-            var enemies = targetNode.Enemies;
-            if (enemies.Count == 0)
+            if (targetNode.HasEnemy())
+            {
+                var enemies = targetNode.GetEnemies();
+                EnemyManager.Instance.ResolveAttack(enemies, FinishAction);
+            }
+            else
             {
                 this.SendEvent(new OnPlayerActionFinishedEvent());
-                return;
             }
-            EnemyManager.Instance.ResolveAttack(enemies, this);
         }
 
+        private void FinishAction()
+        {
+            this.SendEvent(new OnPlayerActionFinishedEvent());
+        }
 
-        
-        
-        public void Die()
+        public override void Die(Action onDeathComplete = null)
         {
             StartCoroutine(DieAnim());
         }
 
+        // Testing
         private IEnumerator DieAnim()
         {
             float duration = 1f;
@@ -141,14 +153,22 @@ namespace Characters.Player
             this.SendEvent(new OnPlayerDeadEvent());
         }
 
+
         // Editor ====================================================================================
 
         #region Editor Methods
 
+#if UNITY_EDITOR
         public void SetOrMoveNode(Direction? dir = null)
         {
+            if (NodeManager.Instance == null)
+            {
+                // Try to find it if an instance is missing (common in Editor mode)
+                var found = FindObjectOfType<NodeManager>();
+                if (found == null) return;
+            }
+
             Node newNode;
-            string warningLog = dir.HasValue ? " No valid node to move to!" : " Invalid spot, couldn't find a node!";
 
             if (dir.HasValue)
             {
@@ -156,44 +176,40 @@ namespace Characters.Player
             }
             else
             {
-                if (NodeManager.Instance == null)
-                    Debug.LogWarning("No NodeManager instance found!", this);
-                newNode = NodeManager.Instance.GetNodeFromWorldPosition(_playerModel.position);
+                // Snap to nearest node
+                newNode = FindObjectOfType<NodeManager>().GetNodeFromWorldPosition(transform.position);
             }
-
-            if (_currentNode != null)
-                _currentNode.RemovePlayer();
-
 
             if (newNode == null)
             {
-                Debug.LogWarning(name + " has no valid node!" + warningLog, this);
+                Debug.LogWarning("No valid node found!");
                 return;
             }
 
+            // Logic
+            if (_currentNode != null) _currentNode.RemoveUnit(this);
             _currentNode = newNode;
+            _currentNode.AddUnit(this);
 
-            SnapPosition(_currentNode.transform.position);
-            _currentNode.PlacePlayer(this);
-        }
+            // Visual Snap
+            transform.position = _currentNode.transform.position;
 
-
-        private void SnapPosition(Vector3 pos)
-        {
-            _playerModel.position = new Vector3(pos.x, transform.position.y, pos.z);
+            UnityEditor.EditorUtility.SetDirty(this);
         }
 
         private Node GetNodeInDirection(Node node, Direction dir)
         {
-            switch (dir)
+            if (node == null) return null;
+            return dir switch
             {
-                case Direction.North: return node.NorthNode;
-                case Direction.South: return node.SouthNode;
-                case Direction.East: return node.EastNode;
-                case Direction.West: return node.WestNode;
-                default: return null;
-            }
+                Direction.North => node.NorthNode,
+                Direction.South => node.SouthNode,
+                Direction.East => node.EastNode,
+                Direction.West => node.WestNode,
+                _ => null
+            };
         }
+#endif
 
         #endregion
     }

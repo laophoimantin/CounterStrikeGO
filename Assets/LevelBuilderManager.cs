@@ -7,9 +7,8 @@ using UnityEngine;
 
 public class LevelBuilderManager : MonoBehaviour
 {
-    [SerializeField] private LevelBuilder m_LevelBuilder;
-    [SerializeField] private NodeManager m_NodeManager;
-    public NodeManager NodeManager => m_NodeManager;
+    [SerializeField] private NodeManager _nodeManager;
+    public NodeManager NodeManager => _nodeManager;
 
     [SerializeField] private int _mapWidth;
     [SerializeField] private int _mapHeight;
@@ -17,36 +16,22 @@ public class LevelBuilderManager : MonoBehaviour
 
     public void GenerateNodeMap()
     {
-        m_NodeManager.GenerateMap(_mapWidth, _mapHeight, _cellSize);
+        _nodeManager.GenerateMap(_mapWidth, _mapHeight, _cellSize);
         
     }
 
     public void DeleteMap()
     {
-        m_NodeManager.DeleteAllNodes();
+        _nodeManager.DeleteAllNodes();
     }
 
     public void AssignNodeNeighbors()
     {
-        m_NodeManager.AssignNodeNeighbour();
+        _nodeManager.AssignNodeNeighbour();
     }
 
     public void RebuildNodeGrid()
     {
-        m_NodeManager.RebuildNodeGrid();
-    }
-
-
-    public void SaveLevel()
-    {
-
-        // must have to save ScriptableObject changes
-        //EditorUtility.SetDirty(mySO);
-        Debug.Log("Save Successfully");
-    }
-
-    public void LoadLevel()
-    {
-
+        _nodeManager.RebuildNodeGrid();
     }
 }

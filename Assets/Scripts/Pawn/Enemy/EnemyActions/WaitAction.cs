@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Characters.Enemy.EnemyActions
+namespace Pawn.EnemyBehaviors
 {
     public class WaitAction : BaseEnemyAction
     {
@@ -15,7 +15,14 @@ namespace Characters.Enemy.EnemyActions
 
         public override IEnumerator Execute(EnemyController enemy)
         {
-            yield return new WaitForSeconds(_duration);
+            if (_duration > 0f)
+            {
+                yield return new WaitForSeconds(_duration);
+            }
+            else
+            {
+                yield return null;
+            }
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Grid
         Trapdoor,
         Exit,
         Item,
-        Objective
+        Objective,
+        Obstacle
     }
 }

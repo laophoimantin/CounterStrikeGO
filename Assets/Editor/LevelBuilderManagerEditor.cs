@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using Grid;
 using UnityEditor;
 using UnityEngine;
-using Grid;
 
 [CustomEditor(typeof(LevelBuilderManager))]
 public class LevelBuilderManagerEditor : Editor
@@ -11,40 +9,55 @@ public class LevelBuilderManagerEditor : Editor
     {
         base.OnInspectorGUI();
 
-        var script = (LevelBuilderManager)target;
+        var builder = (LevelBuilderManager)target;
+        var nodeManager = builder.NodeManager;
 
-        NodeManager nodeManager = script.NodeManager;
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Map Generation Tools", EditorStyles.boldLabel);
 
-
-        if (GUILayout.Button("Assign Node"))
+        GUI.backgroundColor = Color.green; 
+        if (GUILayout.Button("Generate New Map", GUILayout.Height(40)))
         {
-            script.AssignNodeNeighbors();
-            EditorUtility.SetDirty(nodeManager);
+            if (EditorUtility.DisplayDialog("Generate Map", 
+                "This will delete the existing map. Are you sure?", "Yes", "Cancel"))
+            {
+                builder.GenerateNodeMap();
+                builder.RebuildNodeGrid(); 
+                builder.AssignNodeNeighbors();
+                
+                EditorUtility.SetDirty(nodeManager);
+            }
+        }
+        GUI.backgroundColor = Color.white; 
+
+        EditorGUILayout.BeginHorizontal();
+        
+        if (GUILayout.Button("Re-Link Neighbors"))
+        {
+            builder.RebuildNodeGrid();
+            builder.AssignNodeNeighbors();
+            Debug.Log("Neighbors Relinked!");
         }
 
-        if (GUILayout.Button("Generate Map"))
+        if (GUILayout.Button("Rebuild Dictionary"))
         {
-            script.GenerateNodeMap();
-            EditorUtility.SetDirty(nodeManager);
-        }
-
-        if (GUILayout.Button("Delete Map"))
-        {
-            script.DeleteMap();
-            EditorUtility.SetDirty(nodeManager);
-        } 
-        if (GUILayout.Button("Rebuild Node"))
-        {
-            script.RebuildNodeGrid();
-            EditorUtility.SetDirty(nodeManager);
+            builder.RebuildNodeGrid();
+            Debug.Log("Node Grid Dictionary Rebuilt!");
         }
         
-        
+        EditorGUILayout.EndHorizontal();
 
-        // if (GUILayout.Button("Save Level"))
-        // {
-        //     Debug.Log("Saving Level...");
-        //     script.SaveLevel();
-        // }
+        EditorGUILayout.Space();
+        GUI.backgroundColor = Color.red;
+        if (GUILayout.Button("Clear Map"))
+        {
+            if (EditorUtility.DisplayDialog("Delete Map", 
+                "Are you sure you want to delete all nodes?", "Yes", "Cancel"))
+            {
+                builder.DeleteMap();
+                EditorUtility.SetDirty(nodeManager);
+            }
+        }
+        GUI.backgroundColor = Color.white;
     }
 }

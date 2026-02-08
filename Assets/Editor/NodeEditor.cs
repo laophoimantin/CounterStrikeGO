@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Characters.Enemy;
 using UnityEngine;
 using UnityEditor;
 using Grid;
@@ -12,31 +11,49 @@ public class NodeEditor : Editor
     {
         base.OnInspectorGUI();
 
-        var script = (Node)target;
+        var node = (Node)target;
 
-            EditorGUILayout.Space();
-        
-        if (GUILayout.Button("Remove Northside Node"))
-        {
-            script.RemoveNeighbour(Direction.North);
-            EditorUtility.SetDirty(script);
-        }
-        if (GUILayout.Button("Remove Southside Node"))
-        {
-            script.RemoveNeighbour(Direction.South);
-            EditorUtility.SetDirty(script);
-        }
-        if (GUILayout.Button("Remove Eastside Node"))
-        {
-            script.RemoveNeighbour(Direction.East);
-            EditorUtility.SetDirty(script);
-        }
-        if (GUILayout.Button("Remove Westside Node"))
-        {
-            script.RemoveNeighbour(Direction.West);
-            EditorUtility.SetDirty(script);
-        }
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Disconnect Neighbors", EditorStyles.boldLabel);
 
-        
+        // Top Row (North)
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("X North", GUILayout.Width(80))) 
+            ApplyDisconnect(node, Direction.North);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
+        // Middle Row (West / East)
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("X West", GUILayout.Width(80))) 
+            ApplyDisconnect(node, Direction.West);
+        GUILayout.Space(20);
+        if (GUILayout.Button("X East", GUILayout.Width(80))) 
+            ApplyDisconnect(node, Direction.East);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+
+        // Bottom Row (South)
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("X South", GUILayout.Width(80))) 
+            ApplyDisconnect(node, Direction.South);
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+    }
+
+    private void ApplyDisconnect(Node node, Direction dir)
+    {
+        Undo.RecordObject(node, "Disconnect Node");
+        Node neighbor = node.GetNodeInDirection(dir);
+        if (neighbor != null) 
+        {
+            Undo.RecordObject(neighbor, "Disconnect Node");
+            EditorUtility.SetDirty(neighbor); // Save the neighbor too!
+        }
+        node.RemoveNeighbour(dir);
+        EditorUtility.SetDirty(node);
     }
 }

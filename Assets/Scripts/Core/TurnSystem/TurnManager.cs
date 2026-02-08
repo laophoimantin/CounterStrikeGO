@@ -1,7 +1,6 @@
 using UnityEngine;
 using Core.Patterns;
 using Core.Events;
-using EventType = Core.Events.EventType;
 
 namespace Core.TurnSystem
 {
@@ -19,23 +18,29 @@ namespace Core.TurnSystem
         void OnEnable()
         {
             this.Subscribe<OnGameEndedEvent>(Lock);
+            
+            // Player Turn Events
+            this.Subscribe<OnPlayerActionStartedEvent>(HandlePlayerStarted);
+            this.Subscribe<OnPlayerActionFinishedEvent>(HandlePlayerFinished);
+
+            //Enemy Turn Events
+            this.Subscribe<OnEnemyActionStartedEvent>(HandleEnemyStarted);
+            this.Subscribe<OnEnemyActionFinishedEvent>(HandleEnemyFinished);
         }
 
         void OnDisable()
         {
             this.Unsubscribe<OnGameEndedEvent>(Lock);
+            
+            // Player Turn Events
+            this.Unsubscribe<OnPlayerActionStartedEvent>(HandlePlayerStarted);
+            this.Unsubscribe<OnPlayerActionFinishedEvent>(HandlePlayerFinished);
+
+            //Enemy Turn Events
+            this.Unsubscribe<OnEnemyActionStartedEvent>(HandleEnemyStarted);
+            this.Unsubscribe<OnEnemyActionFinishedEvent>(HandleEnemyFinished);
+
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         void Start()
         {
@@ -80,6 +85,30 @@ namespace Core.TurnSystem
             if (_lock) return;
             _currentTurn = next;
             this.SendEvent(new OnTurnChangedEvent { NewTurn = next });
+        }
+        
+        
+        
+        // Player Turn Events
+        private void HandlePlayerStarted(OnPlayerActionStartedEvent eventData)
+        {
+            StartActionPhase();
+        }
+
+        private void HandlePlayerFinished(OnPlayerActionFinishedEvent eventData)
+        {
+            EndActionPhase();
+        }
+
+        //Enemy Turn Events
+        private void HandleEnemyStarted(OnEnemyActionStartedEvent eventData)
+        {
+            StartActionPhase();
+        }
+
+        private void HandleEnemyFinished(OnEnemyActionFinishedEvent eventData)
+        {
+            EndActionPhase();
         }
     }
 }

@@ -1,18 +1,18 @@
 using System.Collections.Generic;
-using Characters.Enemy.EnemyActions;
 using Core.TurnSystem;
 using Grid;
 using UnityEngine;
 
-namespace Characters.Enemy.EnemyBehaviors
+namespace Pawn.EnemyBehaviors
 {
-    public class StaticBehavior : BaseEnemyBehavior
+    public class TurningBehavior : BaseEnemyBehavior
     {
         [Range(0.1f, 2f)] [SerializeField] private float _actionDuration = 1.0f;
 
         public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
         {
             var plan = new List<BaseEnemyAction>();
+            
             float duration = TurnManager.Instance.GlobalActionDuration * _actionDuration;
 
             if (enemy.ScanForPlayerInFront(1))
@@ -22,7 +22,8 @@ namespace Characters.Enemy.EnemyBehaviors
             }
             else
             {
-                plan.Add(new WaitAction(0.01f));
+                Direction targetDirection = enemy.GetDirectionTurnAround();
+                plan.Add(new RotateAction(targetDirection, duration));
             }
             return plan;
         }

@@ -2,16 +2,17 @@ using System.Collections;
 using Grid;
 using UnityEngine;
 
-namespace Characters.Enemy.EnemyActions
+namespace Pawn.EnemyBehaviors
 {
-    public class MoveAction : BaseEnemyAction
+    public class RotateAction : BaseEnemyAction
     {
-        private Node _targetNode;
+        private Direction _targetDir;
         private float _duration;
         private float _delay;
-        public MoveAction(Node target, float duration, float delay = 0.0f)
+
+        public RotateAction(Direction targetDir, float duration, float delay = 0.0f)
         {
-            _targetNode = target;
+            _targetDir = targetDir;
             _duration = duration;
             _delay = delay;
         }
@@ -19,8 +20,7 @@ namespace Characters.Enemy.EnemyActions
         public override IEnumerator Execute(EnemyController enemy)
         {
             yield return new WaitForSeconds(_delay);
-            enemy.UpdateNodeData(_targetNode);
-            yield return enemy.Move(_targetNode, _duration); 
+            yield return enemy.Rotate(_targetDir, _duration);
         }
     }
 }

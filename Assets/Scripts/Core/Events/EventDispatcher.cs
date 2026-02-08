@@ -1,95 +1,76 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Patterns;
 using UnityEngine;
-
+using Core.Events;
 
 namespace Core.Events
 {
-    public class EventDispatcher : Singleton<EventDispatcher>
+    public class EventDispatcher : Singleton<EventDispatcher> 
     {
-        private Dictionary<EventType, Action<object>> _events = new();
-
-        private void OnDestroy()
-        {
-            ClearListeners();
-        }
-
-        public void AddListener(EventType eventType, Action<object> callback)
-        {
-            if (_events.ContainsKey(eventType))
+        private readonly Dictionary<Type, List<object>> _eventHandlers = new();
+        public void Subscribe<T>(Action<T> callback) where T : struct {
+            var eventType = typeof(T);
+    
+            if (!_eventHandlers.ContainsKey(eventType))
             {
-                _events[eventType] += callback;
+                _eventHandlers[eventType] = new List<object>();
             }
-            else
+            if (!_eventHandlers[eventType].Contains(callback))
             {
-                _events.Add(eventType, callback);
+                _eventHandlers[eventType].Add(callback);
             }
         }
 
-        public void RemoveListener(EventType eventType, Action<object> callback)
-        {
-            if (_events.TryGetValue(eventType, out var existing))
+        public void Unsubscribe<T>(Action<T> callback) where T : struct {
+            var eventType = typeof(T);
+
+            if (!_eventHandlers.TryGetValue(eventType, out var handlers)) return;
+            handlers.Remove(callback);
+            if (handlers.Count == 0)
             {
-                existing -= callback;
-                if (existing == null)
-                    _events.Remove(eventType);
-                else
-                    _events[eventType] = existing;
+                _eventHandlers.Remove(eventType);
             }
         }
 
-        public void FireEvent(EventType eventType, object param = null)
-        {
-            if (_events.ContainsKey(eventType))
+        public void SendEvent<T>(T eventData) where T : struct {
+            var eventType = typeof(T);
+
+            if (!_eventHandlers.TryGetValue(eventType, out var eventHandler)) return;
+            foreach (var handler in eventHandler.ToList())
             {
-                var actions = _events[eventType];
-                if (actions == null)
-                {
-                    Debug.Log($"Event {eventType} has not been registered");
-                    _events.Remove(eventType);
-                    return;
-                }
-
-                actions.Invoke(param);
-            }
+                ((Action<T>)handler).Invoke(eventData);
+            }   
+        }
+        
+        public void ClearAll() {
+            _eventHandlers.Clear();
         }
 
-        private void ClearListeners()
-        {
-            _events.Clear();
-        }
-
-        public bool HasListener(EventType eventType)
-        {
-            return _events.ContainsKey(eventType);
-        }
-
-        public void ClearEvent(EventType eventType)
-        {
-            if (_events.ContainsKey(eventType))
-                _events.Remove(eventType);
+        private void OnDestroy() {
+            if (!Application.isPlaying) return;
+            ClearAll();
         }
     }
+}
 
-// Extension Method
-    public static class EventDispatcherExtensions
+public static class NewEventDispatcherExtensions
+{
+    public static void Subscribe<T>(this MonoBehaviour instance, Action<T> callback) where T : struct
     {
-        public static void AddListener(this MonoBehaviour instance, EventType eventType, Action<object> callback)
-        {
-            EventDispatcher.Instance.AddListener(eventType, callback);
-        }
-
-        public static void RemoveListener(this MonoBehaviour instance, EventType eventType, Action<object> callback)
-        {
-            if (EventDispatcher.Instance == null) return;
-
-            EventDispatcher.Instance.RemoveListener(eventType, callback);
-        }
-
-        public static void FireEvent<T>(this MonoBehaviour instance, EventType eventType, T param)
-        {
-            EventDispatcher.Instance?.FireEvent(eventType, param);
-        }
+        EventDispatcher.Instance.Subscribe<T>(callback);
+    }
+    
+    public static void Unsubscribe<T>(this MonoBehaviour instance, Action<T> callback) where T : struct
+    {
+        if (!Application.isPlaying) return;
+        if (EventDispatcher.Instance == null) return;
+        EventDispatcher.Instance.Unsubscribe<T>(callback);
+    }
+    
+    public static void SendEvent<T>(this MonoBehaviour instance,T eventData) where T : struct
+    {
+        EventDispatcher.Instance.SendEvent(eventData);
     }
 }

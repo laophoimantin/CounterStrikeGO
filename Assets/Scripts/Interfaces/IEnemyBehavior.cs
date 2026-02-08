@@ -1,5 +1,5 @@
 using System.Collections;
-using Characters.Enemy;
+using Pawn;
 
 namespace Interfaces
 {

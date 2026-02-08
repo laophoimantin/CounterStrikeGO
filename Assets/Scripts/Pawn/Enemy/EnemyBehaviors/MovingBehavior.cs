@@ -1,10 +1,9 @@
 using System.Collections.Generic;
-using Characters.Enemy.EnemyActions;
 using Core.TurnSystem;
 using Grid;
 using UnityEngine;
 
-namespace Characters.Enemy.EnemyBehaviors
+namespace Pawn.EnemyBehaviors
 {
     public class MovingBehavior : BaseEnemyBehavior
     {
@@ -19,19 +18,19 @@ namespace Characters.Enemy.EnemyBehaviors
             if (firstNodeInFront != null && !firstNodeInFront.IsObstacle)
             {
                 plan.Add(new MoveAction(firstNodeInFront, duration));
-                
+
                 Node secondNodeInFront = enemy.GetNodeInDirection(firstNodeInFront, enemy.CurrentFacingDirection);
-                
+
                 if (secondNodeInFront == null || secondNodeInFront.IsObstacle)
                 {
-                    Quaternion targetRotation = enemy.GetRotationTurnAround();
-                    plan.Add(new RotateAction(targetRotation, duration, 0.1f));
+                    Direction targetDirection = enemy.GetDirectionTurnAround();
+                    plan.Add(new RotateAction(targetDirection, duration, 0.1f));
                 }
             }
             else
             {
-                Quaternion targetRotation = enemy.GetRotationTurnAround();
-                plan.Add(new RotateAction(targetRotation, duration));
+                Direction targetDirection = enemy.GetDirectionTurnAround();
+                plan.Add(new RotateAction(targetDirection, duration));
             }
 
             return plan;

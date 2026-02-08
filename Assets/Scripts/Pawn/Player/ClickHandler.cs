@@ -2,19 +2,22 @@ using Core.TurnSystem;
 using Grid;
 using UnityEngine;
 
-namespace Characters.Player
+namespace Pawn
 {
     public class ClickHandler : MonoBehaviour
     {
+        [SerializeField] private PlayerController _player;
+        [SerializeField] private float _dragThresholdPercent = 0.05f;
+        
         private bool _dragging = false;
         private Vector2 _startPos;
-        [SerializeField] private PlayerController _player;
-        
+        private Camera _cam;
 
-        private void Awake()
+        void Start()
         {
+            _cam = Camera.main;
         }
-
+        
         private void Update()
         {
             if (Input.GetMouseButtonDown(0))
@@ -24,13 +27,13 @@ namespace Characters.Player
                 TryEndDrag();
         }
 
-
         private void TryStartDrag()
         {
             if (!RaycastPlayer()) return;
             _dragging = true;
             _startPos = Input.mousePosition;
         }
+        
         private void TryEndDrag()
         {
             if (!_dragging) return;
@@ -39,7 +42,9 @@ namespace Characters.Player
 
             Vector2 endPos = Input.mousePosition;
             Vector2 delta = endPos - _startPos;
-            if (delta.magnitude < 20f) return;
+            
+            float threshold = Screen.height * _dragThresholdPercent;
+            if (delta.magnitude < threshold) return;
 
             Vector2 dir = delta.normalized;
 
@@ -55,9 +60,9 @@ namespace Characters.Player
             }
         }
         
-        bool RaycastPlayer()
+        private bool RaycastPlayer()
         {
-            Ray r = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Ray r = _cam.ScreenPointToRay(Input.mousePosition);
             return Physics.Raycast(r, out var hit) && hit.collider.CompareTag("Player");
         }
 

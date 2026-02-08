@@ -1,4 +1,4 @@
-using Characters.Player;
+using Pawn;
 using Core.TurnSystem;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +24,8 @@ namespace Core.Events
     {
         
     }
+    
+    
 
     public struct OnEnemyActionStartedEvent
     {
@@ -34,6 +36,11 @@ namespace Core.Events
     {
         
     }
+    
+    
+    
+    
+    
 
     public struct OnGameEndedEvent
     {
@@ -91,14 +98,14 @@ namespace Core.Events
 
         private void OnEnable()
         {
-            NewEventDispatcher.Instance.Subscribe<PlayerScoredEventTest>(OnPlayerScored);
+            EventDispatcher.Instance.Subscribe<PlayerScoredEventTest>(OnPlayerScored);
         }
 
         private void OnDisable()
         {
-            if (NewEventDispatcher.Instance != null)
+            if (EventDispatcher.Instance != null)
             {
-                NewEventDispatcher.Instance.Unsubscribe<PlayerScoredEventTest>(OnPlayerScored);
+                EventDispatcher.Instance.Unsubscribe<PlayerScoredEventTest>(OnPlayerScored);
             }
         }
 
@@ -131,7 +138,7 @@ namespace Core.Events
                 PointsGained = points
             };
 
-            NewEventDispatcher.Instance.SendEvent(scoreEvent);
+            EventDispatcher.Instance.SendEvent(scoreEvent);
         }
     }
 }
