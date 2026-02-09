@@ -77,12 +77,12 @@ namespace Pawn
                 return;
             }
 
-            StartCoroutine(MoveRoutine(target));
+            StartCoroutine(Move(target));
             _tempMoveDirection = Direction.None;
         }
 
 
-        private IEnumerator MoveRoutine(Node targetNode)
+        private IEnumerator Move(Node targetNode)
         {
             this.SendEvent(new OnPlayerActionStartedEvent());
 
