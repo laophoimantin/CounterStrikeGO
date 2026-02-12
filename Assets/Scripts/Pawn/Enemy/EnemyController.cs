@@ -9,17 +9,17 @@ namespace Pawn
 {
     public class EnemyController : GridUnit
     {
-
         public override TeamSide Team => TeamSide.Enemy;
 
         private bool _isDead = false;
 
-        [Header("Component References")] 
+        [Header("Component References")]
         [SerializeField] private Transform _enemyModel;
+        public override Transform VisualModel => _enemyModel;
 
         [SerializeField] private BaseEnemyBehavior _currentBehavior;
 
-        [Header("Enemy State")] 
+        [Header("Enemy State")]
         [SerializeField] private Direction _facingDirection = Direction.None;
 
         private readonly Direction[] _dirs =
@@ -63,12 +63,13 @@ namespace Pawn
             if (_isDead) yield break;
 
             List<BaseEnemyAction> plan = _currentBehavior.PlanActions(this);
-            
+
             if (plan == null || plan.Count == 0)
             {
                 EnemyManager.Instance.OnEnemyFinished(this);
                 yield break;
             }
+
             foreach (BaseEnemyAction action in plan)
             {
                 yield return action.Execute(this);
@@ -76,7 +77,7 @@ namespace Pawn
                 if (TryAttack(_currentNode))
                 {
                     EnemyManager.Instance.OnEnemyFinished(this);
-                    yield break; 
+                    yield break;
                 }
             }
 
@@ -124,20 +125,15 @@ namespace Pawn
         }
 
 
-        /// <summary>
-        /// Updates the enemy's current node. 
-        /// </summary>
-
         public IEnumerator Move(Node targetNode, float duration)
         {
             // Logic
             UpdateNodeData(targetNode);
-            
+
             // Visual
-            // Vector3 endPos = targetNode.transform.position;
             Vector3 startPos = transform.position;
             Vector3 endPos = targetNode.WorldPos;
-            
+
             float elapsed = 0f;
             while (elapsed < duration)
             {
@@ -154,11 +150,11 @@ namespace Pawn
         {
             // Logic
             SetFacingDirection(newDirection);
-            
+
             // Visual
             Quaternion startRot = _enemyModel.rotation;
             Quaternion targetRotation = GetRotationForDirection(newDirection);
-            
+
             float elapsed = 0f;
             while (elapsed < duration)
             {
@@ -170,9 +166,8 @@ namespace Pawn
 
             _enemyModel.rotation = targetRotation;
         }
-        
-        
-        
+
+
         private void UpdateNodeData(Node newNode)
         {
             if (newNode == null) return;
@@ -186,18 +181,16 @@ namespace Pawn
             _currentNode.AddUnit(this);
         }
 
- 
 
         private bool TryAttack(Node targetNode)
         {
             if (targetNode.HasPlayer())
             {
                 GridUnit player = targetNode.GetPlayer();
-                player.Die(() => {
-                    Debug.Log("End!");
-                });
+                player.Die(() => { Debug.Log("End!"); });
                 return true; // We killed someone!
             }
+
             return false; // No one here
         }
 
@@ -220,24 +213,21 @@ namespace Pawn
                 _enemyModel.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, t);
                 yield return null;
             }
+
             transform.localScale = Vector3.zero;
-            
+
             _currentNode.RemoveUnit(this);
             OnDestroyed?.Invoke(this);
             onDeathComplete?.Invoke();
         }
-        
-        
-        
-        
+
         #endregion
 
         #region Utility Methods
 
-        
         // 1. STATE MANAGEMENT (Setters & Core Getters)
         // ==============================================================================================
-        
+
         /// <summary>
         /// STATE CHANGE: Updates the internal facing direction state
         /// Call this only after a rotation action is complete
@@ -246,10 +236,10 @@ namespace Pawn
         {
             _facingDirection = newDirection;
         }
-        
+
         // 2. NODE QUERIES (Finding Neighbors)
         // ==============================================================================================
-        
+
         /// <summary>
         /// Returns the node directly in front of the enemy based on current facing direction
         /// </summary>
@@ -257,7 +247,7 @@ namespace Pawn
         {
             return GetNodeInDirection(_currentNode, _facingDirection);
         }
-        
+
         /// <summary>
         /// Returns the neighbor of a specific node in a specific direction
         /// </summary>
@@ -272,7 +262,7 @@ namespace Pawn
                 default: return null;
             }
         }
-        
+
         // 3. DIRECTION LOGIC (Calculating Directions)
         // ==============================================================================================
 
@@ -284,7 +274,7 @@ namespace Pawn
             if (targetNode == null) return _facingDirection;
             return GetDirectionFromTargetNode(_currentNode, targetNode);
         }
-        
+
         /// <summary>
         /// Calculates the direction between two adjacent nodes
         /// </summary>
@@ -299,7 +289,7 @@ namespace Pawn
 
             return _facingDirection; // Default if not adjacent
         }
-        
+
         /// <summary>
         /// Returns the Direction enum for a step (+1 for Clockwise)
         /// Useful for passing data to RotateActions
@@ -310,10 +300,10 @@ namespace Pawn
             int newIndex = (index + step + _dirs.Length) % _dirs.Length;
             return _dirs[newIndex];
         }
-        
+
         // 4. ROTATION LOGIC (Math & Quaternions)
         // ==============================================================================================
-   
+
         /// <summary>
         /// Calculates the rotation needed to face a specific direction
         /// </summary>
@@ -328,7 +318,7 @@ namespace Pawn
                 default: return _enemyModel.rotation;
             }
         }
-        
+
         /// <summary>
         /// Calculates the rotation needed to face an adjacent target node
         /// </summary>
@@ -337,7 +327,7 @@ namespace Pawn
             Direction dirToNode = GetDirectionFromCurrentNode(targetNode);
             return GetRotationForDirection(dirToNode);
         }
-        
+
         /// <summary>
         /// Helper to get a rotation based on steps (90 degree increments)
         /// </summary>
@@ -347,25 +337,20 @@ namespace Pawn
             return GetRotationForDirection(futureDir);
         }
 
-        
-        
+
         // Rotation Presets ==============================================================================================
-        
+
         public Quaternion GetRotationTurnAround() => GetRotationByStep(+2);
         public Quaternion GetRotationClockwise() => GetRotationByStep(+1);
         public Quaternion GetRotationCounterClockwise() => GetRotationByStep(-1);
-        
+
         // Direction Presets ==============================================================================================
-        
+
         public Direction GetDirectionTurnAround() => GetDirectionByStep(+2);
         public Direction GetDirectionClockwise() => GetDirectionByStep(+1);
         public Direction GetDirectionCounterClockwise() => GetDirectionByStep(-1);
-        
-        
+
         #endregion
-        
-
-
 
 
         // Editor ====================================================================================
@@ -381,7 +366,7 @@ namespace Pawn
         public void SetOrMoveNode(Direction? dir = null)
         {
             NodeManager manager = NodeManager.Instance;
-            if (manager == null) 
+            if (manager == null)
                 manager = FindObjectOfType<NodeManager>();
 
             if (manager == null)
@@ -389,7 +374,7 @@ namespace Pawn
                 Debug.LogError("No NodeManager found in scene. Cannot move.", this);
                 return;
             }
-    
+
             Node newNode;
             string warningLog = dir.HasValue ? " No valid node to move to!" : " Invalid spot, couldn't find a node!";
 
@@ -401,21 +386,21 @@ namespace Pawn
             {
                 newNode = manager.GetNodeFromWorldPosition(_enemyModel.position);
             }
-            
+
             if (newNode == null)
             {
                 Debug.LogWarning(name + " has no valid node!" + warningLog, this);
                 return;
             }
-            
+
             if (_currentNode != null)
                 _currentNode.RemoveUnit(this);
 
             _currentNode = newNode;
             _currentNode.AddUnit(this);
-    
+
             SnapPosition(_currentNode.transform.position);
-            
+
 #if UNITY_EDITOR
             UnityEditor.EditorUtility.SetDirty(this);
 #endif

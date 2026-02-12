@@ -17,7 +17,7 @@ namespace Grid
         [SerializeField] private int _xValue;
         [SerializeField] private int _yValue;
         [SerializeField] private float _size;
-        
+
         public Vector3 WorldPos => transform.position;
 
         // ------------------------------------------------------------
@@ -39,6 +39,10 @@ namespace Grid
         private List<GridUnit> _units = new();
 
         // ------------------------------------------------------------
+        [Header("Crowd Control")]
+        [SerializeField] private float _crowdRadius = 0.35f;
+
+        // ------------------------------------------------------------
         [Header("Utility")]
         [SerializeField] private BaseUtility _utilityItem;
 
@@ -48,7 +52,7 @@ namespace Grid
         private void Awake()
         {
             _effects = GetComponents<INodeEffect>();
-            foreach(var effect in _effects)
+            foreach (var effect in _effects)
             {
                 effect.Initialize(this);
             }
@@ -62,7 +66,6 @@ namespace Grid
 
             name = $"({x}, {y})";
             _textMesh.text = name;
-            _textMesh.gameObject.SetActive(false);
         }
 
         public Vector2Int Get2DCoordinate()
@@ -71,6 +74,10 @@ namespace Grid
             return coordinate;
         }
 
+        public void Start()
+        {
+            _textMesh.gameObject.SetActive(false);
+        }
 
         // Unit Management
         public void AddUnit(GridUnit unit)
@@ -78,12 +85,14 @@ namespace Grid
             if (!_units.Contains(unit))
             {
                 _units.Add(unit);
+                RearrangeUnits();
             }
         }
 
         public void RemoveUnit(GridUnit unit)
         {
             _units.Remove(unit);
+            RearrangeUnits();
         }
 
         public bool HasPlayer()
@@ -120,6 +129,7 @@ namespace Grid
                     enemiesFound.Add(unit);
                 }
             }
+
             return enemiesFound;
         }
 
@@ -128,6 +138,73 @@ namespace Grid
         {
             return _units;
         }
+
+
+       public void RearrangeUnits()
+    {
+        int count = _units.Count;
+        if (count == 0) return;
+
+        // 1. Generate Slots (Same as before)
+        List<Vector3> slots = new List<Vector3>();
+
+        if (count == 1)
+        {
+            slots.Add(Vector3.zero);
+        }
+        else
+        {
+            float angleStep = 360f / count;
+            for (int i = 0; i < count; i++)
+            {
+                float angle = i * angleStep * Mathf.Deg2Rad;
+                float x = Mathf.Cos(angle) * _crowdRadius;
+                float z = Mathf.Sin(angle) * _crowdRadius;
+                slots.Add(new Vector3(x, 0, z));
+            }
+        }
+
+        // 2. THE LOGIC FLIP: Sort Units by Distance from Center (Furthest First)
+        // The unit entering from the neighbor tile is distance ~1.0
+        // The unit standing on the node is distance ~0.0
+        // We want the Entering unit to pick first.
+        
+        List<GridUnit> sortedUnits = _units.OrderByDescending(u => 
+            Vector3.SqrMagnitude(u.transform.position - transform.position)
+        ).ToList();
+
+        List<Vector3> availableSlots = new List<Vector3>(slots);
+
+        // 3. Assign Slots
+        foreach (GridUnit unit in sortedUnits)
+        {
+            Vector3 bestSlot = Vector3.zero;
+            float bestDist = float.MaxValue;
+            int bestSlotIndex = -1;
+
+            // Find the slot closest to THIS unit's current position (Entrance)
+            for (int i = 0; i < availableSlots.Count; i++)
+            {
+                Vector3 worldSlotPos = transform.TransformPoint(availableSlots[i]);
+                float dist = Vector3.SqrMagnitude(unit.transform.position - worldSlotPos);
+
+                if (dist < bestDist)
+                {
+                    bestDist = dist;
+                    bestSlot = availableSlots[i];
+                    bestSlotIndex = i;
+                }
+            }
+
+            // Assign and remove the slot so nobody else takes it
+            if (bestSlotIndex != -1)
+            {
+                unit.SetVisualOffset(bestSlot);
+                availableSlots.RemoveAt(bestSlotIndex);
+            }
+        }
+    }
+
 
 
         // Neighbors ========================================================================================================================
@@ -142,11 +219,11 @@ namespace Grid
                 _ => null
             };
         }
-        
+
         public void AssignNeighbour(Node other, Direction dir)
         {
             if (other == null) return;
-            
+
             switch (dir)
             {
                 case Direction.North:
@@ -181,30 +258,34 @@ namespace Grid
                         _north._south = null;
                         _north = null;
                     }
+
                     break;
-                
+
                 case Direction.South:
                     if (_south != null)
                     {
                         _south._north = null;
                         _south = null;
                     }
+
                     break;
-                
+
                 case Direction.East:
                     if (_east != null)
                     {
                         _east._west = null;
                         _east = null;
                     }
+
                     break;
-                
+
                 case Direction.West:
                     if (_west != null)
                     {
                         _west._east = null;
                         _west = null;
                     }
+
                     break;
             }
         }
@@ -227,7 +308,7 @@ namespace Grid
         }
 
         // Gizmos ================================================================================================
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.green;
@@ -246,16 +327,18 @@ namespace Grid
             {
                 Gizmos.color = Color.red;
             }
+
             Gizmos.DrawWireSphere(center, 0.5f);
 
             Gizmos.color = Color.cyan;
             if (_north) DrawConnection(_north);
             if (_east) DrawConnection(_east);
         }
+
         private void DrawConnection(Node other)
         {
             Gizmos.DrawLine(transform.position, other.transform.position);
         }
-        #endif
+#endif
     }
 }
