@@ -34,7 +34,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0.043}
   m_SizeDelta: {x: 2.5, y: 2.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!23 &7001013405153088366
@@ -217,12 +217,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _textMesh: {fileID: 2952064586748687239}
-  _connectedNodes: []
+  _xValue: 0
+  _yValue: 0
+  _size: 0
+  IsObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 0}
   _east: {fileID: 0}
   _west: {fileID: 0}
-  _enemies: []
-  _player: {fileID: 0}
-  _isObstacle: 0
-  _nodeType: 0
+  _crowdRadius: 0.7

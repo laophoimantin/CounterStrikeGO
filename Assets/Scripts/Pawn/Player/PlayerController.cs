@@ -12,7 +12,10 @@ namespace Pawn
     {
         public override TeamSide Team => TeamSide.Player;
 
+        [Header("Component References")]
         [SerializeField] private Transform _playerModel;
+        public override Transform VisualModel => _playerModel;
+
         [SerializeField] private Node _currentNode;
         [Range(0.1f, 2f)] [SerializeField] private float _actionDurationModifier;
         private bool _isMoving = false;
@@ -89,15 +92,10 @@ namespace Pawn
             _isMoving = true;
             _canMove = false;
 
-            Node originNode = _currentNode;
-            _currentNode = targetNode;
+            UpdateNodeData(targetNode);
 
-            originNode.RemoveUnit(this);
-            targetNode.AddUnit(this);
-
-
-            Vector3 start = transform.position;
-            Vector3 end = targetNode.WorldPos;
+            Vector3 startPos = transform.position;
+            Vector3 endPos = targetNode.WorldPos;
 
             float duration = TurnManager.Instance.GlobalActionDuration * _actionDurationModifier;
             float elapsed = 0f;
@@ -105,14 +103,14 @@ namespace Pawn
             {
                 elapsed += Time.deltaTime;
                 float t = elapsed / duration;
-                transform.position = Vector3.Lerp(start, end, t);
+                transform.position = Vector3.Lerp(startPos, endPos, t);
                 yield return null;
             }
 
-            transform.position = end;
+            transform.position = endPos;
             _isMoving = false;
-
             _currentNode.TriggerNode(this);
+
             TryAttack(_currentNode);
         }
 
@@ -128,6 +126,19 @@ namespace Pawn
             {
                 this.SendEvent(new OnPlayerActionFinishedEvent());
             }
+        }
+
+        private void UpdateNodeData(Node newNode)
+        {
+            if (newNode == null) return;
+
+            if (_currentNode != null)
+            {
+                _currentNode.RemoveUnit(this);
+            }
+
+            _currentNode = newNode;
+            _currentNode.AddUnit(this);
         }
 
         private void FinishAction()
@@ -162,14 +173,14 @@ namespace Pawn
         public void OnPickedUp()
         {
             _playerModel.DOKill();
-        
+
             _playerModel.DOLocalMoveY(_liftHeight, _liftDuration).SetEase(Ease.OutBack);
         }
 
         public void OnDropped()
         {
             _playerModel.DOKill();
-        
+
             _playerModel.DOLocalMoveY(0f, _liftDuration).SetEase(Ease.OutBounce);
         }
 
