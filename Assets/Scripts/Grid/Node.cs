@@ -37,8 +37,12 @@ namespace Grid
         // ------------------------------------------------------------
         [Header("Occupancy")]
         private List<GridUnit> _units = new();
-        
+
         // ------------------------------------------------------------
+        [Header("Utility")]
+        [SerializeField] private BaseUtility _utilityItem;
+
+        [Header("Effect")]
         private INodeEffect[] _effects;
 
         private void Awake()
@@ -212,6 +216,13 @@ namespace Grid
             foreach (var effect in _effects)
             {
                 effect.OnEnter(unit);
+            }
+
+            if (_utilityItem != null && unit.Team == TeamSide.Player)
+            {
+
+                _utilityItem.OnPickUp(unit as PlayerController);
+                _utilityItem = null;
             }
         }
 
