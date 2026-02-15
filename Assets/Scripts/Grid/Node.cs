@@ -19,9 +19,8 @@ namespace Grid
         [SerializeField] private float _size;
 
         public Vector3 WorldPos => transform.position;
-
         // ------------------------------------------------------------
-        [SerializeField] public bool IsObstacle;
+        [SerializeField] private bool _isObstacle;
         // ------------------------------------------------------------
         [Header("Neighbours")]
         [SerializeField] private Node _north;
@@ -44,15 +43,18 @@ namespace Grid
 
         // ------------------------------------------------------------
         [Header("Utility")]
-        [SerializeField] private BaseUtility _utilityItem;
+        [SerializeField] private UtilityController _utilityItem;
+        public bool HasUtilityItem => _utilityItem != null;
 
-        [Header("Effect")]
-        private INodeEffect[] _effects;
+        [Header("Node Features")]
+        private INodeFeature[] _features;
+
+        private NodeZone _activeZone;
 
         private void Awake()
         {
-            _effects = GetComponents<INodeEffect>();
-            foreach (var effect in _effects)
+            _features = GetComponents<INodeFeature>();
+            foreach (var effect in _features)
             {
                 effect.Initialize(this);
             }
@@ -93,6 +95,11 @@ namespace Grid
         {
             _units.Remove(unit);
             RearrangeUnits();
+        }
+
+        public bool HasUnit()
+        {
+            return _units.Count > 0;
         }
 
         public bool HasPlayer()
@@ -139,72 +146,76 @@ namespace Grid
             return _units;
         }
 
-
-       public void RearrangeUnits()
-    {
-        int count = _units.Count;
-        if (count == 0) return;
-
-        // 1. Generate Slots (Same as before)
-        List<Vector3> slots = new List<Vector3>();
-
-        if (count == 1)
+        // Get Units by type
+        public List<T> GetUnits<T>() where T : GridUnit
         {
-            slots.Add(Vector3.zero);
-        }
-        else
-        {
-            float angleStep = 360f / count;
-            for (int i = 0; i < count; i++)
+            List<T> results = new List<T>();
+            foreach (var unit in _units)
             {
-                float angle = i * angleStep * Mathf.Deg2Rad;
-                float x = Mathf.Cos(angle) * _crowdRadius;
-                float z = Mathf.Sin(angle) * _crowdRadius;
-                slots.Add(new Vector3(x, 0, z));
-            }
-        }
-
-        // 2. THE LOGIC FLIP: Sort Units by Distance from Center (Furthest First)
-        // The unit entering from the neighbor tile is distance ~1.0
-        // The unit standing on the node is distance ~0.0
-        // We want the Entering unit to pick first.
-        
-        List<GridUnit> sortedUnits = _units.OrderByDescending(u => 
-            Vector3.SqrMagnitude(u.transform.position - transform.position)
-        ).ToList();
-
-        List<Vector3> availableSlots = new List<Vector3>(slots);
-
-        // 3. Assign Slots
-        foreach (GridUnit unit in sortedUnits)
-        {
-            Vector3 bestSlot = Vector3.zero;
-            float bestDist = float.MaxValue;
-            int bestSlotIndex = -1;
-
-            // Find the slot closest to THIS unit's current position (Entrance)
-            for (int i = 0; i < availableSlots.Count; i++)
-            {
-                Vector3 worldSlotPos = transform.TransformPoint(availableSlots[i]);
-                float dist = Vector3.SqrMagnitude(unit.transform.position - worldSlotPos);
-
-                if (dist < bestDist)
+                if (unit is T typedUnit)
                 {
-                    bestDist = dist;
-                    bestSlot = availableSlots[i];
-                    bestSlotIndex = i;
+                    results.Add(typedUnit);
                 }
             }
 
-            // Assign and remove the slot so nobody else takes it
-            if (bestSlotIndex != -1)
+            return results;
+        }
+
+        private void RearrangeUnits()
+        {
+            int count = _units.Count;
+            if (count == 0) return;
+
+            List<Vector3> slots = new List<Vector3>();
+
+            if (count == 1)
             {
-                unit.SetVisualOffset(bestSlot);
-                availableSlots.RemoveAt(bestSlotIndex);
+                slots.Add(Vector3.zero);
+            }
+            else
+            {
+                float angleStep = 360f / count;
+                for (int i = 0; i < count; i++)
+                {
+                    float angle = i * angleStep * Mathf.Deg2Rad;
+                    float x = Mathf.Cos(angle) * _crowdRadius;
+                    float z = Mathf.Sin(angle) * _crowdRadius;
+                    slots.Add(new Vector3(x, 0, z));
+                }
+            }
+
+            List<GridUnit> sortedUnits = _units.OrderByDescending(u =>
+                Vector3.SqrMagnitude(u.transform.position - transform.position)
+            ).ToList();
+
+            List<Vector3> availableSlots = new List<Vector3>(slots);
+
+            foreach (GridUnit unit in sortedUnits)
+            {
+                Vector3 bestSlot = Vector3.zero;
+                float bestDist = float.MaxValue;
+                int bestSlotIndex = -1;
+
+                for (int i = 0; i < availableSlots.Count; i++)
+                {
+                    Vector3 worldSlotPos = transform.TransformPoint(availableSlots[i]);
+                    float dist = Vector3.SqrMagnitude(unit.transform.position - worldSlotPos);
+
+                    if (dist < bestDist)
+                    {
+                        bestDist = dist;
+                        bestSlot = availableSlots[i];
+                        bestSlotIndex = i;
+                    }
+                }
+
+                if (bestSlotIndex != -1)
+                {
+                    unit.SetVisualOffset(bestSlot);
+                    availableSlots.RemoveAt(bestSlotIndex);
+                }
             }
         }
-    }
-
 
 
         // Neighbors ========================================================================================================================
@@ -290,22 +301,70 @@ namespace Grid
             }
         }
 
-        public void TriggerNode(GridUnit unit)
+        public void TriggerEnter(GridUnit unit)
         {
-            if (_effects == null || _effects.Length == 0) return;
-
-            foreach (var effect in _effects)
+            if (_features != null && _features.Length > 0)
             {
-                effect.OnEnter(unit);
+                foreach (var effect in _features)
+                {
+                    effect.OnEnter(unit);
+                }
             }
-
-            if (_utilityItem != null && unit.Team == TeamSide.Player)
+            else if (unit.Team == TeamSide.Player)
             {
-
-                _utilityItem.OnPickUp(unit as PlayerController);
-                _utilityItem = null;
+                if (HasUtilityItem)
+                {
+                    PlayerController player = unit as PlayerController;
+                    player.EquipUtility(_utilityItem);
+                    _utilityItem = null;
+                }
             }
         }
+
+        // Utility ====================
+        public void AddUtility(UtilityController utility)
+        {
+            _utilityItem = utility;
+        }
+        
+        public void RemoveUtility()
+        {
+            _utilityItem = null;
+        }
+        // Zone ==================================================================================================
+        public void AddZone(NodeZone newZone)
+        {
+            if (_activeZone != null)
+            {
+                _activeZone.ForceDestroy();
+            }
+
+            _activeZone = newZone;
+        }
+
+        public void RemoveZone()
+        {
+            _activeZone = null;
+        }
+
+        public bool IsWalkable()
+        {
+            if (_isObstacle) return false;
+
+            if (_activeZone != null && !_activeZone.IsWalkable())
+                return false;
+            
+            return true;
+        }
+
+        public bool IsHidden()
+        {
+            if (_activeZone != null && _activeZone.IsObscuring()) 
+                return true;
+            
+            return false;
+        }
+
 
         // Gizmos ================================================================================================
 #if UNITY_EDITOR
@@ -323,7 +382,7 @@ namespace Grid
             Gizmos.DrawLine(bottomLeft + Vector3.forward * size,
                 bottomLeft + Vector3.forward * size + Vector3.right * size);
 
-            if (IsObstacle)
+            if (_isObstacle)
             {
                 Gizmos.color = Color.red;
             }

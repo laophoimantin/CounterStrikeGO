@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Grid
 {
-    public class ExitNode : MonoBehaviour, INodeEffect
+    public class ExitFeature : MonoBehaviour, INodeFeature
     {
         private Node _node;
 

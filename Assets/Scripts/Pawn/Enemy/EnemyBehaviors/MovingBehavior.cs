@@ -7,30 +7,26 @@ namespace Pawn.EnemyBehaviors
 {
     public class MovingBehavior : BaseEnemyBehavior
     {
-        [Range(0.1f, 2f)] [SerializeField] private float _actionDuration = 1.0f;
-
         public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
         {
             var plan = new List<BaseEnemyAction>();
-            float duration = TurnManager.Instance.GlobalActionDuration * _actionDuration;
-
             Node firstNodeInFront = enemy.GetNodeInFront();
-            if (firstNodeInFront != null && !firstNodeInFront.IsObstacle)
+            if (firstNodeInFront != null && firstNodeInFront.IsWalkable())
             {
-                plan.Add(new MoveAction(firstNodeInFront, duration));
+                plan.Add(new MoveAction(firstNodeInFront, Duration));
 
                 Node secondNodeInFront = enemy.GetNodeInDirection(firstNodeInFront, enemy.CurrentFacingDirection);
 
-                if (secondNodeInFront == null || secondNodeInFront.IsObstacle)
+                if (secondNodeInFront == null || !secondNodeInFront.IsWalkable())
                 {
                     Direction targetDirection = enemy.GetDirectionTurnAround();
-                    plan.Add(new RotateAction(targetDirection, duration, 0.1f));
+                    plan.Add(new RotateAction(targetDirection, Duration, 0.1f));
                 }
             }
             else
             {
                 Direction targetDirection = enemy.GetDirectionTurnAround();
-                plan.Add(new RotateAction(targetDirection, duration));
+                plan.Add(new RotateAction(targetDirection, Duration));
             }
 
             return plan;

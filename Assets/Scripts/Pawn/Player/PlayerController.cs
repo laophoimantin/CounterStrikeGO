@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Core.Events;
 using Core.TurnSystem;
@@ -12,20 +13,17 @@ namespace Pawn
     {
         public override TeamSide Team => TeamSide.Player;
 
-        [Header("Component References")]
-        [SerializeField] private Transform _playerModel;
-        public override Transform VisualModel => _playerModel;
+        [Header("References")]
+        private PlayerVisual _playerVisual;
 
-        [SerializeField] private Node _currentNode;
         [Range(0.1f, 2f)] [SerializeField] private float _actionDurationModifier;
         private bool _isMoving = false;
         private bool _canMove = true;
 
         private Direction _tempMoveDirection = Direction.None;
-
-        [Header("Visual Feedback")]
-        [SerializeField] private float _liftHeight = 0.5f;
-        [SerializeField] private float _liftDuration = 0.2f;
+        private UtilityController _currentUtility;
+        private bool _hasUtility = false;
+        public bool HasUtility => _hasUtility;
 
         void OnEnable()
         {
@@ -49,6 +47,10 @@ namespace Pawn
             {
                 Debug.LogWarning($"{gameObject.name} has no node assigned!");
             }
+            
+            _playerVisual = _visual as PlayerVisual;
+            if (_playerVisual == null) 
+                Debug.Log("VISUALLLLLL!");
         }
 
         // Turn System =========================================================================
@@ -74,7 +76,7 @@ namespace Pawn
                 _ => null
             };
 
-            if (target == null || target.IsObstacle)
+            if (target == null || !target.IsWalkable())
             {
                 _tempMoveDirection = Direction.None;
                 return;
@@ -94,40 +96,44 @@ namespace Pawn
 
             UpdateNodeData(targetNode);
 
-            Vector3 startPos = transform.position;
-            Vector3 endPos = targetNode.WorldPos;
-
             float duration = TurnManager.Instance.GlobalActionDuration * _actionDurationModifier;
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float t = elapsed / duration;
-                transform.position = Vector3.Lerp(startPos, endPos, t);
-                yield return null;
-            }
-
-            transform.position = endPos;
+            yield return _visual.MoveTo(targetNode.WorldPos, duration);
+            
             _isMoving = false;
-            _currentNode.TriggerNode(this);
+            _currentNode.TriggerEnter(this);
 
-            TryAttack(_currentNode);
+            PostMove(_currentNode);
         }
 
 
-        private void TryAttack(Node targetNode)
+        private void PostMove(Node targetNode)
         {
+            // Attack 
             if (targetNode.HasEnemy())
             {
                 var enemies = targetNode.GetEnemies();
                 EnemyManager.Instance.ResolveAttack(enemies, FinishAction);
             }
+            else if (_hasUtility)
+            {
+                return;
+            }
             else
             {
-                this.SendEvent(new OnPlayerActionFinishedEvent());
+                 FinishAction();
             }
+        }   
+        
+        private void FinishAction()
+        {
+            if (_hasUtility)
+            {
+                return;
+            }
+            this.SendEvent(new OnPlayerActionFinishedEvent());
         }
-
+        
+        
         private void UpdateNodeData(Node newNode)
         {
             if (newNode == null) return;
@@ -141,47 +147,56 @@ namespace Pawn
             _currentNode.AddUnit(this);
         }
 
-        private void FinishAction()
-        {
-            this.SendEvent(new OnPlayerActionFinishedEvent());
-        }
-
         public override void Die(Action onDeathComplete = null)
         {
-            StartCoroutine(DieAnim());
-        }
-
-        // Testing
-        private IEnumerator DieAnim()
-        {
-            float duration = 1f;
-            float elapsed = 0f;
-            while (elapsed < duration)
+            StartCoroutine(_visual.DeadAnim(1f, () => 
             {
-                elapsed += Time.deltaTime;
-                float t = elapsed / duration;
-                _playerModel.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, t);
-                yield return null;
-            }
-
-            transform.localScale = Vector3.zero;
-            this.SendEvent(new OnPlayerDeadEvent());
+               OnDeathEvent(onDeathComplete);
+            }));
         }
 
-        // On Click
+        private void OnDeathEvent(Action onDeathComplete = null)
+        {
+            this.SendEvent(new OnPlayerDeadEvent());
+            onDeathComplete?.Invoke();
+        }
+
+
+        public void EquipUtility(UtilityController newUtility)
+        {
+            _currentUtility = newUtility;
+            _currentUtility.OnPickUp(this);
+            _hasUtility = true;
+            _playerVisual.SwitchUtilityModel(_hasUtility);
+        }
+
+        public void TryUseUtility(Node targetNode)
+        {
+            if (!_hasUtility) return;
+            List<Node> validNodes = NodeManager.Instance.GetNodesInRange(_currentNode.Get2DCoordinate(), _currentUtility.ThrowRange);
+            if (validNodes.Contains(targetNode))
+            {
+                UseUtility(targetNode);
+            }
+        }
+
+        private void UseUtility(Node targetNode)
+        {
+            _currentUtility.Throw(targetNode, FinishAction);
+            _currentUtility = null; // Unequip utility
+            _hasUtility = false;
+            _playerVisual.SwitchUtilityModel(_hasUtility);
+        }
+        
         // On Click ====================================================================================
         public void OnPickedUp()
         {
-            _playerModel.DOKill();
-
-            _playerModel.DOLocalMoveY(_liftHeight, _liftDuration).SetEase(Ease.OutBack);
+            _playerVisual.PickedUpAnim();
         }
 
         public void OnDropped()
         {
-            _playerModel.DOKill();
-
-            _playerModel.DOLocalMoveY(0f, _liftDuration).SetEase(Ease.OutBounce);
+            _playerVisual.DroppedAnim();
         }
 
         // Editor ====================================================================================
@@ -193,7 +208,6 @@ namespace Pawn
         {
             if (NodeManager.Instance == null)
             {
-                // Try to find it if an instance is missing (common in Editor mode)
                 var found = FindObjectOfType<NodeManager>();
                 if (found == null) return;
             }
@@ -217,7 +231,11 @@ namespace Pawn
             }
 
             // Logic
-            if (_currentNode != null) _currentNode.RemoveUnit(this);
+            if (_currentNode != null)
+            {
+                _currentNode.RemoveUnit(this);
+                UnityEditor.EditorUtility.SetDirty(_currentNode);
+            }
             _currentNode = newNode;
             _currentNode.AddUnit(this);
 

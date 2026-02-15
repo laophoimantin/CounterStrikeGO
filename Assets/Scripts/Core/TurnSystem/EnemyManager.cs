@@ -69,7 +69,7 @@ namespace Core.TurnSystem
         private IEnumerator BeginEnemyAction()
         {
             yield return new WaitForSeconds(_delayTime);
-            TurnManager.Instance.StartActionPhase();
+            this.SendEvent(new OnEnemyActionStartedEvent());
 
             _pendingEnemies.RemoveAll(e => e == null);
 
@@ -106,12 +106,11 @@ namespace Core.TurnSystem
         private IEnumerator EndEnemyActionPhase()
         {
             yield return new WaitForSeconds(_delayTime);
-            TurnManager.Instance.EndActionPhase();
+            this.SendEvent(new OnEnemyActionFinishedEvent());
         }
 
 
         private int _pendingKills = 0;
-        private Action _onAttackResolvedCallback;
 
         public void ResolveAttack(List<GridUnit> enemies, Action onComplete)
         {
@@ -122,13 +121,12 @@ namespace Core.TurnSystem
             }
 
             _pendingKills = enemies.Count;
-            _onAttackResolvedCallback = onComplete;
 
             foreach (var unit in enemies)
             {
                 if (unit is EnemyController enemy)
                 {
-                    enemy.Die(() => OnEnemyDeathComplete(enemy));
+                    enemy.Die(() => OnEnemyDeathComplete(onComplete));
                 }
                 else
                 {
@@ -137,13 +135,12 @@ namespace Core.TurnSystem
             }
         }
 
-        private void OnEnemyDeathComplete(EnemyController enemy)
+        private void OnEnemyDeathComplete(Action onComplete)
         {
             _pendingKills--;
             if (_pendingKills <= 0)
             {
-                _onAttackResolvedCallback?.Invoke();
-                _onAttackResolvedCallback = null;
+                onComplete?.Invoke();
             }
         }
     }

@@ -5,7 +5,7 @@ using Core;
 
 namespace Grid
 {
-    public class ObjectivePickupNode : MonoBehaviour, INodeEffect
+    public class ObjectivePickupFeature : MonoBehaviour, INodeFeature
     {
         [SerializeField] private GameObject _objectiveItemPrefab;
         private GameObject _objectiveItem;

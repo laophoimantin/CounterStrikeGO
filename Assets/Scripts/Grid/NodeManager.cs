@@ -18,6 +18,14 @@ namespace Grid
         [SerializeField] private List<Node> _allNodes = new();
         private Dictionary<Vector2Int, Node> _nodeGrid = new();
 
+        protected override void Awake()
+        {
+            base.Awake();
+            RebuildNodeGrid();
+        }
+        void Start()
+        {
+        }
         public void GenerateMap(int width, int height, float size)
         {
             _widthX = width;
@@ -40,6 +48,43 @@ namespace Grid
                 }
             }
         }
+        
+        public bool TryGetNode(Vector2Int coord, out Node node)
+        {
+            return _nodeGrid.TryGetValue(coord, out node);
+        }
+        
+        public List<Node> GetNodesInRange(Vector2Int center, int range)
+        {
+            var result = new List<Node>();
+
+            for (int dx = -range; dx <= range; dx++)
+            {
+                for (int dy = -range; dy <= range; dy++)
+                {
+                    if (Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy)) > range)
+                        continue;
+
+                    Vector2Int coord = center + new Vector2Int(dx, dy);
+
+                    if (_nodeGrid.TryGetValue(coord, out Node node))
+                        result.Add(node);
+                }
+            }
+
+            return result;
+        }
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
         private void SpawnNode(int x, int y, float cellSize)
         {
@@ -89,6 +134,7 @@ namespace Grid
             Debug.Log("Neighbor assignment complete.");
         }
 
+
         public void DeleteAllNodes()
         {
             _allNodes.Clear();
@@ -100,7 +146,7 @@ namespace Grid
 #if UNITY_EDITOR
                 Undo.DestroyObjectImmediate(child);
 #else
-            DestroyImmediate(child);
+            Destroy(child);
 #endif
             }
         }

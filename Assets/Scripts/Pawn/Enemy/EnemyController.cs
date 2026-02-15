@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Core.TurnSystem;
+using DG.Tweening;
 using Grid;
 using UnityEngine;
 
@@ -13,10 +14,9 @@ namespace Pawn
 
         private bool _isDead = false;
 
-        [Header("Component References")]
-        [SerializeField] private Transform _enemyModel;
-        public override Transform VisualModel => _enemyModel;
-
+        [Header("References")]
+        private EnemyVisual _enemyVisual;
+        
         [SerializeField] private BaseEnemyBehavior _currentBehavior;
 
         [Header("Enemy State")]
@@ -27,7 +27,7 @@ namespace Pawn
             Direction.North, Direction.East, Direction.South, Direction.West
         };
 
-        [SerializeField] private Node _currentNode;
+        
 
         public Direction CurrentFacingDirection => _facingDirection;
         public Node CurrentNode => _currentNode;
@@ -50,6 +50,11 @@ namespace Pawn
 
             if (_currentNode != null)
                 _currentNode.AddUnit(this);
+            
+            _enemyVisual = _visual as EnemyVisual;
+            if (_enemyVisual == null) 
+                Debug.Log("VISUALLLLLL!");
+            
         }
 
 
@@ -108,11 +113,10 @@ namespace Pawn
             {
                 if (nodeToScan.HasPlayer())
                 {
-                    Debug.Log("Guard at " + _currentNode.name + " SPOTTED PLAYER at " + nodeToScan.name);
                     return true;
                 }
 
-                if (nodeToScan.IsObstacle)
+                if (!nodeToScan.IsWalkable())
                 {
                     return false;
                 }
@@ -131,19 +135,7 @@ namespace Pawn
             UpdateNodeData(targetNode);
 
             // Visual
-            Vector3 startPos = transform.position;
-            Vector3 endPos = targetNode.WorldPos;
-
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float t = elapsed / duration;
-                transform.position = Vector3.Lerp(startPos, endPos, t);
-                yield return null;
-            }
-
-            transform.position = endPos;
+            yield return _visual.MoveTo(targetNode.WorldPos, duration);
         }
 
         public IEnumerator Rotate(Direction newDirection, float duration)
@@ -152,19 +144,8 @@ namespace Pawn
             SetFacingDirection(newDirection);
 
             // Visual
-            Quaternion startRot = _enemyModel.rotation;
-            Quaternion targetRotation = GetRotationForDirection(newDirection);
-
-            float elapsed = 0f;
-            while (elapsed < duration)
-            {
-                elapsed += Time.deltaTime;
-                float t = elapsed / duration;
-                _enemyModel.rotation = Quaternion.Slerp(startRot, targetRotation, t);
-                yield return null;
-            }
-
-            _enemyModel.rotation = targetRotation;
+            Quaternion targetRot = GetRotationForDirection(newDirection);
+            yield return _visual.RotateTo(targetRot, duration);
         }
 
 
@@ -184,41 +165,27 @@ namespace Pawn
 
         private bool TryAttack(Node targetNode)
         {
-            if (targetNode.HasPlayer())
+            if (targetNode.HasPlayer() && !targetNode.IsHidden())
             {
                 GridUnit player = targetNode.GetPlayer();
-                player.Die(() => { Debug.Log("End!"); });
-                return true; // We killed someone!
+                player.Die();
+                return true; 
             }
 
-            return false; // No one here
+            return false; 
         }
 
         public override void Die(Action onDeathComplete = null)
         {
             if (_isDead) return;
             _isDead = true;
-
-            StartCoroutine(DeathRoutine(onDeathComplete));
-        }
-
-        private IEnumerator DeathRoutine(Action onDeathComplete)
-        {
-            float duration = 1f;
-            float elapsed = 0f;
-            while (elapsed < duration)
+            
+            StartCoroutine(_visual.DeadAnim(1f, () => 
             {
-                elapsed += Time.deltaTime;
-                float t = elapsed / duration;
-                _enemyModel.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, t);
-                yield return null;
-            }
-
-            transform.localScale = Vector3.zero;
-
-            _currentNode.RemoveUnit(this);
-            OnDestroyed?.Invoke(this);
-            onDeathComplete?.Invoke();
+                _currentNode.RemoveUnit(this);
+                OnDestroyed?.Invoke(this);
+                onDeathComplete?.Invoke();
+            }));
         }
 
         #endregion
@@ -315,7 +282,7 @@ namespace Pawn
                 case Direction.South: return Quaternion.Euler(0, 180, 0);
                 case Direction.East: return Quaternion.Euler(0, 90, 0);
                 case Direction.West: return Quaternion.Euler(0, -90, 0);
-                default: return _enemyModel.rotation;
+                default: return _visual.GetRotation();
             }
         }
 
@@ -359,10 +326,10 @@ namespace Pawn
 
         public void SetDirection(Direction dir)
         {
-            _enemyModel.rotation = GetRotationForDirection(dir);
+            _visual.SetRotation(GetRotationForDirection(dir));
             SetFacingDirection(dir);
         }
-
+#if UNITY_EDITOR
         public void SetOrMoveNode(Direction? dir = null)
         {
             NodeManager manager = NodeManager.Instance;
@@ -384,7 +351,7 @@ namespace Pawn
             }
             else
             {
-                newNode = manager.GetNodeFromWorldPosition(_enemyModel.position);
+                newNode = manager.GetNodeFromWorldPosition(transform.position);
             }
 
             if (newNode == null)
@@ -394,14 +361,16 @@ namespace Pawn
             }
 
             if (_currentNode != null)
+            {
                 _currentNode.RemoveUnit(this);
-
+                UnityEditor.EditorUtility.SetDirty(_currentNode);
+            }
             _currentNode = newNode;
             _currentNode.AddUnit(this);
 
             SnapPosition(_currentNode.transform.position);
 
-#if UNITY_EDITOR
+
             UnityEditor.EditorUtility.SetDirty(this);
 #endif
         }
@@ -417,8 +386,7 @@ namespace Pawn
         private void SnapPosition(Vector3 targetPos)
         {
             transform.position = new Vector3(targetPos.x, transform.position.y, targetPos.z);
-            if (_enemyModel != null)
-                _enemyModel.localPosition = Vector3.zero;
+            _visual.SetPosition(targetPos);
         }
 
         #endregion
