@@ -18,7 +18,7 @@ namespace Core.TurnSystem
         void OnEnable()
         {
             this.Subscribe<OnGameEndedEvent>(Lock);
-            
+
             // Player Turn Events
             this.Subscribe<OnPlayerActionStartedEvent>(HandlePlayerStarted);
             this.Subscribe<OnPlayerActionFinishedEvent>(HandlePlayerFinished);
@@ -31,7 +31,7 @@ namespace Core.TurnSystem
         void OnDisable()
         {
             this.Unsubscribe<OnGameEndedEvent>(Lock);
-            
+
             // Player Turn Events
             this.Unsubscribe<OnPlayerActionStartedEvent>(HandlePlayerStarted);
             this.Unsubscribe<OnPlayerActionFinishedEvent>(HandlePlayerFinished);
@@ -41,7 +41,7 @@ namespace Core.TurnSystem
             this.Unsubscribe<OnEnemyActionFinishedEvent>(HandleEnemyFinished);
 
         }
-        
+
         void Start()
         {
             SetTurn(TurnType.PlayerPlanning);
@@ -52,63 +52,88 @@ namespace Core.TurnSystem
             _lock = true;
         }
 
-        public void StartActionPhase()
+        public void StartActionPhase(TurnType nextActionTurn)
         {
             if (_actionPhaseActive) return;
             _actionPhaseActive = true;
-            
-            if (_currentTurn == TurnType.PlayerPlanning)
-                SetTurn(TurnType.PlayerAction);
-            else if (_currentTurn == TurnType.EnemyPlanning)
-                SetTurn(TurnType.EnemyAction);
+
+            SetTurn(nextActionTurn);
         }
-        
-        public void EndActionPhase()
+
+        public void EndActionPhase(TurnType nextPlainningTurn)
         {
             if (!_actionPhaseActive) return;
             _actionPhaseActive = false;
 
-            switch (_currentTurn)
-            {
-                case TurnType.PlayerAction:
-                    SetTurn(TurnType.EnemyPlanning);
-                    break;
+            SetTurn(nextPlainningTurn);
 
-                case TurnType.EnemyAction:
-                    SetTurn(TurnType.PlayerPlanning);
-                    break;
-            }
         }
 
         private void SetTurn(TurnType next)
         {
             if (_lock) return;
+            if (!IsValidTransition(_currentTurn, next)) return;
+
             _currentTurn = next;
             this.SendEvent(new OnTurnChangedEvent { NewTurn = next });
         }
-        
-        
-        
+
+
+
         // Player Turn Events
         private void HandlePlayerStarted(OnPlayerActionStartedEvent eventData)
         {
-            StartActionPhase();
+            if (_currentTurn != TurnType.PlayerPlanning) return;
+            StartActionPhase(TurnType.PlayerAction);
         }
 
         private void HandlePlayerFinished(OnPlayerActionFinishedEvent eventData)
         {
-            EndActionPhase();
+            if (_currentTurn != TurnType.PlayerAction) return;
+            if (eventData.EndTurn)
+            {
+                EndActionPhase(TurnType.EnemyPlanning);
+
+            }
+            else
+            {
+                EndActionPhase(TurnType.PlayerPlanning);
+            }
         }
 
         //Enemy Turn Events
         private void HandleEnemyStarted(OnEnemyActionStartedEvent eventData)
         {
-            StartActionPhase();
+            if (_currentTurn != TurnType.EnemyPlanning) return;
+            StartActionPhase(TurnType.EnemyAction);
         }
 
         private void HandleEnemyFinished(OnEnemyActionFinishedEvent eventData)
         {
-            EndActionPhase();
+            if (_currentTurn != TurnType.EnemyAction) return;
+            EndActionPhase(TurnType.PlayerPlanning);
+        }
+
+        private bool IsValidTransition(TurnType from, TurnType to)
+        {
+            switch (from)
+            {
+                case TurnType.PlayerPlanning:
+                    return to == TurnType.PlayerAction;
+
+                case TurnType.PlayerAction:
+                    return to == TurnType.PlayerPlanning
+                        || to == TurnType.EnemyPlanning;
+
+                case TurnType.EnemyPlanning:
+                    return to == TurnType.EnemyAction;
+
+                case TurnType.EnemyAction:
+                    return to == TurnType.PlayerPlanning;
+
+                default:
+                    return false;
+            }
         }
     }
 }

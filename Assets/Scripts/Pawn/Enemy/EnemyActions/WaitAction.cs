@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Pawn.EnemyBehaviors
+namespace Pawn
 {
     public class WaitAction : BaseEnemyAction
     {

@@ -18,14 +18,17 @@ namespace Core.Events
 
     public struct OnPlayerActionStartedEvent
     {
-        
     }
     public struct OnPlayerActionFinishedEvent
     {
-        
+        public bool EndTurn;
+        public OnPlayerActionFinishedEvent(bool endTurn)
+        {
+            EndTurn = endTurn;
+        }
     }
-    
-    
+
+
 
     public struct OnEnemyActionStartedEvent
     {

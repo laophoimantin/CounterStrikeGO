@@ -6,7 +6,6 @@ using UnityEngine;
 
 public abstract class UtilityController : GridUnit
 {
-    public override TeamSide Team => TeamSide.None;
     private PlayerController _owner;
     
     [SerializeField] private int _throwRange = 1;
@@ -15,6 +14,9 @@ public abstract class UtilityController : GridUnit
     [Header("References")]
     [SerializeField] private Collider _collider;
     private UtilityVisual _utilityVisual;
+
+    [SerializeField] private bool _endsTurn = true;
+    public bool EndsTurn => _endsTurn;
 
     void Start()
     {
@@ -50,20 +52,20 @@ public abstract class UtilityController : GridUnit
 
     private IEnumerator ThrowRoutine(Node targetNode, Action onComplete)
     {
-        if (_currentNode != null) _currentNode.RemoveUnit(this);
 
         yield return _utilityVisual.AnimateThrow(targetNode.WorldPos, 0.5f);
-
-        OnLanded(targetNode, onComplete);
+        _utilityVisual.HideUtitlityModel();
+        yield return OnLanded(targetNode);
+        Terminate(onComplete);
     }
 
-    public override void Die(Action onDeathComplete = null)
+    public override void Terminate(Action onDeathComplete = null)
     {
         Destroy(gameObject);
         onDeathComplete?.Invoke();
     }
     
-    protected abstract void OnLanded(Node targetNode, Action onComplete);
+    protected abstract IEnumerator OnLanded(Node targetNode);
 
     // Editor ====================================================================================
 

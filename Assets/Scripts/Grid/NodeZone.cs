@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Core.Events;
 using Core.TurnSystem;
 using Pawn;
@@ -12,7 +14,7 @@ namespace Grid
         protected Node _hostNode;
         protected int _duration;
 
-        public virtual void Initialize(Node hostNode, int duration, Action onComplete)
+        public virtual IEnumerator Initialize(Node hostNode, int duration)
         {
             this.Subscribe<OnTurnChangedEvent>(HandleTurnChange);
             _hostNode = hostNode;
@@ -21,12 +23,9 @@ namespace Grid
             _hostNode.AddZone(this);
             if (hostNode.HasUnit())
             {
-                OnUnitEnter(hostNode.GetAllUnits(), onComplete);
+                yield return OnUnitEnter();
             }
-            else
-            {
-                onComplete?.Invoke();
-            }
+         
         }
 
         void OnDisable()
@@ -57,7 +56,7 @@ namespace Grid
             Destroy(gameObject);
         }
 
-        public abstract void OnUnitEnter(List<GridUnit> units, Action onComplete);
+        public abstract IEnumerator OnUnitEnter();
 
         public virtual bool IsWalkable() => true;
 

@@ -1,14 +1,12 @@
-using System;
-using System.Collections.Generic;
-using Pawn;
+using System.Collections;
 
 namespace Grid
 {
     public class SmokeZone : NodeZone
     {
-        public override void OnUnitEnter(List<GridUnit> units, Action onComplete)
+        public override IEnumerator OnUnitEnter()
         {
-            onComplete?.Invoke();
+            yield break;
         }
 
         public override bool IsObscuring() => true;

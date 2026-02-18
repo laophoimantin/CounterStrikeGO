@@ -20,6 +20,11 @@ public class UtilityVisual : GridUnitVisual
         _utilityModel.transform.position = startPos + Vector3.up * 2; 
     }
 
+    public void HideUtitlityModel()
+    {
+        _pawnModel.gameObject.SetActive(false);
+    }
+
     public IEnumerator AnimateThrow(Vector3 targetPos, float duration)
     {
         yield return _utilityModel.transform

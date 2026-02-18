@@ -1,22 +1,21 @@
+using Core.Events;
+using Core.TurnSystem;
+using Grid;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using Core.Events;
-using Core.TurnSystem;
-using DG.Tweening;
-using Grid;
 
 namespace Pawn
 {
     public class PlayerController : GridUnit
     {
-        public override TeamSide Team => TeamSide.Player;
 
         [Header("References")]
         private PlayerVisual _playerVisual;
 
-        [Range(0.1f, 2f)] [SerializeField] private float _actionDurationModifier;
+        [Range(0.1f, 2f)][SerializeField] private float _actionDurationModifier;
         private bool _isMoving = false;
         private bool _canMove = true;
 
@@ -47,9 +46,9 @@ namespace Pawn
             {
                 Debug.LogWarning($"{gameObject.name} has no node assigned!");
             }
-            
+
             _playerVisual = _visual as PlayerVisual;
-            if (_playerVisual == null) 
+            if (_playerVisual == null)
                 Debug.Log("VISUALLLLLL!");
         }
 
@@ -82,6 +81,7 @@ namespace Pawn
                 return;
             }
 
+            StartAction();
             StartCoroutine(Move(target));
             _tempMoveDirection = Direction.None;
         }
@@ -89,8 +89,6 @@ namespace Pawn
 
         private IEnumerator Move(Node targetNode)
         {
-            this.SendEvent(new OnPlayerActionStartedEvent());
-
             _isMoving = true;
             _canMove = false;
 
@@ -98,42 +96,53 @@ namespace Pawn
 
             float duration = TurnManager.Instance.GlobalActionDuration * _actionDurationModifier;
             yield return _visual.MoveTo(targetNode.WorldPos, duration);
-            
+
             _isMoving = false;
             _currentNode.TriggerEnter(this);
 
-            PostMove(_currentNode);
+            yield return PostMove(_currentNode);
+            FinishAction(ShouldEndTurn());
         }
 
 
-        private void PostMove(Node targetNode)
+        private IEnumerator PostMove(Node targetNode)
         {
-            // Attack 
-            if (targetNode.HasEnemy())
+            if (targetNode.HasUnitsOfType<EnemyController>())
             {
-                var enemies = targetNode.GetEnemies();
-                EnemyManager.Instance.ResolveAttack(enemies, FinishAction);
+                var enemies = targetNode.GetUnitsByType<EnemyController>().ToList();
+                yield return Attack(enemies);
             }
-            else if (_hasUtility)
-            {
-                return;
-            }
-            else
-            {
-                 FinishAction();
-            }
-        }   
-        
-        private void FinishAction()
+        }
+        private IEnumerator Attack(List<EnemyController> enemies)
+        {
+            int pending = enemies.Count;
+
+            foreach (var enemy in enemies)
+                enemy.Terminate(() => pending--);
+
+            while (pending > 0)
+                yield return null;
+        }
+
+        private bool ShouldEndTurn()
         {
             if (_hasUtility)
             {
-                return;
+                return false;
             }
-            this.SendEvent(new OnPlayerActionFinishedEvent());
+                return true;
         }
-        
-        
+
+        private void StartAction()
+        {
+            this.SendEvent(new OnPlayerActionStartedEvent());
+        }
+        private void FinishAction(bool shouldEnd)
+        {
+            this.SendEvent(new OnPlayerActionFinishedEvent(shouldEnd));
+        }
+
+
         private void UpdateNodeData(Node newNode)
         {
             if (newNode == null) return;
@@ -147,11 +156,11 @@ namespace Pawn
             _currentNode.AddUnit(this);
         }
 
-        public override void Die(Action onDeathComplete = null)
+        public override void Terminate(Action onDeathComplete = null)
         {
-            StartCoroutine(_visual.DeadAnim(1f, () => 
+            StartCoroutine(_visual.DeadAnim(1f, () =>
             {
-               OnDeathEvent(onDeathComplete);
+                OnDeathEvent(onDeathComplete);
             }));
         }
 
@@ -164,6 +173,7 @@ namespace Pawn
 
         public void EquipUtility(UtilityController newUtility)
         {
+
             _currentUtility = newUtility;
             _currentUtility.OnPickUp(this);
             _hasUtility = true;
@@ -173,21 +183,23 @@ namespace Pawn
         public void TryUseUtility(Node targetNode)
         {
             if (!_hasUtility) return;
-            List<Node> validNodes = NodeManager.Instance.GetNodesInRange(_currentNode.Get2DCoordinate(), _currentUtility.ThrowRange);
+            List<Node> validNodes = NodeManager.Instance.GetNodesInRange(_currentNode, _currentUtility.ThrowRange);
             if (validNodes.Contains(targetNode))
             {
+                StartAction();
                 UseUtility(targetNode);
             }
         }
 
         private void UseUtility(Node targetNode)
         {
-            _currentUtility.Throw(targetNode, FinishAction);
+            bool endsTurn = _currentUtility.EndsTurn;
+            _currentUtility.Throw(targetNode,() => FinishAction(endsTurn));
             _currentUtility = null; // Unequip utility
             _hasUtility = false;
             _playerVisual.SwitchUtilityModel(_hasUtility);
         }
-        
+
         // On Click ====================================================================================
         public void OnPickedUp()
         {
@@ -198,6 +210,7 @@ namespace Pawn
         {
             _playerVisual.DroppedAnim();
         }
+
 
         // Editor ====================================================================================
 

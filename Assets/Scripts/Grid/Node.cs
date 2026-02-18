@@ -5,6 +5,7 @@ using Pawn;
 using Core;
 using TMPro;
 using UnityEngine;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Grid
 {
@@ -102,63 +103,32 @@ namespace Grid
             return _units.Count > 0;
         }
 
-        public bool HasPlayer()
+        public bool HasUnitsOfType<T>() where T : GridUnit
         {
-            return _units.Any(u => u.Team == TeamSide.Player);
+            //return _units.OfType<T>().Any(); // same
+            return _units.Any(u => u is T);
         }
 
-        public bool HasEnemy()
-        {
-            return _units.Any(u => u.Team == TeamSide.Enemy);
-        }
-
-        public GridUnit GetPlayer()
-        {
-            foreach (GridUnit unit in _units)
-            {
-                if (unit.Team == TeamSide.Player)
-                {
-                    return unit;
-                }
-            }
-
-            return null;
-        }
-
-        public List<GridUnit> GetEnemies()
-        {
-            List<GridUnit> enemiesFound = new List<GridUnit>();
-
-            foreach (GridUnit unit in _units)
-            {
-                if (unit.Team == TeamSide.Enemy)
-                {
-                    enemiesFound.Add(unit);
-                }
-            }
-
-            return enemiesFound;
-        }
-
-
-        public List<GridUnit> GetAllUnits()
+        public IEnumerable<GridUnit> GetAllUnits()
         {
             return _units;
         }
 
-        // Get Units by type
-        public List<T> GetUnits<T>() where T : GridUnit
+        public IEnumerable<T> GetUnitsByType<T>() where T : GridUnit
         {
-            List<T> results = new List<T>();
+            return _units.OfType<T>();
+        }
+
+        public T GetUnitByType<T>() where T : GridUnit
+        {
             foreach (var unit in _units)
             {
                 if (unit is T typedUnit)
                 {
-                    results.Add(typedUnit);
+                    return typedUnit;
                 }
             }
-
-            return results;
+            return null;
         }
 
         private void RearrangeUnits()
@@ -301,6 +271,14 @@ namespace Grid
             }
         }
 
+        public IEnumerable<Node> GetNeighbour()
+        {
+            if (_north != null) yield return _north;
+            if (_south != null) yield return _south;
+            if (_east != null) yield return _east;
+            if (_west != null) yield return _west;
+        }
+
         public void TriggerEnter(GridUnit unit)
         {
             if (_features != null && _features.Length > 0)
@@ -310,7 +288,8 @@ namespace Grid
                     effect.OnEnter(unit);
                 }
             }
-            else if (unit.Team == TeamSide.Player)
+
+            if (unit is PlayerController)
             {
                 if (HasUtilityItem)
                 {
@@ -319,6 +298,11 @@ namespace Grid
                     _utilityItem = null;
                 }
             }
+
+            //if (_activeZone != null)
+            //{
+            //    yield return _activeZone.OnUnitEnter();
+            //}
         }
 
         // Utility ====================
@@ -326,7 +310,7 @@ namespace Grid
         {
             _utilityItem = utility;
         }
-        
+
         public void RemoveUtility()
         {
             _utilityItem = null;
@@ -353,15 +337,15 @@ namespace Grid
 
             if (_activeZone != null && !_activeZone.IsWalkable())
                 return false;
-            
+
             return true;
         }
 
         public bool IsHidden()
         {
-            if (_activeZone != null && _activeZone.IsObscuring()) 
+            if (_activeZone != null && _activeZone.IsObscuring())
                 return true;
-            
+
             return false;
         }
 

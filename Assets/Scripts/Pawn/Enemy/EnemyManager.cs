@@ -5,6 +5,7 @@ using Pawn;
 using Core.Events;
 using Core.Patterns;
 using UnityEngine;
+using Grid;
 
 namespace Core.TurnSystem
 {
@@ -76,7 +77,7 @@ namespace Core.TurnSystem
             if (_pendingEnemies.Count == 0)
             {
                 _pendingEnemies.Clear();
-                TurnManager.Instance.EndActionPhase();
+                StartCoroutine(EndEnemyActionPhase());
                 yield break;
             }
 
@@ -107,41 +108,6 @@ namespace Core.TurnSystem
         {
             yield return new WaitForSeconds(_delayTime);
             this.SendEvent(new OnEnemyActionFinishedEvent());
-        }
-
-
-        private int _pendingKills = 0;
-
-        public void ResolveAttack(List<GridUnit> enemies, Action onComplete)
-        {
-            if (enemies.Count == 0)
-            {
-                onComplete?.Invoke();
-                return;
-            }
-
-            _pendingKills = enemies.Count;
-
-            foreach (var unit in enemies)
-            {
-                if (unit is EnemyController enemy)
-                {
-                    enemy.Die(() => OnEnemyDeathComplete(onComplete));
-                }
-                else
-                {
-                    OnEnemyDeathComplete(null);
-                }
-            }
-        }
-
-        private void OnEnemyDeathComplete(Action onComplete)
-        {
-            _pendingKills--;
-            if (_pendingKills <= 0)
-            {
-                onComplete?.Invoke();
-            }
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Grid;
 using UnityEngine;
 
@@ -8,10 +9,9 @@ public class DeployZoneUtility : UtilityController
     [SerializeField] private NodeZone _zonePrefab;
     [SerializeField] private int _duration = 3;
 
-    protected override void OnLanded(Node targetNode, Action onComplete)
+    protected override IEnumerator OnLanded(Node targetNode)
     {
         NodeZone newZone = Instantiate(_zonePrefab, targetNode.WorldPos, Quaternion.identity);
-        newZone.Initialize(targetNode, _duration, onComplete);
-        Die();
+        yield return newZone.Initialize(targetNode, _duration);
     }
 }

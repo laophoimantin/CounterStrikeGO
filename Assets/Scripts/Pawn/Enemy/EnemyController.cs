@@ -1,23 +1,24 @@
+using Core.TurnSystem;
+using Grid;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Core.TurnSystem;
-using DG.Tweening;
-using Grid;
 using UnityEngine;
 
 namespace Pawn
 {
     public class EnemyController : GridUnit
     {
-        public override TeamSide Team => TeamSide.Enemy;
 
         private bool _isDead = false;
 
         [Header("References")]
         private EnemyVisual _enemyVisual;
-        
-        [SerializeField] private BaseEnemyBehavior _currentBehavior;
+
+        private BaseEnemyBehavior _currentBehavior;
+        [SerializeField] private BaseEnemyBehavior _defaultBehavior;
+        [SerializeField] private FollowingNoiseBehavior _noiseBehavior;
+        [SerializeField] private FlashedBehavior _flashedBehavior;
 
         [Header("Enemy State")]
         [SerializeField] private Direction _facingDirection = Direction.None;
@@ -27,10 +28,22 @@ namespace Pawn
             Direction.North, Direction.East, Direction.South, Direction.West
         };
 
-        
-
         public Direction CurrentFacingDirection => _facingDirection;
-        public Node CurrentNode => _currentNode;
+
+
+
+        private List<Node> _astarPath = new();
+        public List<Node> AstarPath => _astarPath;
+
+        public Node StartNode => 0 < _astarPath.Count ? _astarPath[0] : null;
+        public Node NextNode => 0 + 1 < _astarPath.Count ? _astarPath[1] : null;
+        public Node UpcomingNode => 0 + 2 < _astarPath.Count ? _astarPath[2] : null;
+
+
+
+        private int _flashTurnsRemaining;
+
+
 
         public Action<EnemyController> OnDestroyed;
 
@@ -43,18 +56,19 @@ namespace Pawn
         {
             if (_currentNode == null)
                 Debug.LogWarning($"{gameObject.name} has no node assigned!!!");
-            if (_currentBehavior == null)
+            if (_defaultBehavior == null || _noiseBehavior == null)
                 Debug.LogWarning($"{gameObject.name} has no behavior assigned!!!");
             if (_facingDirection == Direction.None)
                 Debug.LogWarning($"{gameObject.name} has no facing direction assigned!!!");
 
             if (_currentNode != null)
                 _currentNode.AddUnit(this);
-            
+
             _enemyVisual = _visual as EnemyVisual;
-            if (_enemyVisual == null) 
+            if (_enemyVisual == null)
                 Debug.Log("VISUALLLLLL!");
-            
+
+            _currentBehavior = _defaultBehavior;
         }
 
 
@@ -71,7 +85,7 @@ namespace Pawn
 
             if (plan == null || plan.Count == 0)
             {
-                EnemyManager.Instance.OnEnemyFinished(this);
+                FinishTurn();
                 yield break;
             }
 
@@ -81,16 +95,20 @@ namespace Pawn
 
                 if (TryAttack(_currentNode))
                 {
-                    EnemyManager.Instance.OnEnemyFinished(this);
+                    FinishTurn();
                     yield break;
                 }
             }
 
-            OnActionFinished();
+            FinishTurn();
         }
 
-        private void OnActionFinished()
+        private void FinishTurn()
         {
+            AdvancePath();
+            AdvanceFlashed();
+            HasReachedNoiseDestination();
+            HasEndFlashed();
             EnemyManager.Instance.OnEnemyFinished(this);
         }
 
@@ -98,20 +116,13 @@ namespace Pawn
         // Actions ==============================================================================================
 
         #region Actions Methods
-
-        /// <summary>
-        /// Scans forward in the enemy's facing direction to detect the player.
-        /// This scan is blocked by obstacles.
-        /// </summary>
-        /// <param name="range">The maximum number of nodes to check.</param>
-        /// <returns>True if the player is spotted within range, false otherwise.</returns>
         public bool ScanForPlayerInFront(int range)
         {
             Node nodeToScan = GetNodeInFront();
 
             while (nodeToScan != null && range > 0)
             {
-                if (nodeToScan.HasPlayer())
+                if (nodeToScan.HasUnitsOfType<PlayerController>())
                 {
                     return true;
                 }
@@ -165,22 +176,22 @@ namespace Pawn
 
         private bool TryAttack(Node targetNode)
         {
-            if (targetNode.HasPlayer() && !targetNode.IsHidden())
+            if (targetNode.HasUnitsOfType<PlayerController>() && !targetNode.IsHidden())
             {
-                GridUnit player = targetNode.GetPlayer();
-                player.Die();
-                return true; 
+                GridUnit player = targetNode.GetUnitByType<PlayerController>();
+                player.Terminate();
+                return true;
             }
 
-            return false; 
+            return false;
         }
 
-        public override void Die(Action onDeathComplete = null)
+        public override void Terminate(Action onDeathComplete)
         {
             if (_isDead) return;
             _isDead = true;
-            
-            StartCoroutine(_visual.DeadAnim(1f, () => 
+
+            StartCoroutine(_visual.DeadAnim(1f, () =>
             {
                 _currentNode.RemoveUnit(this);
                 OnDestroyed?.Invoke(this);
@@ -188,7 +199,71 @@ namespace Pawn
             }));
         }
 
+        public void HearNoise(Node noiseOrigin, Action onReactionComplete)
+        {
+            _currentBehavior = _noiseBehavior;
+            _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
+            StartCoroutine(ReactToNoise(_astarPath, onReactionComplete));
+        }
+
+        private IEnumerator ReactToNoise(List<Node> path, Action onReactionComplete)
+        {
+            if (path == null || path.Count < 2)
+            {
+                yield break;
+            }
+
+            Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
+
+            yield return Rotate(targetDirection, 0.1f);
+            onReactionComplete?.Invoke();
+        }
+
+        public void AdvancePath()
+        {
+            if (_astarPath != null && _astarPath.Count > 0)
+                _astarPath.RemoveAt(0);
+        }
+
+        public bool HasReachedNoiseDestination()
+        {
+            if (_astarPath == null || _astarPath.Count <= 1)
+            {
+                _currentBehavior = _defaultBehavior;
+                return true;
+            }
+            return false;
+        }
+
+
+        public void GetFlashed(int duration, Action onReactionComplete)
+        {
+            _currentBehavior = _flashedBehavior;
+            _flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
+            onReactionComplete?.Invoke();
+        }
+        public void AdvanceFlashed()
+        {
+            if (_flashTurnsRemaining > 0)
+                _flashTurnsRemaining--;
+        }
+
+        public bool HasEndFlashed()
+        {
+            if (_flashTurnsRemaining <= 0)
+            {
+                _currentBehavior = _defaultBehavior;
+                return true;
+            }
+            return false;
+        }
+
+
         #endregion
+
+
+
+
 
         #region Utility Methods
 

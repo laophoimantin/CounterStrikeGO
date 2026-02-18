@@ -3,8 +3,9 @@ using Core.TurnSystem;
 using Grid;
 using UnityEngine;
 
-namespace Pawn.EnemyBehaviors
+namespace Pawn
 {
+    [CreateAssetMenu(fileName = "Stand", menuName = "Behav/Stand", order = 1)]
     public class StaticBehavior : BaseEnemyBehavior
     {
         public override List<BaseEnemyAction> PlanActions(EnemyController enemy)

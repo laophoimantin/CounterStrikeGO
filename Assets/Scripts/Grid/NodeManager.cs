@@ -48,15 +48,24 @@ namespace Grid
                 }
             }
         }
-        
+
         public bool TryGetNode(Vector2Int coord, out Node node)
         {
             return _nodeGrid.TryGetValue(coord, out node);
         }
-        
-        public List<Node> GetNodesInRange(Vector2Int center, int range)
+
+        public List<Node> GetNodesInRange(Node centerNode, int range, bool centerInclude = false)
         {
+            Vector2Int centerCoord = centerNode.Get2DCoordinate();
             var result = new List<Node>();
+
+            if (centerInclude)
+            {
+                if (_nodeGrid.TryGetValue(centerCoord, out Node node))
+                {
+                    result.Add(node);
+                }
+            }
 
             for (int dx = -range; dx <= range; dx++)
             {
@@ -65,7 +74,7 @@ namespace Grid
                     if (Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy)) > range)
                         continue;
 
-                    Vector2Int coord = center + new Vector2Int(dx, dy);
+                    Vector2Int coord = centerCoord + new Vector2Int(dx, dy);
 
                     if (_nodeGrid.TryGetValue(coord, out Node node))
                         result.Add(node);
@@ -75,21 +84,21 @@ namespace Grid
             return result;
         }
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
 
         private void SpawnNode(int x, int y, float cellSize)
         {
             Vector3 localPos = new Vector3(x, 0, y) * cellSize;
-            Node node; 
+            Node node;
 
 #if UNITY_EDITOR
             node = (Node)PrefabUtility.InstantiatePrefab(_nodePrefab, _cellContainer);
@@ -102,12 +111,12 @@ namespace Grid
             node.transform.localPosition = localPos;
 
             node.gameObject.name = $"Node ({x}, {y})";
-            node.Initialize(x, y, cellSize); 
+            node.Initialize(x, y, cellSize);
 
             _allNodes.Add(node);
             _nodeGrid.TryAdd(new Vector2Int(x, y), node);
         }
-        
+
 
         public void AssignNodeNeighbour()
         {

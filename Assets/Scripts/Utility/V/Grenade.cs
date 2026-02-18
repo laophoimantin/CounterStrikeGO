@@ -1,21 +1,31 @@
-using System;
 using Core.TurnSystem;
 using Grid;
+using Pawn;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Grenade : UtilityController
 {
-    protected override void OnLanded(Node targetNode, Action onComplete)
+    protected override IEnumerator OnLanded(Node targetNode)
     {
-        if (targetNode.HasEnemy())
+        if (targetNode.HasUnitsOfType<EnemyController>())
         {
-            var enemies = targetNode.GetEnemies();
-            EnemyManager.Instance.ResolveAttack(enemies, onComplete);
-            Die();
+            var enemyList = targetNode.GetUnitsByType<EnemyController>().ToList();
+            yield return Attack(enemyList);
         }
-        else
-        {
-            Die(onComplete);
-        }
+    }
+
+    private IEnumerator Attack(List<EnemyController> enemies)
+    {
+        int pending = enemies.Count;
+
+        foreach (var enemy in enemies)
+            enemy.Terminate(() => pending--);
+
+        while (pending > 0)
+            yield return null;
     }
 }

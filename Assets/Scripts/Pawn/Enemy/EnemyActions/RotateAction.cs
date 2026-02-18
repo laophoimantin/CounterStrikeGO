@@ -2,7 +2,7 @@ using System.Collections;
 using Grid;
 using UnityEngine;
 
-namespace Pawn.EnemyBehaviors
+namespace Pawn
 {
     public class RotateAction : BaseEnemyAction
     {
