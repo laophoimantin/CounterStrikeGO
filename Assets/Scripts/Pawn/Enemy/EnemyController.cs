@@ -9,9 +9,7 @@ namespace Pawn
 {
     public class EnemyController : GridUnit
     {
-
-        private bool _isDead = false;
-
+  
         [Header("References")]
         private EnemyVisual _enemyVisual;
 
@@ -31,18 +29,15 @@ namespace Pawn
         public Direction CurrentFacingDirection => _facingDirection;
 
 
-
         private List<Node> _astarPath = new();
-        public List<Node> AstarPath => _astarPath;
+ 
 
         public Node StartNode => 0 < _astarPath.Count ? _astarPath[0] : null;
         public Node NextNode => 0 + 1 < _astarPath.Count ? _astarPath[1] : null;
         public Node UpcomingNode => 0 + 2 < _astarPath.Count ? _astarPath[2] : null;
 
 
-
         private int _flashTurnsRemaining;
-
 
 
         public Action<EnemyController> OnDestroyed;
@@ -70,7 +65,6 @@ namespace Pawn
 
             _currentBehavior = _defaultBehavior;
         }
-
 
         public void StartAction()
         {
@@ -107,15 +101,25 @@ namespace Pawn
         {
             AdvancePath();
             AdvanceFlashed();
-            HasReachedNoiseDestination();
-            HasEndFlashed();
+            EvaluateState();
             EnemyManager.Instance.OnEnemyFinished(this);
+        }
+
+        private void EvaluateState()
+        {
+            if (!HasEndFlashed())
+                _currentBehavior = _flashedBehavior;
+            else if (!HasReachedNoiseDestination())
+                _currentBehavior = _noiseBehavior;
+            else
+                _currentBehavior = _defaultBehavior;
         }
 
         // --- AI Action & Utility Methods ---
         // Actions ==============================================================================================
 
         #region Actions Methods
+
         public bool ScanForPlayerInFront(int range)
         {
             Node nodeToScan = GetNodeInFront();
@@ -194,6 +198,7 @@ namespace Pawn
             StartCoroutine(_visual.DeadAnim(1f, () =>
             {
                 _currentNode.RemoveUnit(this);
+                _currentNode = null;
                 OnDestroyed?.Invoke(this);
                 onDeathComplete?.Invoke();
             }));
@@ -201,8 +206,7 @@ namespace Pawn
 
         public void HearNoise(Node noiseOrigin, Action onReactionComplete)
         {
-            _currentBehavior = _noiseBehavior;
-            _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
+         _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
             StartCoroutine(ReactToNoise(_astarPath, onReactionComplete));
         }
 
@@ -210,16 +214,18 @@ namespace Pawn
         {
             if (path == null || path.Count < 2)
             {
+                onReactionComplete?.Invoke();
                 yield break;
             }
 
             Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
 
             yield return Rotate(targetDirection, 0.1f);
+            _currentBehavior = _noiseBehavior;
             onReactionComplete?.Invoke();
         }
 
-        public void AdvancePath()
+        private void AdvancePath()
         {
             if (_astarPath != null && _astarPath.Count > 0)
                 _astarPath.RemoveAt(0);
@@ -227,14 +233,8 @@ namespace Pawn
 
         public bool HasReachedNoiseDestination()
         {
-            if (_astarPath == null || _astarPath.Count <= 1)
-            {
-                _currentBehavior = _defaultBehavior;
-                return true;
-            }
-            return false;
+            return _astarPath == null || _astarPath.Count <= 1;
         }
-
 
         public void GetFlashed(int duration, Action onReactionComplete)
         {
@@ -242,7 +242,8 @@ namespace Pawn
             _flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
             onReactionComplete?.Invoke();
         }
-        public void AdvanceFlashed()
+
+        private void AdvanceFlashed()
         {
             if (_flashTurnsRemaining > 0)
                 _flashTurnsRemaining--;
@@ -250,19 +251,10 @@ namespace Pawn
 
         public bool HasEndFlashed()
         {
-            if (_flashTurnsRemaining <= 0)
-            {
-                _currentBehavior = _defaultBehavior;
-                return true;
-            }
-            return false;
+            return _flashTurnsRemaining <= 0;
         }
 
-
         #endregion
-
-
-
 
 
         #region Utility Methods
@@ -440,6 +432,7 @@ namespace Pawn
                 _currentNode.RemoveUnit(this);
                 UnityEditor.EditorUtility.SetDirty(_currentNode);
             }
+
             _currentNode = newNode;
             _currentNode.AddUnit(this);
 

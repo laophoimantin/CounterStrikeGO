@@ -5,19 +5,14 @@ using UnityEngine;
 
 namespace Grid
 {
-    public class ExitFeature : MonoBehaviour, INodeFeature
+    [CreateAssetMenu(fileName = "ExitFeature", menuName = "Grid/Node Feature/Exit")]
+    public class ExitFeature : BaseNodeFeature
     {
-        private Node _node;
-
-        public void Initialize(Node owner)
-        {
-            _node = owner;
-        }
-        public void OnEnter(GridUnit unit)
+        public override void OnEnter(GridUnit unit)
         {
             if (unit is PlayerController)
             {
-                GameManager.Instance.CheckExitWinCondition();
+                GameManager.Instance.EvaluateWin();
             }
         }
     }

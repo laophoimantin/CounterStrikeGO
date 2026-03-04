@@ -5,16 +5,18 @@ using Core;
 
 namespace Grid
 {
-    public class ObjectivePickupFeature : MonoBehaviour, INodeFeature
+    [CreateAssetMenu(fileName = "ObjectivePickupFeature", menuName = "Grid/Node Feature/Objective Pickup Feature")]
+    public class ObjectivePickupFeature : BaseNodeFeature
     {
         [SerializeField] private GameObject _objectiveItemPrefab;
         private GameObject _objectiveItem;
         
-        private Node _node;
+        private bool _collected;
 
-        public void Initialize(Node owner)
+        public override void Initialize(Node owner)
         {
-            _node = owner;
+            base.Initialize(owner);
+            
             if (_objectiveItemPrefab == null)
             {
                 Debug.LogError("Objective Item is null!");
@@ -24,15 +26,14 @@ namespace Grid
             _objectiveItem.transform.localPosition = Vector3.zero;
         }
 
-        public void OnEnter(GridUnit unit)
+        public override void OnEnter(GridUnit unit)
         {
-            if (unit is PlayerController)
-            {
-                GameManager.Instance.OnPlayerPickedUpObjective();
-                HideItem();
-                this.enabled = false;
-                Debug.Log("Objective Collected!");
-            }
+            if (_collected) return;
+            if (unit is not PlayerController) return;
+
+            _collected = true;
+            GameManager.Instance.OnPlayerPickedUpObjective();
+            HideItem();
         }
 
         private void HideItem()

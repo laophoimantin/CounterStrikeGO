@@ -39,6 +39,20 @@ namespace Core.Events
     {
         
     }
+
+    public struct OnEnemyKilledEvent
+    {
+        private int RemainingEnemyCount;
+        public OnEnemyKilledEvent(int remain)
+        {
+            RemainingEnemyCount = remain;
+        }
+    }
+
+    public struct OnPlayerSteppedEvent
+    {
+        
+    }
     
     
     

@@ -78,7 +78,6 @@ public class AstarPathfinder
                     existing.G = tentativeG;
                 }
             }
-
         }
 
         return null; // No path, too bad, so sad

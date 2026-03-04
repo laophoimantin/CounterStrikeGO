@@ -2,70 +2,65 @@ using Core.Events;
 using Core.Patterns;
 using Core.TurnSystem;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 namespace Core
 {
     public class GameManager : Singleton<GameManager>
     {
-        [Header("Win Rules (Check all that apply)")]
-        [Tooltip("The Player wins by killing all enemies")]
-        [SerializeField] private bool _enableEliminationWin = true;
+        [Header("Data")]
+        [SerializeField] private LevelData _currentLevelData;
+        
+        [Header("References")]
+        [SerializeField] private ObjectivesController _objectivesController;
 
-        [Tooltip("The Player wins by reaching the Exit Node")]
-        [SerializeField] private bool _enableExitWin = true;
+        private LevelContext _context;
+        bool _isGameOver = false;
 
-        [Tooltip("The player must have the objective item")]
-        [SerializeField] private bool _exitRequiresObjective = false;
+        protected override void Awake()
+        {
+            base.Awake();
 
-        [Header("Game State")]
-        private bool _playerHasObjective = false;
-        private bool _isGameOver = false;
-
-        public bool PlayerHasObjective => _playerHasObjective;
+            _context = new LevelContext();
+            
+            // DataLoader.Instance.SetLevelSaveDataBaseOnIdIsUnlocked(true, _currentLevelData.Id);
+            
+            if (_objectivesController != null)
+                _objectivesController.Initialize(_currentLevelData, _context);
+        }
 
         void OnEnable()
         {
-            //Game Over Event
             this.Subscribe<OnPlayerDeadEvent>(LoseGame);
+            this.Subscribe<OnPlayerSteppedEvent>(OnPlayerStep);
         }
 
         void OnDisable()
         {
-            //Game Over Event
             this.Unsubscribe<OnPlayerDeadEvent>(LoseGame);
+            this.Unsubscribe<OnPlayerSteppedEvent>(OnPlayerStep);
         }
 
         // =============================================================================================================
 
         public void OnPlayerPickedUpObjective()
         {
-            _playerHasObjective = true;
+            _context.PlayerHasObjectiveItem = true;
         }
 
-        public void CheckEliminationWinCondition()
+        private void OnPlayerStep(OnPlayerSteppedEvent e)
         {
-            if (_isGameOver || !_enableEliminationWin) return;
-
-            if (EnemyManager.Instance.GetActiveEnemyCount() <= 0)
-            {
-                Debug.Log("Win Condition Met: All Hostiles Eliminated.");
-                WinGame();
-            }
+            _context.StepCount++;
         }
-        
-        public void CheckExitWinCondition()
-        {
-            if (_isGameOver || !_enableExitWin) return;
 
-            if (_exitRequiresObjective && !_playerHasObjective)
-            {
-                Debug.Log("Need the Objective Item before escaping");
+        public void EvaluateWin()
+        {
+            if (!_objectivesController.IsMainComplete())
                 return;
-            }
 
             WinGame();
         }
-        
+
         private void WinGame()
         {
             if (_isGameOver) return;

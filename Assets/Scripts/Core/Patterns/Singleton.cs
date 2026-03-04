@@ -37,8 +37,9 @@ namespace Core.Patterns
                         }
                         else
                         {
-                            Debug.Log($"No instances found, creating new {typeof(T)} instance.");
-                            _instance = new GameObject($"{typeof(T).Name} (singleton").AddComponent<T>();
+                            Debug.Log($"No instances found: {typeof(T)} instance");
+                            //_instance = new GameObject($"{typeof(T).Name} (singleton").AddComponent<T>();
+                            return null;
                         }
                     }
                 }

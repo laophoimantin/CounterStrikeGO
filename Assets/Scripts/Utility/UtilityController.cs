@@ -52,8 +52,7 @@ public abstract class UtilityController : GridUnit
 
     private IEnumerator ThrowRoutine(Node targetNode, Action onComplete)
     {
-
-        yield return _utilityVisual.AnimateThrow(targetNode.WorldPos, 0.5f);
+        yield return _utilityVisual.AnimateThrow(targetNode.WorldPos);
         _utilityVisual.HideUtitlityModel();
         yield return OnLanded(targetNode);
         Terminate(onComplete);

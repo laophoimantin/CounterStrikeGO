@@ -7,41 +7,29 @@ using UnityEngine.UI;
 public class InGameMenuController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private ButtonSwapper _swapper;
-
-    [SerializeField] private Menu _menu;
+    [SerializeField] private ObjectivesPanel _objectivesPanel;
     [SerializeField] private string _mainMenuScene = "MainMenu";
 
     [Header("Buttons")]
     [SerializeField] private Button _openMenuButton;
-    [SerializeField] private Button _closeMenuButton;
     [SerializeField] private Button _resetButton;
     [SerializeField] private Button _hintButton;
-    [SerializeField] private Button _exitButton;
 
 
-    void Start()
+    void Awake()
     {
-        if (_openMenuButton != null) _openMenuButton.onClick.AddListener(OpenMenu);
-        if (_closeMenuButton != null) _closeMenuButton.onClick.AddListener(CloseMenu);
-
-        if (_resetButton != null) _resetButton.onClick.AddListener(ResetGame);
-        if (_exitButton != null) _exitButton.onClick.AddListener(Exit);
-
-        // Don't ghost your buttons!
-        if (_hintButton != null) _hintButton.onClick.AddListener(ShowHint);
+        _openMenuButton.onClick.RemoveAllListeners();
+        _resetButton.onClick.RemoveAllListeners();
+        _hintButton.onClick.RemoveAllListeners();
+        
+        _openMenuButton.onClick.AddListener(OpenMenu);
+        _resetButton.onClick.AddListener(ResetGame);
+        _hintButton.onClick.AddListener(ShowHint);
     }
 
     private void OpenMenu()
     {
-        _menu.OpenMenu();
-        _swapper.Swap(showMenuVersion: true);
-    }
-
-    private void CloseMenu()
-    {
-        _menu.CloseMenu();
-        _swapper.Swap(showMenuVersion: false);
+        _objectivesPanel.OpenPausePanel();
     }
 
     private void ResetGame()

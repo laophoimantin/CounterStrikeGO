@@ -11,8 +11,9 @@ namespace Grid
 {
     public class Node : MonoBehaviour
     {
-        [Header("Debug")]
-        [SerializeField] private TextMeshPro _textMesh;
+        [Header("Node Features")]
+        [SerializeField] private BaseNodeFeature _feature;
+       
         // ------------------------------------------------------------
         [Header("Core")]
         [SerializeField] private int _xValue;
@@ -46,18 +47,17 @@ namespace Grid
         [Header("Utility")]
         [SerializeField] private UtilityController _utilityItem;
         public bool HasUtilityItem => _utilityItem != null;
-
-        [Header("Node Features")]
-        private INodeFeature[] _features;
-
         private NodeZone _activeZone;
+
+        [Header("Debug")]
+        [SerializeField] private TextMeshPro _textMesh;
+
 
         private void Awake()
         {
-            _features = GetComponents<INodeFeature>();
-            foreach (var effect in _features)
+            if (_feature != null)
             {
-                effect.Initialize(this);
+                _feature.Initialize(this);
             }
         }
 
@@ -105,7 +105,6 @@ namespace Grid
 
         public bool HasUnitsOfType<T>() where T : GridUnit
         {
-            //return _units.OfType<T>().Any(); // same
             return _units.Any(u => u is T);
         }
 
@@ -128,11 +127,14 @@ namespace Grid
                     return typedUnit;
                 }
             }
+
             return null;
         }
 
         private void RearrangeUnits()
         {
+            List<GridUnit> aliveUnits = _units.Where(u => !u.IsDead).ToList();
+
             int count = _units.Count;
             if (count == 0) return;
 
@@ -154,7 +156,11 @@ namespace Grid
                 }
             }
 
-            List<GridUnit> sortedUnits = _units.OrderByDescending(u =>
+            // List<GridUnit> sortedUnits = _units.OrderByDescending(u =>
+            //     Vector3.SqrMagnitude(u.transform.position - transform.position)
+            // ).ToList();
+
+            List<GridUnit> sortedUnits = aliveUnits.OrderByDescending(u =>
                 Vector3.SqrMagnitude(u.transform.position - transform.position)
             ).ToList();
 
@@ -281,28 +287,19 @@ namespace Grid
 
         public void TriggerEnter(GridUnit unit)
         {
-            if (_features != null && _features.Length > 0)
+            if (_feature != null)
             {
-                foreach (var effect in _features)
-                {
-                    effect.OnEnter(unit);
-                }
+                _feature.OnEnter(unit);
             }
 
-            if (unit is PlayerController)
+            if (unit is PlayerController player)
             {
                 if (HasUtilityItem)
                 {
-                    PlayerController player = unit as PlayerController;
                     player.EquipUtility(_utilityItem);
                     _utilityItem = null;
                 }
             }
-
-            //if (_activeZone != null)
-            //{
-            //    yield return _activeZone.OnUnitEnter();
-            //}
         }
 
         // Utility ====================
@@ -315,6 +312,7 @@ namespace Grid
         {
             _utilityItem = null;
         }
+
         // Zone ==================================================================================================
         public void AddZone(NodeZone newZone)
         {

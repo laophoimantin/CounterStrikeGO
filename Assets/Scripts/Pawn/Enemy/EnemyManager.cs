@@ -14,7 +14,7 @@ namespace Core.TurnSystem
         [SerializeField] private float _delayTime = 0.3f;
 
         private readonly List<EnemyController> _activeEnemiesList = new();
-        public int GetActiveEnemyCount() => _activeEnemiesList.Count;
+        public bool AreAllEnemiesDefeated() => _activeEnemiesList.Count<=0;
         
         private List<EnemyController> _pendingEnemies;
         private int _finishedCount = 0;
@@ -46,8 +46,6 @@ namespace Core.TurnSystem
             if (_activeEnemiesList.Contains(enemy))
             {
                 _activeEnemiesList.Remove(enemy);
-        
-                GameManager.Instance.CheckEliminationWinCondition();
             }
         }
 

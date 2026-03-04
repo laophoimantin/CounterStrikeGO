@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace Pawn
@@ -82,6 +83,7 @@ namespace Pawn
             }
 
             StartAction();
+            this.SendEvent(new OnPlayerSteppedEvent());
             StartCoroutine(Move(target));
             _tempMoveDirection = Direction.None;
         }
@@ -98,9 +100,9 @@ namespace Pawn
             yield return _visual.MoveTo(targetNode.WorldPos, duration);
 
             _isMoving = false;
-            _currentNode.TriggerEnter(this);
 
             yield return PostMove(_currentNode);
+            _currentNode.TriggerEnter(this);
             FinishAction(ShouldEndTurn());
         }
 
@@ -130,7 +132,7 @@ namespace Pawn
             {
                 return false;
             }
-                return true;
+            return true;
         }
 
         private void StartAction()

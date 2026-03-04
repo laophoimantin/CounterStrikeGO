@@ -7,23 +7,27 @@ using Core.Events;
 
 namespace Core.Events
 {
-    public class EventDispatcher : Singleton<EventDispatcher> 
+    public class EventDispatcher : Singleton<EventDispatcher>
     {
         private readonly Dictionary<Type, List<object>> _eventHandlers = new();
-        public void Subscribe<T>(Action<T> callback) where T : struct {
+
+        public void Subscribe<T>(Action<T> callback) where T : struct
+        {
             var eventType = typeof(T);
-    
+
             if (!_eventHandlers.ContainsKey(eventType))
             {
                 _eventHandlers[eventType] = new List<object>();
             }
+
             if (!_eventHandlers[eventType].Contains(callback))
             {
                 _eventHandlers[eventType].Add(callback);
             }
         }
 
-        public void Unsubscribe<T>(Action<T> callback) where T : struct {
+        public void Unsubscribe<T>(Action<T> callback) where T : struct
+        {
             var eventType = typeof(T);
 
             if (!_eventHandlers.TryGetValue(eventType, out var handlers)) return;
@@ -34,21 +38,24 @@ namespace Core.Events
             }
         }
 
-        public void SendEvent<T>(T eventData) where T : struct {
+        public void SendEvent<T>(T eventData) where T : struct
+        {
             var eventType = typeof(T);
 
             if (!_eventHandlers.TryGetValue(eventType, out var eventHandler)) return;
             foreach (var handler in eventHandler.ToList())
             {
                 ((Action<T>)handler).Invoke(eventData);
-            }   
+            }
         }
-        
-        public void ClearAll() {
+
+        public void ClearAll()
+        {
             _eventHandlers.Clear();
         }
 
-        private void OnDestroy() {
+        private void OnDestroy()
+        {
             if (!Application.isPlaying) return;
             ClearAll();
         }
@@ -61,15 +68,15 @@ public static class NewEventDispatcherExtensions
     {
         EventDispatcher.Instance.Subscribe<T>(callback);
     }
-    
+
     public static void Unsubscribe<T>(this MonoBehaviour instance, Action<T> callback) where T : struct
     {
         if (!Application.isPlaying) return;
         if (EventDispatcher.Instance == null) return;
         EventDispatcher.Instance.Unsubscribe<T>(callback);
     }
-    
-    public static void SendEvent<T>(this MonoBehaviour instance,T eventData) where T : struct
+
+    public static void SendEvent<T>(this MonoBehaviour instance, T eventData) where T : struct
     {
         EventDispatcher.Instance.SendEvent(eventData);
     }

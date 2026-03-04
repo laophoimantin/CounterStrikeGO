@@ -25,6 +25,7 @@ namespace Grid
         }
         void Start()
         {
+            
         }
         public void GenerateMap(int width, int height, float size)
         {
@@ -54,33 +55,29 @@ namespace Grid
             return _nodeGrid.TryGetValue(coord, out node);
         }
 
-        public List<Node> GetNodesInRange(Node centerNode, int range, bool centerInclude = false)
+        public List<Node> GetNodesInRange(Node centerNode, int range, bool includeCenter = false)
         {
             Vector2Int centerCoord = centerNode.Get2DCoordinate();
             var result = new List<Node>();
 
-            if (centerInclude)
-            {
-                if (_nodeGrid.TryGetValue(centerCoord, out Node node))
-                {
-                    result.Add(node);
-                }
-            }
-
+            
             for (int dx = -range; dx <= range; dx++)
             {
                 for (int dy = -range; dy <= range; dy++)
                 {
-                    if (Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy)) > range)
+                    if (!includeCenter && dx == 0 && dy == 0)
                         continue;
 
+                    // Chebyshev distance check (square range)
+                    if (Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy)) > range)
+                        continue;
+                    
                     Vector2Int coord = centerCoord + new Vector2Int(dx, dy);
-
+                    
                     if (_nodeGrid.TryGetValue(coord, out Node node))
                         result.Add(node);
                 }
             }
-
             return result;
         }
 

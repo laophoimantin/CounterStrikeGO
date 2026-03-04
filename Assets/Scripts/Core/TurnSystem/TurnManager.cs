@@ -11,7 +11,8 @@ namespace Core.TurnSystem
         private TurnType _currentTurn;
         private bool _actionPhaseActive = false;
         private bool _lock = false;
-
+        private int _turnCount = 0;
+public int TurnCount => _turnCount;
         public TurnType CurrentTurn => _currentTurn;
 
 
@@ -39,7 +40,6 @@ namespace Core.TurnSystem
             //Enemy Turn Events
             this.Unsubscribe<OnEnemyActionStartedEvent>(HandleEnemyStarted);
             this.Unsubscribe<OnEnemyActionFinishedEvent>(HandleEnemyFinished);
-
         }
 
         void Start()
@@ -66,7 +66,6 @@ namespace Core.TurnSystem
             _actionPhaseActive = false;
 
             SetTurn(nextPlainningTurn);
-
         }
 
         private void SetTurn(TurnType next)
@@ -93,7 +92,7 @@ namespace Core.TurnSystem
             if (eventData.EndTurn)
             {
                 EndActionPhase(TurnType.EnemyPlanning);
-
+                _turnCount++;
             }
             else
             {

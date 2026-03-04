@@ -20,7 +20,6 @@ public class Flash : UtilityController
         {
             yield return Flashing(affectedEnemies, targetNode);
         }
-        yield break;
     }
     private IEnumerator Flashing(List<EnemyController> enemies, Node targetNode)
     {

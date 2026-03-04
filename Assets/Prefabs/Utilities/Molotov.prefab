@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7e487452e42edeb4a872db8d465050e1, type: 2}
+  - {fileID: 2100000, guid: 49fa2fdca89f5d5458bfe39ecbeb47e7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -332,7 +332,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _visual: {fileID: 2800488762857286229}
   _currentNode: {fileID: 0}
+  _throwRange: 1
   _collider: {fileID: 1977861098401317242}
+  _endsTurn: 1
   _zonePrefab: {fileID: 4947160239019077367, guid: 9f5128931f013fd489c7f75157829b62, type: 3}
   _duration: 3
 --- !u!114 &2800488762857286229
