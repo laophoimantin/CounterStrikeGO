@@ -2,14 +2,15 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
-public class UtilityVisual : GridUnitVisual
+public abstract class UtilityVisual : GridUnitVisual
 {
-    [SerializeField] private Transform _utilityModel;
+    [SerializeField] protected Transform _utilityModel;
     
+    [Header("Throw Animation")]
     [SerializeField] private float _throwHeight = 2;
     [SerializeField] private float _throwDuration = 1;
 
-    void Start()
+    public virtual void Start()
     {
         if (_utilityModel != null)
             _utilityModel.gameObject.SetActive(false);
@@ -24,16 +25,25 @@ public class UtilityVisual : GridUnitVisual
         _utilityModel.transform.position = startPos + Vector3.up * 2;
     }
 
-    public void HideUtitlityModel()
+    public void HideUtilityModel()
     {
-        _pawnModel.gameObject.SetActive(false);
+        _utilityModel.gameObject.SetActive(false);
     }
 
-    public IEnumerator AnimateThrow(Vector3 targetPos)
+    public Sequence GetThrowSequence(Vector3 targetPos)
     {
-        yield return _utilityModel.transform
+        Sequence throwSeq = DOTween.Sequence();
+
+        throwSeq.Append(_utilityModel.transform
             .DOJump(targetPos, _throwHeight, 1, _throwDuration)
-            .SetEase(Ease.Linear)
-            .WaitForCompletion();
+            .SetEase(Ease.Linear));
+
+        throwSeq.Join(_utilityModel.transform
+            .DORotate(new Vector3(360f, 0, 0), _throwDuration, RotateMode.FastBeyond360)
+            .SetEase(Ease.Linear));
+
+        return throwSeq;
     }
+
+    public abstract Tween GetLandedAnim();
 }

@@ -241,7 +241,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2177235951455572608}
   - component: {fileID: 6848161530996731214}
-  - component: {fileID: 4421336160433964265}
   - component: {fileID: 1778499257861461408}
   m_Layer: 0
   m_Name: Smoke
@@ -279,27 +278,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fffd92831224643b6674ec8fb7ab7ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 4421336160433964265}
+  _visual: {fileID: 0}
   _currentNode: {fileID: 0}
   _throwRange: 1
   _collider: {fileID: 1778499257861461408}
   _endsTurn: 1
   _zonePrefab: {fileID: -3364030898839806846, guid: 60922860ddbea6d49a05b992a44fbffa, type: 3}
   _duration: 100
---- !u!114 &4421336160433964265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5931094388953076725}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60d040327a86447880bb3773d001e234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pawnModel: {fileID: 9127940101397394057}
-  _utilityModel: {fileID: 7660245811007317401}
 --- !u!65 &1778499257861461408
 BoxCollider:
   m_ObjectHideFlags: 0

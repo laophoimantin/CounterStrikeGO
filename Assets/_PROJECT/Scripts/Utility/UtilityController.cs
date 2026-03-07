@@ -2,6 +2,7 @@ using System;
 using Grid;
 using Pawn;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 
 public abstract class UtilityController : GridUnit
@@ -52,9 +53,13 @@ public abstract class UtilityController : GridUnit
 
     private IEnumerator ThrowRoutine(Node targetNode, Action onComplete)
     {
-        yield return _utilityVisual.AnimateThrow(targetNode.WorldPos);
-        _utilityVisual.HideUtitlityModel();
-        yield return OnLanded(targetNode);
+        Sequence fullAnimSeq = DOTween.Sequence();
+
+        fullAnimSeq.Append(_utilityVisual.GetThrowSequence(targetNode.WorldPos));
+        fullAnimSeq.Append(_utilityVisual.GetLandedAnim());
+        fullAnimSeq.AppendCallback(() => _utilityVisual.HideUtilityModel());
+        yield return fullAnimSeq.WaitForCompletion();
+        yield return OnLanded(targetNode); 
         Terminate(onComplete);
     }
 

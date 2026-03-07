@@ -17,9 +17,7 @@ public class Decoy : UtilityController
 
         if (affectedEnemies.Count > 0)
         {
-            Debug.Log("Decoy landed on " + targetNode.WorldPos + " and found " + affectedEnemies.Count + " enemies");
             yield return Lure(affectedEnemies, targetNode);
-            Debug.Log("Decoy lured " + affectedEnemies.Count + " enemies0");
         }
     }
     private IEnumerator Lure(List<EnemyController> enemies, Node targetNode)

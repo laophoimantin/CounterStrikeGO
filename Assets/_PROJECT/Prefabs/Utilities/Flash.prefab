@@ -324,7 +324,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2098276757803952886}
   - component: {fileID: 531425166764469080}
-  - component: {fileID: 5249278130004194834}
   - component: {fileID: 4451240819417628474}
   m_Layer: 0
   m_Name: Flash
@@ -362,26 +361,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e167a85e4354efc97908e1c76e770f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 5249278130004194834}
+  _visual: {fileID: 0}
   _currentNode: {fileID: 0}
   _throwRange: 1
   _collider: {fileID: 4451240819417628474}
   _endsTurn: 1
   _flashAmount: 2
---- !u!114 &5249278130004194834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8186530667036356580}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60d040327a86447880bb3773d001e234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pawnModel: {fileID: 2384546781458830686}
-  _utilityModel: {fileID: 2329955520931732821}
 --- !u!65 &4451240819417628474
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -180,7 +180,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7298840920863247322}
   - component: {fileID: 1904643667109439588}
-  - component: {fileID: 4697866703325565511}
   - component: {fileID: 4206497950099613433}
   m_Layer: 0
   m_Name: Grenade
@@ -218,25 +217,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78dda338c96e4bbcb61485a630ead4c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 4697866703325565511}
+  _visual: {fileID: 0}
   _currentNode: {fileID: 0}
   _throwRange: 1
   _collider: {fileID: 4206497950099613433}
   _endsTurn: 1
---- !u!114 &4697866703325565511
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5965038521269289059}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60d040327a86447880bb3773d001e234, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _pawnModel: {fileID: 2656185663215824837}
-  _utilityModel: {fileID: 9143512353725660657}
 --- !u!65 &4206497950099613433
 BoxCollider:
   m_ObjectHideFlags: 0
