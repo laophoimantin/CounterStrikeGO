@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ReachExitObjective
   m_EditorClassIdentifier: 
   _id: 
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: 7835e1a35173faf4c8737378215ff5dd, type: 3}
   _description: Exit

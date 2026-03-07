@@ -10,35 +10,34 @@ namespace Grid
     {
         [SerializeField] private GameObject _objectiveItemPrefab;
         private GameObject _objectiveItem;
-        
-        private bool _collected;
+        private bool _isCollected;
 
         public override void Initialize(Node owner)
         {
             base.Initialize(owner);
-            
+
             if (_objectiveItemPrefab == null)
             {
                 Debug.LogError("Objective Item is null!");
                 return;
             }
+
             _objectiveItem = Instantiate(_objectiveItemPrefab, owner.transform, false);
             _objectiveItem.transform.localPosition = Vector3.zero;
         }
 
         public override void OnEnter(GridUnit unit)
         {
-            if (_collected) return;
+            if (_isCollected) return;
             if (unit is not PlayerController) return;
-
-            _collected = true;
+            Debug.Log("Objective Pickup!");
+            _isCollected = true;
             GameManager.Instance.OnPlayerPickedUpObjective();
             HideItem();
         }
 
         private void HideItem()
         {
-            // Hide bomb
             _objectiveItem.SetActive(false);
         }
     }

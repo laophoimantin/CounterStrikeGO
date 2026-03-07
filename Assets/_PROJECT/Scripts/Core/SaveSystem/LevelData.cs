@@ -15,17 +15,3 @@ public class LevelData : ScriptableObject
     public List<BaseObjective> OptionalObjectives => _optionalObjectives;
 }
 
-[System.Serializable]
-public class LevelSaveData
-{
-    public string LevelId;
-    public bool IsUnlocked;
-    public List<ObjectiveSaveData> Objectives;
-}
-
-[System.Serializable]
-public class ObjectiveSaveData
-{
-    public string ObjectiveId;
-    public bool IsCompleted;
-}

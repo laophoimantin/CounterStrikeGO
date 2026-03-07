@@ -5,10 +5,8 @@ using UnityEngine;
 public class FinishUnderStepsObjective : BaseObjective
 {
     [SerializeField] private int _maxSteps;
-
-
     public override bool IsComplete(LevelContext context)
     {
-        return context.StepCount <= _maxSteps;
+        return context.GetData<int>(ContextKey.StepCount, 0) <= _maxSteps;
     }
 }

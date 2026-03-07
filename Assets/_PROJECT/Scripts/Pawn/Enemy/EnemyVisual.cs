@@ -26,7 +26,7 @@ public class EnemyVisual : GridUnitVisual
             _pawnModel.position = new Vector3(finalRestingPlace.x, finalRestingPlace.y + offScreenHeight, finalRestingPlace.z);
         
             // Tilt the pawn 90 degrees so it looks "knocked over" before it drops
-            _pawnModel.rotation = Quaternion.Euler(90f, UnityEngine.Random.Range(0f, 360f), 0f);
+            //_pawnModel.rotation = Quaternion.Euler(90f, UnityEngine.Random.Range(0f, 360f), 0f);// Todo: Fix
         });
 
         // STEP 3: The Drop (Slam into the table and bounce)

@@ -45,12 +45,14 @@ namespace Core
 
         public void OnPlayerPickedUpObjective()
         {
-            _context.PlayerHasObjectiveItem = true;
+            _context.SetData<bool>(ContextKey.HasObjectiveItem, true);
         }
 
         private void OnPlayerStep(OnPlayerSteppedEvent e)
         {
-            _context.StepCount++;
+            int currentSteps = _context.GetData<int>(ContextKey.StepCount, 0); 
+    
+            _context.SetData(ContextKey.StepCount, currentSteps + 1);
         }
 
         public void EvaluateWin()
@@ -58,6 +60,7 @@ namespace Core
             if (!_objectivesController.IsMainComplete())
                 return;
 
+            _objectivesController.UpdateOptionalCompletedState();
             WinGame();
         }
 

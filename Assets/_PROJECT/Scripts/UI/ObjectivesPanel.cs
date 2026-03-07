@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class ObjectivesPanel : MonoBehaviour
 {
+    [Header("Main UI Elements")]
     [SerializeField] private RectTransform _mainPanel;
-
     [SerializeField] private RectTransform _buttonContainer;
     [SerializeField] private CanvasGroup _backgroundGroup;
 
@@ -16,19 +16,19 @@ public class ObjectivesPanel : MonoBehaviour
     [SerializeField] private Button _returnButton;
     [SerializeField] private Button _resetButton;
     [SerializeField] private Button _exitButton;
-    [SerializeField] private string _mainMenuScene = "MainMenu";
 
     [Header("Win")]
     [SerializeField] private RectTransform _winButtonContainer;
     [SerializeField] private Button _nextLevelButton;
     [SerializeField] private Button _resetButton2;
 
-
+    [Header("Objectives")]
     [SerializeField] private RectTransform _objectiveContainer;
     [SerializeField] private ObjectiveItemUI _objectiveItemUIPrefab;
     private readonly List<ObjectiveItemUI> _spawnedItems = new();
 
     [Header("Animation Settings")]
+    [SerializeField] private float _itemStaggerDelay = 0.3f;
     [SerializeField] private float _animDuration = 0.5f;
     [SerializeField] private float _startYOffset = -500f;
     private Vector2 _originalPos;
@@ -36,10 +36,11 @@ public class ObjectivesPanel : MonoBehaviour
 
     [SerializeField] private Ease _easeOpen = Ease.InOutQuint;
     [SerializeField] private Ease _easeClose = Ease.InOutQuint;
-    
+
     [SerializeField] private RectTransform _offScreenPos;
-    public float OffScreenYPos => _offScreenPos.anchoredPosition.y;
-    
+    private float OffScreenYPos => _offScreenPos.anchoredPosition.y;
+
+    private Sequence _panelSeq;
 
     void OnEnable()
     {
@@ -51,7 +52,7 @@ public class ObjectivesPanel : MonoBehaviour
         this.Unsubscribe<OnGameEndedEvent>(OpenWinPanel);
     }
 
-    void Awake()
+    void OnDestroy()
     {
         _returnButton.onClick.RemoveAllListeners();
         _resetButton.onClick.RemoveAllListeners();
@@ -59,10 +60,15 @@ public class ObjectivesPanel : MonoBehaviour
         _nextLevelButton.onClick.RemoveAllListeners();
         _resetButton2.onClick.RemoveAllListeners();
 
+        _panelSeq?.Kill();
+        DOTween.Kill(this);
+    }
+
+    void Awake()
+    {
         _returnButton.onClick.AddListener(OnReturnClicked);
         _resetButton.onClick.AddListener(OnResetClicked);
         _exitButton.onClick.AddListener(OnExitClicked);
-
         _nextLevelButton.onClick.AddListener(OnNextLevelClicked);
         _resetButton2.onClick.AddListener(OnResetClicked);
 
@@ -72,7 +78,6 @@ public class ObjectivesPanel : MonoBehaviour
 
     public void Initialize()
     {
-        // Hide
         _pauseButtonContainer.gameObject.SetActive(false);
         _winButtonContainer.gameObject.SetActive(false);
         _mainPanel.gameObject.SetActive(false);
@@ -85,23 +90,41 @@ public class ObjectivesPanel : MonoBehaviour
         _spawnedItems.Add(item);
     }
 
-    private void Open()
+    private void CreateNewSequence()
     {
+        _panelSeq?.Kill();
+        _panelSeq = DOTween.Sequence();
+    }
+
+    private void OpenInternal(bool isWinPanel)
+    {
+        _mainPanel.gameObject.SetActive(true);
         _buttonContainer.DOKill();
         _backgroundGroup.DOKill();
 
         _buttonContainer.anchoredPosition = _hiddenPos;
         _backgroundGroup.alpha = 0f;
 
-        Sequence seq = DOTween.Sequence();
+        CreateNewSequence();
 
-        seq.Join(_backgroundGroup.DOFade(1f, _animDuration));
-        seq.Join(_buttonContainer.DOAnchorPos(_originalPos, _animDuration).SetEase(_easeOpen));
+        _panelSeq.Join(_backgroundGroup.DOFade(1f, _animDuration));
+        _panelSeq.Join(_buttonContainer.DOAnchorPos(_originalPos, _animDuration).SetEase(_easeOpen));
+
         for (int i = 0; i < _spawnedItems.Count; i++)
         {
-            _spawnedItems[i].SlideIn(seq,i, OffScreenYPos);
+            if (isWinPanel)
+            {
+                _panelSeq.Append(_spawnedItems[i].GetWinAnimationSequence(OffScreenYPos));
+            }
+            else
+            {
+                _panelSeq.Insert(i * _itemStaggerDelay, _spawnedItems[i].GetSlideInTween(OffScreenYPos));
+            }
         }
     }
+
+    private void Open() => OpenInternal(false);
+    private void OpenWin() => OpenInternal(true);
 
     private void Close()
     {
@@ -111,17 +134,18 @@ public class ObjectivesPanel : MonoBehaviour
         _buttonContainer.anchoredPosition = _originalPos;
         _backgroundGroup.alpha = 1f;
 
-        Sequence seq = DOTween.Sequence();
+        CreateNewSequence();
 
-        seq.Join(_backgroundGroup.DOFade(0f, _animDuration));
-        seq.Join(_buttonContainer.DOAnchorPos(_hiddenPos, _animDuration).SetEase(_easeClose));
+        _panelSeq.Join(_backgroundGroup.DOFade(0f, _animDuration));
+        _panelSeq.Join(_buttonContainer.DOAnchorPos(_hiddenPos, _animDuration).SetEase(_easeClose));
 
         for (int i = 0; i < _spawnedItems.Count; i++)
         {
-            _spawnedItems[i].SlideOut(seq, i, OffScreenYPos);
+            _panelSeq.Insert(i * _itemStaggerDelay, _spawnedItems[i].GetSlideOutTween(OffScreenYPos));
         }
 
-        seq.OnComplete(() => {
+        _panelSeq.OnComplete(() =>
+        {
             _mainPanel.gameObject.SetActive(false);
             _pauseButtonContainer.gameObject.SetActive(false);
         });
@@ -130,44 +154,32 @@ public class ObjectivesPanel : MonoBehaviour
 
     public void OpenPausePanel()
     {
-        _mainPanel.gameObject.SetActive(true);
         _winButtonContainer.gameObject.SetActive(false);
         _pauseButtonContainer.gameObject.SetActive(true);
         Open();
     }
 
-    private void ClosePause()
+    private void OpenWinPanel(OnGameEndedEvent eventData)
     {
-        Close();
+        _pauseButtonContainer.gameObject.SetActive(false);
+        _winButtonContainer.gameObject.SetActive(true);
+        OpenWin();
     }
 
     private void OnReturnClicked()
     {
-        ClosePause();
+        Close();
     }
 
     private void OnExitClicked()
     {
-        SceneController.Instance.LoadScene(_mainMenuScene);
+        SceneController.Instance.LoadMainMenu();
     }
-
-
-    private void OpenWinPanel(OnGameEndedEvent eventData)
-    {
-        _mainPanel.gameObject.SetActive(true);
-        _pauseButtonContainer.gameObject.SetActive(false);
-        _winButtonContainer.gameObject.SetActive(true);
-        foreach (var item in _spawnedItems)
-        {
-            item.Refresh();
-        }
-        Open();
-    }
-
 
     private void OnResetClicked()
     {
         _resetButton.interactable = false;
+        _resetButton2.interactable = false;
         SceneController.Instance.ReloadCurrentScene();
     }
 

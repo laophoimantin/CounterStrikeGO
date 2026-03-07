@@ -7,6 +7,6 @@ public class BringTheBombObjective : BaseObjective
 {
     public override bool IsComplete(LevelContext context)
     {
-        throw new System.NotImplementedException();
+        return context.GetData<bool>(ContextKey.HasObjectiveItem, false);
     }
 }

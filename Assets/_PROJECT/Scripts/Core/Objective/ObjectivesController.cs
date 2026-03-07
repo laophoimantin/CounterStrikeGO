@@ -6,6 +6,7 @@ public class ObjectivesController : MonoBehaviour
 {
     private RuntimeObjective _mainObjective;
     private List<RuntimeObjective> _optionalObjectives = new();
+    private string _currentLevelId;
     
     [SerializeField] private ObjectivesPanel _objectivesPanel;
 
@@ -13,28 +14,35 @@ public class ObjectivesController : MonoBehaviour
 
     public void Initialize(LevelData currentLevelData, LevelContext context)
     {
+        _currentLevelId = currentLevelData.LevelId;
         _context = context;
 
-        _objectivesPanel.Initialize();
         
-        _mainObjective = new RuntimeObjective(currentLevelData.MainObjective);
+        bool isMainDone = SaveManager.Instance.IsObjectiveComplete(_currentLevelId, currentLevelData.MainObjective.Id);
+        _mainObjective = new RuntimeObjective(currentLevelData.MainObjective, isMainDone);
         _objectivesPanel.SpawnObjective(_mainObjective);
         
-        foreach (var obj in currentLevelData.OptionalObjectives)
+       foreach (var obj in currentLevelData.OptionalObjectives)
         {
-            var runtimeObj = new RuntimeObjective(obj);
-            _optionalObjectives.Add(runtimeObj);
-            _objectivesPanel.SpawnObjective(runtimeObj);
+            bool isOptDone = SaveManager.Instance.IsObjectiveComplete(_currentLevelId, obj.Id);
+            var optObj = new RuntimeObjective(obj, isOptDone);
+            _optionalObjectives.Add(optObj);
+            _objectivesPanel.SpawnObjective(optObj);
         }
+        _objectivesPanel.Initialize();
     }
 
     public bool IsMainComplete()
     {
-        return _mainObjective.CheckProgress(_context);
+        _mainObjective.UpdateCompletedState(_context);
+        return _mainObjective.IsCompleteNow;
     }
 
-    public IEnumerable<RuntimeObjective> GetCompletedOptional()
+    public void UpdateOptionalCompletedState()
     {
-        return _optionalObjectives.Where(o => o.CheckProgress(_context));
+        foreach (var obj in _optionalObjectives)
+        {
+            obj.UpdateCompletedState(_context);
+        }
     }
 }

@@ -5,6 +5,6 @@ public class ReachExitWithItemObjective : BaseObjective
 {
     public override bool IsComplete(LevelContext context)
     {
-        return context.PlayerHasObjectiveItem;
+        return context.GetData<bool>(ContextKey.HasObjectiveItem, false);
     }
 }

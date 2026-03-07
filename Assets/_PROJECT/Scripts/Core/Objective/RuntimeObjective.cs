@@ -1,23 +1,23 @@
+using UnityEngine.ProBuilder.MeshOperations;
+
 public class RuntimeObjective
 {
-    public BaseObjective Blueprint { get; private set; }
+    public BaseObjective Blueprint { get; }
     public bool IsCompleteBefore { get; private set; }
     public bool IsCompleteNow { get; private set; }
 
-    public RuntimeObjective(BaseObjective blueprint)
+    public RuntimeObjective(BaseObjective blueprint, bool isCompletedBefore)
     {
         Blueprint = blueprint;
-        
-        //IsCompleteBefore = DataLoader.Instance.GetObjectiveData(blueprint.Id).IsCompleted;
-        IsCompleteNow = false;
+        IsCompleteBefore = isCompletedBefore;
+        IsCompleteNow = isCompletedBefore;
     }
 
-    public bool CheckProgress(LevelContext context)
+    public void UpdateCompletedState(LevelContext context)
     {
-        if (!IsCompleteNow && Blueprint.IsComplete(context))
+        if (!IsCompleteBefore)
         {
-            IsCompleteNow = true;
+            IsCompleteNow = Blueprint.IsComplete(context);
         }
-        return IsCompleteNow;
     }
 }

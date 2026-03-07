@@ -8,7 +8,10 @@ using UnityEngine.UI;
 public class SceneController : MonoBehaviour
 {
     public static SceneController Instance { get; private set; }
-
+    
+    [Header("Main Menu")]
+    [SerializeField] private string _mainMenuSceneName = "MainMenu";
+    
     [Header("Settings")]
     [SerializeField] private float _fadeDuration = 0.5f;
     [Tooltip("If true, this object will survive scene changes.")]
@@ -49,6 +52,10 @@ public class SceneController : MonoBehaviour
         StartCoroutine(LoadSceneRoutine(sceneName));
     }
 
+    public void LoadMainMenu()
+    {
+        LoadScene(_mainMenuSceneName);
+    }
     public void ReloadCurrentScene()
     {
         LoadScene(SceneManager.GetActiveScene().name);

@@ -16,4 +16,4 @@ MonoBehaviour:
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
   - {fileID: 11400000, guid: f7f10e55f115c6447980f6e7c08acdf3, type: 2}
-  - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}
+  - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}
