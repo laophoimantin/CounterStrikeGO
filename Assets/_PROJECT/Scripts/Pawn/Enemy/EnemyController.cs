@@ -1,4 +1,5 @@
 using Core.TurnSystem;
+using DG.Tweening;
 using Grid;
 using System;
 using System.Collections;
@@ -9,7 +10,7 @@ namespace Pawn
 {
     public class EnemyController : GridUnit
     {
-  
+
         [Header("References")]
         private EnemyVisual _enemyVisual;
 
@@ -30,7 +31,7 @@ namespace Pawn
 
 
         private List<Node> _astarPath = new();
- 
+
 
         public Node StartNode => 0 < _astarPath.Count ? _astarPath[0] : null;
         public Node NextNode => 0 + 1 < _astarPath.Count ? _astarPath[1] : null;
@@ -163,6 +164,20 @@ namespace Pawn
             yield return _visual.RotateTo(targetRot, duration);
         }
 
+        public Tween RotateTween(Direction newDirection, float duration)
+        {
+            Sequence rotateTween = DOTween.Sequence();
+            rotateTween.AppendCallback(() =>
+            {
+                SetFacingDirection(newDirection);
+            }
+            );
+
+            // Visual
+            Quaternion targetRot = GetRotationForDirection(newDirection);
+            return _visual.RotateToTween(targetRot, duration);
+        }
+
 
         private void UpdateNodeData(Node newNode)
         {
@@ -176,7 +191,6 @@ namespace Pawn
             _currentNode = newNode;
             _currentNode.AddUnit(this);
         }
-
 
         private bool TryAttack(Node targetNode)
         {
@@ -195,28 +209,43 @@ namespace Pawn
             if (_isDead) return;
             _isDead = true;
 
-            StartCoroutine(_visual.DeadAnim(1f, () =>
+            Sequence deathSequence = _visual.DeadAnim(1f);
+
+            deathSequence.OnComplete(() =>
             {
                 _currentNode.RemoveUnit(this);
                 _currentNode = null;
                 OnDestroyed?.Invoke(this);
                 onDeathComplete?.Invoke();
-            }));
+            });
         }
 
         public void HearNoise(Node noiseOrigin, Action onReactionComplete)
         {
-         _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
-            StartCoroutine(ReactToNoise(_astarPath, onReactionComplete));
+            _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
+
+
+            if (_astarPath == null || _astarPath.Count < 2)
+            {
+                onReactionComplete?.Invoke();
+                return;
+            }
+
+            Sequence hearNoiseSeq = DOTween.Sequence();
+
+            Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
+            hearNoiseSeq.Append(_enemyVisual.QuestionMarkAnim());
+            hearNoiseSeq.Append(RotateTween(targetDirection, 0.1f));
+
+            hearNoiseSeq.OnComplete(() =>
+            {
+                _currentBehavior = _noiseBehavior;
+                onReactionComplete?.Invoke();
+            });
         }
 
         private IEnumerator ReactToNoise(List<Node> path, Action onReactionComplete)
         {
-            if (path == null || path.Count < 2)
-            {
-                onReactionComplete?.Invoke();
-                yield break;
-            }
 
             Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
 

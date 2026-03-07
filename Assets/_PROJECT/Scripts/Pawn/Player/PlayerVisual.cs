@@ -18,16 +18,15 @@ public class PlayerVisual : GridUnitVisual
     }
 
     // Todo: Change later
-    public override IEnumerator DeadAnim(float duration, Action onComplete)
+    public override Sequence DeadAnim(float duration)
     {
         Sequence deathSeq = DOTween.Sequence();
             
         deathSeq.Join(_pawnModel.DORotate(new Vector3(0, 360, 0), duration, RotateMode.FastBeyond360));
         deathSeq.Join(_pawnModel.DOScale(Vector3.zero, duration).SetEase(Ease.InBack));
             
-        yield return deathSeq.WaitForCompletion();
+        return deathSeq;
 
-        onComplete?.Invoke();
     }
 
     public void SwitchUtilityModel(bool hasUtility)

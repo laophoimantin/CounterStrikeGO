@@ -12,6 +12,7 @@ public class DecoyVisual : UtilityVisual
     {
         base.Start();
         _decoyEffect.localScale = Vector3.zero;
+        _decoyEffect.gameObject.SetActive(false);       
     }
     
     public override Tween GetLandedAnim()
@@ -20,6 +21,7 @@ public class DecoyVisual : UtilityVisual
 
         decoySeq.AppendCallback(() => 
         {
+            _decoyEffect.gameObject.SetActive(true); 
             _decoyEffect.position = _utilityModel.position + Vector3.up * 0.5f;
             _decoyEffect.localScale = Vector3.zero; 
         });

@@ -27,15 +27,19 @@ public class GridUnitVisual : MonoBehaviour
             .SetEase(Ease.OutQuad)
             .WaitForCompletion();
     }
-    
-    // Test
-    public virtual IEnumerator DeadAnim(float duration, Action onComplete)
-    {
-        yield return _pawnModel.DOScale(Vector3.zero, duration)
-            .SetEase(Ease.InBack) 
-            .WaitForCompletion();
 
-        onComplete?.Invoke();
+    public Tween RotateToTween(Quaternion targetRot, float duration)
+    {
+       return _pawnModel.DORotateQuaternion(targetRot, duration)
+            .SetEase(Ease.OutQuad);
+    }
+
+    // Test
+    public virtual Sequence DeadAnim(float duration)
+    {
+        Sequence deathSeq = DOTween.Sequence();
+        deathSeq.Append(_pawnModel.DOScale(Vector3.zero, duration).SetEase(Ease.InBack));
+        return deathSeq;
     }
     
     public Vector3 GetPosition() => _pawnModel.position;

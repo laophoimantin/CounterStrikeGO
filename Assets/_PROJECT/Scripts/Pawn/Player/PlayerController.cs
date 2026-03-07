@@ -1,5 +1,6 @@
 using Core.Events;
 using Core.TurnSystem;
+using DG.Tweening;
 using Grid;
 using System;
 using System.Collections;
@@ -160,10 +161,12 @@ namespace Pawn
 
         public override void Terminate(Action onDeathComplete = null)
         {
-            StartCoroutine(_visual.DeadAnim(1f, () =>
+            Sequence deathSequence = _visual.DeadAnim(1f);
+
+            deathSequence.OnComplete(() =>
             {
                 OnDeathEvent(onDeathComplete);
-            }));
+            });
         }
 
         private void OnDeathEvent(Action onDeathComplete = null)

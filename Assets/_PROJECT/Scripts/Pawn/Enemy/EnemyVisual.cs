@@ -5,38 +5,48 @@ using UnityEngine;
 
 public class EnemyVisual : GridUnitVisual
 {
-    public override IEnumerator DeadAnim(float duration, Action onComplete)
+    [SerializeField] private Transform _questionMark;
+
+    void Start()
     {
-        // 1. Ask the Graveyard Manager where this piece should land
+        _questionMark.gameObject.SetActive(false);
+    }
+
+    public override Sequence DeadAnim(float duration)
+    {
         Vector3 finalRestingPlace = GraveyardManager.Instance.GetNextSlotPosition();
-    
-        // How high it needs to go to be off-screen (Adjust this based on your camera)
         float offScreenHeight = 15f; 
 
         Sequence deathSeq = DOTween.Sequence();
 
-        // STEP 1: The Abduction (Fly straight up really fast)
         deathSeq.Append(_pawnModel.DOMoveY(_pawnModel.position.y + offScreenHeight, duration * 0.4f)
-            .SetEase(Ease.InExpo)); // InExpo makes it start slow and ZOOM out
+            .SetEase(Ease.InExpo)); 
 
-        // STEP 2: The Mid-Air Teleport & Tilt
         deathSeq.AppendCallback(() => 
         {
-            // Move directly over the graveyard slot, keeping the height
             _pawnModel.position = new Vector3(finalRestingPlace.x, finalRestingPlace.y + offScreenHeight, finalRestingPlace.z);
-        
-            // Tilt the pawn 90 degrees so it looks "knocked over" before it drops
-            //_pawnModel.rotation = Quaternion.Euler(90f, UnityEngine.Random.Range(0f, 360f), 0f);// Todo: Fix
         });
 
         // STEP 3: The Drop (Slam into the table and bounce)
         deathSeq.Append(_pawnModel.DOMoveY(finalRestingPlace.y, duration * 0.4f)
-            .SetEase(Ease.OutBounce)); // OutBounce makes it physically bounce on the table
+            .SetEase(Ease.OutBounce)); 
 
-        yield return deathSeq.WaitForCompletion();
+        return deathSeq;
+    }
 
-        // IMPORTANT: Since the physical model is now in the graveyard, 
-        // Instead, just disable their logic/colliders.
-        onComplete?.Invoke();
+    public Sequence QuestionMarkAnim()
+    {
+        Sequence questionSeq = DOTween.Sequence();
+        questionSeq.AppendCallback(() =>
+        {
+            _questionMark.gameObject.SetActive(true);
+        });
+
+        questionSeq.Append(_questionMark.DOLocalMoveY(-0.5f, 1.5f).SetRelative().SetEase(Ease.OutBounce));
+        questionSeq.AppendCallback(() =>
+        {
+            _questionMark.gameObject.SetActive(false);
+        });
+        return questionSeq;
     }
 }

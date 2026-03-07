@@ -30,7 +30,7 @@ public abstract class UtilityVisual : GridUnitVisual
         _utilityModel.gameObject.SetActive(false);
     }
 
-    public Sequence GetThrowSequence(Vector3 targetPos)
+    public virtual Sequence GetThrowSequence(Vector3 targetPos)
     {
         Sequence throwSeq = DOTween.Sequence();
 
