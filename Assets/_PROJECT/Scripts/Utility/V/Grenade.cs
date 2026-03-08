@@ -1,12 +1,6 @@
-using Core.TurnSystem;
+using DG.Tweening;
 using Grid;
 using Pawn;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using DG.Tweening;
-using UnityEngine;
 
 public class Grenade : UtilityController
 {
@@ -15,13 +9,13 @@ public class Grenade : UtilityController
         Sequence seq = DOTween.Sequence();
         bool hasReaction = false;
 
+        float turn = 0;
         foreach (var enemy in targetNode.GetUnitsByType<EnemyController>())
         {
+            turn += 0.3f;
             var death = enemy.Terminate();
-
             if (death == null) continue;
-
-            seq.Insert(0, death);
+            seq.Insert(turn, death);
             hasReaction = true;
         }
 

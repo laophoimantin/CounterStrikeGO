@@ -18,14 +18,14 @@ namespace Pawn
             }
 
             var nextNode = enemy.NextNode;
-            plan.Add(new MoveAction(nextNode, Duration));
+            plan.Add(new MoveAction(nextNode));
 
 
             var upcoming = enemy.UpcomingNode;
             if (upcoming != null)
             {
                 Direction dir = enemy.GetDirectionFromTargetNode(nextNode, upcoming);
-                plan.Add(new RotateAction(dir, Duration));
+                plan.Add(new RotateAction(dir));
             }
             return plan;
         }

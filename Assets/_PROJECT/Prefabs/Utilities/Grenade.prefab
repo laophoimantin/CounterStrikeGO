@@ -180,6 +180,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7298840920863247322}
   - component: {fileID: 1904643667109439588}
+  - component: {fileID: 3295043646767896793}
   - component: {fileID: 4206497950099613433}
   m_Layer: 0
   m_Name: Grenade
@@ -217,11 +218,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78dda338c96e4bbcb61485a630ead4c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 0}
   _currentNode: {fileID: 0}
-  _throwRange: 1
-  _collider: {fileID: 4206497950099613433}
+  _visual: {fileID: 3295043646767896793}
+  _throwRange: 2
   _endsTurn: 1
+  _collider: {fileID: 4206497950099613433}
+--- !u!114 &3295043646767896793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5965038521269289059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d5cf6d37d8f4034ba2e5470af5132c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pawnModel: {fileID: 2656185663215824837}
+  _offScreenHeight: 15
+  _duration: 1
+  _punchRotation: {x: 0, y: 0, z: 15}
+  _wobbleDuration: 0.5
+  _vibrato: 10
+  _elasticity: 1
+  _punchPosition: {x: 0, y: 0.2, z: 0}
+  _landDuration: 0.3
+  _landVibrato: 8
+  _utilityModel: {fileID: 9143512353725660657}
+  _throwHeight: 2
+  _throwDuration: 1
 --- !u!65 &4206497950099613433
 BoxCollider:
   m_ObjectHideFlags: 0

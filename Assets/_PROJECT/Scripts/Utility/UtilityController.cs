@@ -7,7 +7,7 @@ using UnityEngine;
 
 public abstract class UtilityController : GridOccupant
 {
-    public override bool IsActive => true;
+    public override bool OccupiesSpace => true;
 
     [Header("Settings")]
     [SerializeField] private int _throwRange = 1;

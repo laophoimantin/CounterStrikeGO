@@ -326,6 +326,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8885504438761364268}
   - component: {fileID: 1409490960664311764}
+  - component: {fileID: 4839947585339817458}
   - component: {fileID: 7168953816085663151}
   m_Layer: 0
   m_Name: Decoy
@@ -364,11 +365,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739c0170093b48d9ad4fc49234331a32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 0}
   _currentNode: {fileID: 0}
+  _visual: {fileID: 4839947585339817458}
   _throwRange: 10
+  _endsTurn: 0
   _collider: {fileID: 7168953816085663151}
-  _endsTurn: 1
+--- !u!114 &4839947585339817458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7416297498664628362}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a49ed2033d04f0885664a5587a4c185, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pawnModel: {fileID: 3163547103218849650}
+  _offScreenHeight: 15
+  _duration: 1
+  _punchRotation: {x: 0, y: 0, z: 15}
+  _wobbleDuration: 0.5
+  _vibrato: 10
+  _elasticity: 1
+  _punchPosition: {x: 0, y: 0.2, z: 0}
+  _landDuration: 0.3
+  _landVibrato: 8
+  _utilityModel: {fileID: 6844427901595026848}
+  _throwHeight: 2
+  _throwDuration: 0.5
+  _decoyEffect: {fileID: 7394864351744868990}
+  _expandScale: 0.7
+  _expandDuration: 1
 --- !u!65 &7168953816085663151
 BoxCollider:
   m_ObjectHideFlags: 0

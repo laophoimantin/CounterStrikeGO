@@ -1,14 +1,15 @@
 using System.Collections;
+using DG.Tweening;
 
 namespace Grid
 {
-    public class SmokeZone : NodeZone
+    public class SmokeZone : Zone
     {
-        public override IEnumerator OnUnitEnter()
+        protected override Tween OnZoneCreated()
         {
-            yield break;
+            return null;
         }
 
-        public override bool IsObscuring() => true;
+        public override bool IsHideable() => true;
     }
 }

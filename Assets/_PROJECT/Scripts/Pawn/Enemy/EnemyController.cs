@@ -11,7 +11,7 @@ namespace Pawn
 {
     public class EnemyController : PawnUnit
     {
-
+        [SerializeField] private float _rotateDuration = 1f;
         [Header("References")]
         private EnemyVisual _enemyVisual;
 
@@ -25,26 +25,28 @@ namespace Pawn
 
         private readonly Direction[] _dirs =
         {
-            Direction.North, Direction.East, Direction.South, Direction.West
+            Direction.North,
+            Direction.East,
+            Direction.South,
+            Direction.West
         };
 
         public Direction CurrentFacingDirection => _facingDirection;
 
-        private List<PlayerController> _tempEnemyCache = new (10);
-        
+        private List<PlayerController> _tempEnemyCache = new(10);
+
         private List<Node> _astarPath = new();
 
 
         public Node StartNode => 0 < _astarPath.Count ? _astarPath[0] : null;
         public Node NextNode => 0 + 1 < _astarPath.Count ? _astarPath[1] : null;
         public Node UpcomingNode => 0 + 2 < _astarPath.Count ? _astarPath[2] : null;
-        
-        
+
+
         public Action<EnemyController> OnDestroyed;
 
 
         private int _flashTurnsRemaining;
-
 
 
         void OnEnable()
@@ -152,37 +154,25 @@ namespace Pawn
         }
 
 
-        public IEnumerator Move(Node targetNode, float duration)
+        public Sequence Move(Node targetNode)
         {
             // Logic
-            UpdateNodeData(targetNode);
+            Sequence seq = DOTween.Sequence();
+            seq.AppendCallback(() => { UpdateNodeData(targetNode); });
 
-            // Visual
-            yield return _visual.MoveTo(targetNode.WorldPos, duration);
+            seq.Append(_visual.MoveTo(targetNode.WorldPos, _moveDuration));
+            return seq;
         }
 
-        public IEnumerator Rotate(Direction newDirection, float duration)
+        public Sequence Rotate(Direction newDirection)
         {
-            // Logic
-            SetFacingDirection(newDirection);
-
-            // Visual
-            Quaternion targetRot = GetRotationForDirection(newDirection);
-            yield return _visual.RotateTo(targetRot, duration);
-        }
-
-        public Tween RotateTween(Direction newDirection, float duration)
-        {
-            Sequence rotateTween = DOTween.Sequence();
-            rotateTween.AppendCallback(() =>
-            {
-                SetFacingDirection(newDirection);
-            }
+            Sequence seq = DOTween.Sequence();
+            seq.AppendCallback(() => { SetFacingDirection(newDirection); }
             );
 
-            // Visual
             Quaternion targetRot = GetRotationForDirection(newDirection);
-            return _visual.RotateToTween(targetRot, duration);
+            seq.Append(_visual.RotateToTween(targetRot, _rotateDuration));
+            return seq;
         }
 
 
@@ -216,19 +206,63 @@ namespace Pawn
             if (_isDead) return null;
             _isDead = true;
 
-            Sequence deathSequence = _visual.DeadAnim();
+            Sequence seq = DOTween.Sequence();
+            seq.Append(_visual.FlyAnim());
+            seq.Append(_enemyVisual.WobbleAnim());
+            Vector3 finalRestingPlace = GraveyardManager.Instance.GetNextSlotPosition();
+            seq.AppendCallback(() =>
+            {
+                SnapPosition(finalRestingPlace);
+            });
 
-            deathSequence.AppendCallback(() =>
+            seq.Append(_enemyVisual.DropDown());
+            seq.AppendCallback(() =>
             {
                 _currentNode.RemoveUnit(this);
                 _currentNode = null;
                 OnDestroyed?.Invoke(this);
             });
+            seq.Append(_enemyVisual.BounceAnim());
 
-            deathSequence.Append(_enemyVisual.FlydownAnim());
-            
-            return deathSequence;
+            return seq;
         }
+
+        public Tween ReactToFire()
+        {
+            Sequence seq = DOTween.Sequence();
+
+            Node targetNode = FindWalkableNodeFromFacing();
+
+            // Cannot find a walkable node, so terminate
+            if (targetNode == null)
+            {
+                seq.Append(Terminate());
+                return seq;
+            }
+
+            // Runaway
+            Direction targetDir = GetDirectionFromTargetNode(_currentNode, targetNode);
+
+            if (targetDir != _facingDirection)
+                seq.Append(Rotate(targetDir));
+
+            seq.Append(Move(targetNode));
+            return seq;
+        }
+
+        private Node FindWalkableNodeFromFacing()
+        {
+            for (int i = 0; i < 4; i++)
+            {
+                Direction dir = GetDirectionByStep(i);
+                Node node = GetNodeInDirection(_currentNode, dir);
+                if (node != null && node.IsWalkable())
+                    return node;
+            }
+
+            return null;
+        }
+
 
         public Sequence HearNoise(Node noiseOrigin)
         {
@@ -239,27 +273,14 @@ namespace Pawn
                 return null;
             }
 
-            Sequence hearNoiseSeq = DOTween.Sequence();
-            Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
-            
-            hearNoiseSeq.Append(_enemyVisual.QuestionMarkAnim());
-            hearNoiseSeq.Append(RotateTween(targetDirection, 0.1f));
-
-            hearNoiseSeq.OnComplete(() =>
-            {
-                _currentBehavior = _noiseBehavior;
-            });
-            return hearNoiseSeq;
-        }
-
-        private IEnumerator ReactToNoise(List<Node> path, Action onReactionComplete)
-        {
-
+            Sequence seq = DOTween.Sequence();
             Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
 
-            yield return Rotate(targetDirection, 0.1f);
-            _currentBehavior = _noiseBehavior;
-            onReactionComplete?.Invoke();
+            seq.Append(_enemyVisual.QuestionMarkAnim());
+            seq.Append(Rotate(targetDirection));
+
+            seq.OnComplete(() => { _currentBehavior = _noiseBehavior; });
+            return seq;
         }
 
         private void AdvancePath()
@@ -275,19 +296,19 @@ namespace Pawn
 
         public Sequence GetFlashed(int duration)
         {
-            Sequence flashedSeq = DOTween.Sequence();
-            flashedSeq.Append(_enemyVisual.StunMarkAnim());
-            flashedSeq.AppendCallback(() =>
+            Sequence seq = DOTween.Sequence();
+            seq.AppendCallback(() =>
                 {
                     _currentBehavior = _flashedBehavior;
                     _flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
                 }
             );
-            return flashedSeq;
+            seq.Append(_enemyVisual.StunMarkAnim());
+            seq.Append(_enemyVisual.WobbleAnim());
+            return seq;
         }
 
-        
-        
+
         private void AdvanceFlashed()
         {
             if (_flashTurnsRemaining > 0)
@@ -302,7 +323,7 @@ namespace Pawn
         #endregion
 
 
-        #region Utility Methods
+        #region Helper Methods
 
         // 1. STATE MANAGEMENT (Setters & Core Getters)
         // ==============================================================================================

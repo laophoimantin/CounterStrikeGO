@@ -7,18 +7,18 @@ using UnityEngine;
 public class DeployZoneUtility : UtilityController
 {
     [Header("Zone Settings")]
-    [SerializeField] private NodeZone _zonePrefab;
+    [SerializeField] private Zone _zonePrefab;
     [SerializeField] private int _duration = 3;
-
-    // protected override IEnumerator OnLanded(Node targetNode)
-    // {
-    //     NodeZone newZone = Instantiate(_zonePrefab, targetNode.WorldPos, Quaternion.identity);
-    //     yield return newZone.Initialize(targetNode, _duration);
-    // }
-
 
     protected override Sequence GetOnLandedSequence(Node targetNode)
     {
-        return null;
+        Sequence seq = DOTween.Sequence();
+        seq.Append(SpawnZone(targetNode));
+        return seq;
+    }
+    private Tween SpawnZone(Node node)
+    {
+        Zone zone = Instantiate(_zonePrefab, node.WorldPos, Quaternion.identity);
+        return zone.Initialize(node, _duration);
     }
 }

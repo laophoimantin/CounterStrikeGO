@@ -1,23 +1,20 @@
+using System.Collections.Generic;
+using System.Linq;
 using Core.Events;
 using Core.TurnSystem;
 using DG.Tweening;
 using Grid;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 
 namespace Pawn
 {
-    public class PlayerController : PawnUnit 
+    public class PlayerController : PawnUnit
     {
-
         [Header("References")]
         private PlayerVisual _playerVisual;
 
-        [Range(0.1f, 2f)][SerializeField] private float _actionDurationModifier;
+        [Range(0.1f, 2f)] [SerializeField] private float _actionDurationModifier;
         private bool _isMoving = false;
         private bool _canMove = true;
 
@@ -66,7 +63,7 @@ namespace Pawn
         public void TryMoveTo(Direction direction)
         {
             _tempMoveDirection = direction;
-            if (!_canMove || _isMoving) return;
+            if (!_canMove || _isMoving || _hasUtility) return;
 
             Node target = _tempMoveDirection switch
             {
@@ -98,26 +95,21 @@ namespace Pawn
             UpdateNodeData(targetNode);
             float duration = TurnManager.Instance.GlobalActionDuration * _actionDurationModifier;
 
-            // Bắt đầu ráp nối rạp xiếc:
             Sequence fullMoveSeq = DOTween.Sequence();
 
-            // 1. CHẠY: Nhét cái Tween di chuyển vào (Nhớ sửa _visual.MoveTo nhả ra Tween nhé!)
-            fullMoveSeq.Append(_visual.MoveTo(targetNode.WorldPos, duration));
+            fullMoveSeq.Append(_playerVisual.MoveTo(targetNode.WorldPos, duration));
 
-            // 2. CHÉM: Lấy kịch bản kiểm tra và chém địch sau khi tới nơi
             Sequence postMoveSeq = GetPostMove(_currentNode);
             if (postMoveSeq != null)
             {
-                // Tới đích một phát là vung dao chém luôn!
                 fullMoveSeq.Append(postMoveSeq);
             }
 
-            // 3. DỌN DẸP: Sau khi chạy xong và chém xong xuôi tất cả...
             fullMoveSeq.OnComplete(() =>
             {
                 _isMoving = false;
-                _currentNode.TriggerEnter(this); // Đạp trúng bẫy hay lụm đồ gì thì xử lý ở đây
-                FinishAction(ShouldEndTurn());   // Báo cáo hết Turn
+                _currentNode.TriggerEnter(this); 
+                FinishAction(ShouldEndTurn());
             });
         }
 
@@ -127,25 +119,24 @@ namespace Pawn
             if (targetNode.HasUnitsOfType<EnemyController>())
             {
                 var enemies = targetNode.GetUnitsByType<EnemyController>().ToList();
-        
+
                 return Attack(enemies);
             }
-    
+
             return null;
         }
+
         private Sequence Attack(List<EnemyController> enemies)
         {
             Sequence attackSeq = DOTween.Sequence();
 
             foreach (var enemy in enemies)
             {
-                // Gọi cái hàm ông vừa sửa ở bài trước ấy!
-                Sequence deathSeq = enemy.Terminate(); 
-        
+                Sequence deathSeq = enemy.Terminate();
+
                 if (deathSeq != null)
                 {
-                    // Ép tất cả tụi nó hộc máu CÙNG MỘT LÚC tại mốc 0 giây
-                    attackSeq.Insert(0, deathSeq); 
+                    attackSeq.Insert(0, deathSeq);
                 }
             }
 
@@ -158,6 +149,7 @@ namespace Pawn
             {
                 return false;
             }
+
             return true;
         }
 
@@ -165,6 +157,7 @@ namespace Pawn
         {
             this.SendEvent(new OnPlayerActionStartedEvent());
         }
+
         private void FinishAction(bool shouldEnd)
         {
             this.SendEvent(new OnPlayerActionFinishedEvent(shouldEnd));
@@ -186,19 +179,14 @@ namespace Pawn
 
         public override Sequence Terminate()
         {
-            Sequence deathSequence = _visual.DeadAnim();
-
-            deathSequence.OnComplete(() =>
-            {
-                this.SendEvent(new OnPlayerDeadEvent());
-            });
-            
+            Sequence deathSequence = DOTween.Sequence();
+            deathSequence.Append(_playerVisual.FlyAnim());
+            deathSequence.OnComplete(() => { this.SendEvent(new OnPlayerDeadEvent()); });
             return deathSequence;
         }
 
         public void EquipUtility(UtilityController newUtility)
         {
-
             _currentUtility = newUtility;
             _currentUtility.OnPickUp(this);
             _hasUtility = true;
@@ -219,7 +207,7 @@ namespace Pawn
         private void UseUtility(Node targetNode)
         {
             bool endsTurn = _currentUtility.EndsTurn;
-            _currentUtility.Throw(targetNode,() => FinishAction(endsTurn));
+            _currentUtility.Throw(targetNode, () => FinishAction(endsTurn));
             _currentUtility = null; // Unequip utility
             _hasUtility = false;
             _playerVisual.SwitchUtilityModel(_hasUtility);
@@ -272,15 +260,16 @@ namespace Pawn
             if (_currentNode != null)
             {
                 _currentNode.RemoveUnit(this);
-                UnityEditor.EditorUtility.SetDirty(_currentNode);
+                EditorUtility.SetDirty(_currentNode);
             }
+
             _currentNode = newNode;
             _currentNode.AddUnit(this);
 
             // Visual Snap
             transform.position = _currentNode.transform.position;
 
-            UnityEditor.EditorUtility.SetDirty(this);
+            EditorUtility.SetDirty(this);
         }
 
         private Node GetNodeInDirection(Node node, Direction dir)

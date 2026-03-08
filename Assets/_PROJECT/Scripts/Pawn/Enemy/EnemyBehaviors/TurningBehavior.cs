@@ -14,12 +14,12 @@ namespace Pawn
             if (enemy.ScanForPlayerInFront(1))
             {
                 Node targetNode = enemy.GetNodeInFront();
-                plan.Add(new MoveAction(targetNode, Duration));
+                plan.Add(new MoveAction(targetNode));
             }
             else
             {
                 Direction targetDirection = enemy.GetDirectionTurnAround();
-                plan.Add(new RotateAction(targetDirection, Duration));
+                plan.Add(new RotateAction(targetDirection));
             }
             return plan;
         }

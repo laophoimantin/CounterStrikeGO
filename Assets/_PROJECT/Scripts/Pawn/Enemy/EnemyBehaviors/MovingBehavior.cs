@@ -14,20 +14,20 @@ namespace Pawn
             Node firstNodeInFront = enemy.GetNodeInFront();
             if (firstNodeInFront != null && firstNodeInFront.IsWalkable())
             {
-                plan.Add(new MoveAction(firstNodeInFront, Duration));
+                plan.Add(new MoveAction(firstNodeInFront));
 
                 Node secondNodeInFront = enemy.GetNodeInDirection(firstNodeInFront, enemy.CurrentFacingDirection);
 
                 if (secondNodeInFront == null || !secondNodeInFront.IsWalkable())
                 {
                     Direction targetDirection = enemy.GetDirectionTurnAround();
-                    plan.Add(new RotateAction(targetDirection, Duration, 0.1f));
+                    plan.Add(new RotateAction(targetDirection, 0.1f));
                 }
             }
             else
             {
                 Direction targetDirection = enemy.GetDirectionTurnAround();
-                plan.Add(new RotateAction(targetDirection, Duration));
+                plan.Add(new RotateAction(targetDirection));
             }
 
             return plan;

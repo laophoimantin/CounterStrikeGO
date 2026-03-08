@@ -47,7 +47,7 @@ namespace Grid
         [Header("Utility")]
         [SerializeField] private UtilityController _utilityItem;
         public bool HasUtilityItem => _utilityItem != null;
-        private NodeZone _activeZone;
+        private Zone _activeZone;
 
         [Header("Debug")]
         [SerializeField] private TextMeshPro _textMesh;
@@ -133,7 +133,7 @@ namespace Grid
 
         private void RearrangeUnits()
         {
-            var activeUnits = _units.Where(o => o.IsActive).ToList();
+            var activeUnits = _units.Where(o => o.OccupiesSpace).ToList();
 
             //int count = _units.Count;
             int count = activeUnits.Count;
@@ -310,11 +310,11 @@ namespace Grid
         }
 
         // Zone ==================================================================================================
-        public void AddZone(NodeZone newZone)
+        public void AddZone(Zone newZone)
         {
             if (_activeZone != null)
             {
-                _activeZone.ForceDestroy();
+                _activeZone.Expire();
             }
 
             _activeZone = newZone;
@@ -337,7 +337,7 @@ namespace Grid
 
         public bool IsHidden()
         {
-            if (_activeZone != null && _activeZone.IsObscuring())
+            if (_activeZone != null && _activeZone.IsHideable())
                 return true;
 
             return false;
@@ -365,7 +365,7 @@ namespace Grid
                 Gizmos.color = Color.red;
             }
 
-            Gizmos.DrawWireSphere(center, 0.5f);
+            //Gizmos.DrawWireSphere(center, 0.5f);
 
             Gizmos.color = Color.cyan;
             if (_north) DrawConnection(_north);

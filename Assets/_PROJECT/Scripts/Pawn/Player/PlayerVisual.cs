@@ -8,7 +8,6 @@ public class PlayerVisual : GridUnitVisual
     [Header("Utility Model")]
     [SerializeField] private GameObject _utilityModel;
     
-    [SerializeField] private float _duration = 1f;
     
     [Header("PickUp Animation")]
     [SerializeField] private float _liftHeight;
@@ -19,8 +18,7 @@ public class PlayerVisual : GridUnitVisual
         SwitchUtilityModel(false);
     }
 
-    // Todo: Change later
-    public override Sequence DeadAnim()
+    public override Tween FlyAnim()
     {
         Sequence deathSeq = DOTween.Sequence();
             
@@ -28,7 +26,6 @@ public class PlayerVisual : GridUnitVisual
         deathSeq.Join(_pawnModel.DOScale(Vector3.zero, _duration).SetEase(Ease.InBack));
             
         return deathSeq;
-
     }
 
     public void SwitchUtilityModel(bool hasUtility)
@@ -36,9 +33,6 @@ public class PlayerVisual : GridUnitVisual
         _pawnModel.gameObject.SetActive(!hasUtility);
         _utilityModel.SetActive(hasUtility);
     }
-    
-    
-    
     
     public void PickedUpAnim()
     {

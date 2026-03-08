@@ -292,6 +292,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8898377125659555656}
   - component: {fileID: 7145379669983265302}
+  - component: {fileID: 7426559291729761496}
   - component: {fileID: 1977861098401317242}
   m_Layer: 0
   m_Name: Molotov
@@ -329,13 +330,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55ad753523ec4ded8580701afff1890e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 0}
   _currentNode: {fileID: 0}
-  _throwRange: 1
+  _visual: {fileID: 7426559291729761496}
+  _throwRange: 3
+  _endsTurn: 0
   _collider: {fileID: 1977861098401317242}
-  _endsTurn: 1
   _zonePrefab: {fileID: 4947160239019077367, guid: 9f5128931f013fd489c7f75157829b62, type: 3}
   _duration: 3
+--- !u!114 &7426559291729761496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8734687359550613544}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a60d56d1d2924dcbbdd5adb14a91c0a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pawnModel: {fileID: 5541236055337904546}
+  _offScreenHeight: 15
+  _duration: 1
+  _punchRotation: {x: 0, y: 0, z: 15}
+  _wobbleDuration: 0.5
+  _vibrato: 10
+  _elasticity: 1
+  _punchPosition: {x: 0, y: 0.2, z: 0}
+  _landDuration: 0.3
+  _landVibrato: 8
+  _utilityModel: {fileID: 7502964345066267196}
+  _throwHeight: 2
+  _throwDuration: 1
 --- !u!65 &1977861098401317242
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -1,19 +1,31 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Core.TurnSystem;
+using DG.Tweening;
 using Pawn;
 
 namespace Grid
 {
-    public class FireZone : NodeZone
+    public class FireZone : Zone
     {
-        public override bool IsWalkable() => false; 
-        public override IEnumerator OnUnitEnter()
+        public override bool OccupiesSpace => false;
+        public override bool IsWalkable() => false;
+
+        protected override Tween OnZoneCreated()
         {
-            var enemyList = _hostNode.GetUnitsByType<EnemyController>();
-            return null;
+            return PushEnemiesAway();
+        }
+
+        private Tween PushEnemiesAway()
+        {
+            Sequence seq = DOTween.Sequence();
+            bool hasReaction = false;
+            foreach (var enemy in _currentNode.GetUnitsByType<EnemyController>())
+            {
+                var death = enemy.ReactToFire();
+                if (death == null) continue;
+                seq.Insert(0, death);
+                hasReaction = true;
+            }
+
+            return hasReaction ? seq : null;
         }
     }
 }

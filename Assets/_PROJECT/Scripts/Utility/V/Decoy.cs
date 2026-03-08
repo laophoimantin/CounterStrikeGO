@@ -18,7 +18,7 @@ public class Decoy : UtilityController
         {
             foreach (var enemy in node.GetUnitsByType<EnemyController>())
             {
-                if (!enemy.IsActive) continue;
+                if (!enemy.OccupiesSpace) continue;
 
                 var reaction = enemy.HearNoise(targetNode);
 

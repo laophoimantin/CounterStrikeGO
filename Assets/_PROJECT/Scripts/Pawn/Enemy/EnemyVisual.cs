@@ -3,14 +3,13 @@ using UnityEngine;
 
 public class EnemyVisual : GridUnitVisual
 {
-    [SerializeField] private float _offScreenHeight = 15f;
-
-    [SerializeField] private float _duration = 1f;
     [SerializeField] private float _markDuration = 1f;
-    
+
     [Header("Marks")]
     [SerializeField] private Transform _questionMark;
     [SerializeField] private Transform _stunMark;
+
+
 
     void Start()
     {
@@ -18,47 +17,34 @@ public class EnemyVisual : GridUnitVisual
         _stunMark.gameObject.SetActive(false);
     }
 
-    public override Sequence DeadAnim()
+    public Tween DropToGraveyard()
     {
-        Sequence deathSeq = DOTween.Sequence();
-
-        deathSeq.Append(_pawnModel.DOMoveY(_pawnModel.position.y + _offScreenHeight, _duration).SetEase(Ease.InExpo));
-
-        return deathSeq;
-    }
-
-    public Sequence FlydownAnim()
-    {
-        Sequence flydownSeq = DOTween.Sequence();
-        
+        Sequence seq = DOTween.Sequence();
         Vector3 finalRestingPlace = GraveyardManager.Instance.GetNextSlotPosition();
-        flydownSeq.AppendCallback(() => { _pawnModel.position = new Vector3(finalRestingPlace.x, finalRestingPlace.y + _offScreenHeight, finalRestingPlace.z); });
-        flydownSeq.Append(_pawnModel.DOMoveY(finalRestingPlace.y, _duration)
-            .SetEase(Ease.OutCubic));
-        
-        return flydownSeq;
-    }
 
-    public Sequence QuestionMarkAnim()
+        seq.Append(DropDown());
+        return seq;
+    }
+    
+    public Tween QuestionMarkAnim()
     {
-        Sequence questionSeq = DOTween.Sequence();
-        questionSeq.AppendCallback(() => { _questionMark.gameObject.SetActive(true); });
+        Sequence seq = DOTween.Sequence();
+        seq.AppendCallback(() => { _questionMark.gameObject.SetActive(true); });
 
-        questionSeq.Append(_questionMark.DOLocalMoveY(-0.5f, _markDuration).SetRelative().SetEase(Ease.OutBounce));
-        questionSeq.AppendCallback(() => { _questionMark.gameObject.SetActive(false); });
-        return questionSeq;
+        seq.Append(_questionMark.DOLocalMoveY(-0.5f, _markDuration).SetRelative().SetEase(Ease.OutBounce));
+        seq.AppendCallback(() => { _questionMark.gameObject.SetActive(false); });
+        return seq;
     }
 
-  
-
-    public Sequence StunMarkAnim()
+    public Tween StunMarkAnim()
     {
-        Sequence stunSequence = DOTween.Sequence();
-        stunSequence.AppendCallback(() => { _stunMark.gameObject.SetActive(true); });
-        stunSequence.Append(_stunMark.DOLocalMoveY(1f, _markDuration).SetRelative().SetEase(Ease.Linear));
+        Sequence seq = DOTween.Sequence();
+        seq.AppendCallback(() => { _stunMark.gameObject.SetActive(true); });
+        seq.Append(_stunMark.DOLocalMoveY(1f, _markDuration).SetRelative().SetEase(Ease.Linear));
 
-        return stunSequence;
+        return seq;
     }
+
 
     public void HideStunMark()
     {

@@ -324,6 +324,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2098276757803952886}
   - component: {fileID: 531425166764469080}
+  - component: {fileID: 4458046867740189460}
   - component: {fileID: 4451240819417628474}
   m_Layer: 0
   m_Name: Flash
@@ -361,12 +362,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e167a85e4354efc97908e1c76e770f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 0}
   _currentNode: {fileID: 0}
-  _throwRange: 1
-  _collider: {fileID: 4451240819417628474}
+  _visual: {fileID: 4458046867740189460}
+  _throwRange: 10
   _endsTurn: 1
+  _collider: {fileID: 4451240819417628474}
   _flashAmount: 2
+--- !u!114 &4458046867740189460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8186530667036356580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fadce5e863926dd479f9f41001b7919b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pawnModel: {fileID: 2384546781458830686}
+  _offScreenHeight: 15
+  _duration: 1
+  _punchRotation: {x: 0, y: 0, z: 15}
+  _wobbleDuration: 0.5
+  _vibrato: 10
+  _elasticity: 1
+  _punchPosition: {x: 0, y: 0.2, z: 0}
+  _landDuration: 0.3
+  _landVibrato: 8
+  _utilityModel: {fileID: 2329955520931732821}
+  _throwHeight: 2
+  _throwDuration: 0.5
 --- !u!65 &4451240819417628474
 BoxCollider:
   m_ObjectHideFlags: 0
