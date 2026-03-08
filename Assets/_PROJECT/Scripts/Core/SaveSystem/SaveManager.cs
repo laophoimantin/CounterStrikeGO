@@ -29,7 +29,7 @@ public class SaveManager : Singleton<SaveManager>
                 string json = File.ReadAllText(_saveFilePath);
                 // Ma thuật của Newtonsoft đây:
                 CurrentData = JsonConvert.DeserializeObject<GameSaveData>(json);
-                Debug.Log("Load Save File thành công!");
+                //Debug.Log("Load Save File thành công!");
             }
             catch (System.Exception e)
             {

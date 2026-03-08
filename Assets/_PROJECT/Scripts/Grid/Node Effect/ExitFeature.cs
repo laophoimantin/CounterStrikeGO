@@ -8,9 +8,9 @@ namespace Grid
     [CreateAssetMenu(fileName = "ExitFeature", menuName = "Grid/Node Feature/Exit")]
     public class ExitFeature : BaseNodeFeature
     {
-        public override void OnEnter(GridUnit unit)
+        public override void OnEnter(PawnUnit pawnUnit)
         {
-            if (unit is PlayerController)
+            if (pawnUnit is PlayerController)
             {
                 GameManager.Instance.EvaluateWin();
             }

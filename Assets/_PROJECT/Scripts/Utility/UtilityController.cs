@@ -5,71 +5,82 @@ using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 
-public abstract class UtilityController : GridUnit
+public abstract class UtilityController : GridOccupant
 {
-    private PlayerController _owner;
-    
+    public override bool IsActive => true;
+
+    [Header("Settings")]
     [SerializeField] private int _throwRange = 1;
+    [SerializeField] private bool _endsTurn = true;
     public int ThrowRange => _throwRange;
-    
+    public bool EndsTurn => _endsTurn;
+
     [Header("References")]
     [SerializeField] private Collider _collider;
+
     private UtilityVisual _utilityVisual;
 
-    [SerializeField] private bool _endsTurn = true;
-    public bool EndsTurn => _endsTurn;
+    void Awake()
+    {
+        _utilityVisual = _visual as UtilityVisual;
+
+        if (_utilityVisual == null)
+            Debug.LogError($"{name} requires UtilityVisual.");
+    }
 
     void Start()
     {
-        if (_currentNode != null)
-        {
-            _currentNode.AddUnit(this);
-            _currentNode.AddUtility(this);
-        }
-
-        _utilityVisual = _visual as UtilityVisual;
-        if (_utilityVisual == null)
-            Debug.Log("VISUALLLLLL!");
+        RegisterToNode();
     }
-       
+
+    private void RegisterToNode()
+    {
+        if (_currentNode == null) return;
+
+        _currentNode.AddUnit(this);
+        _currentNode.AddUtility(this);
+    }
+
+    private void UnregisterFromNode()
+    {
+        if (_currentNode == null) return;
+
+        _currentNode.RemoveUnit(this);
+        _currentNode.RemoveUtility();
+
+        _currentNode = null;
+    }
+
     public void OnPickUp(PlayerController player)
     {
-        if (_currentNode != null)
-        {
-            _currentNode.RemoveUnit(this);
-            _currentNode.RemoveUtility();
-            _currentNode = null;
-        }
-        
-        _owner = player;
+        UnregisterFromNode();
+
         _collider.enabled = false;
         _utilityVisual.SwitchToFlyingMode(player.transform.position);
     }
 
     public void Throw(Node targetNode, Action onComplete)
     {
-        StartCoroutine(ThrowRoutine(targetNode, onComplete));
-    }
+        Sequence sequence = DOTween.Sequence();
 
-    private IEnumerator ThrowRoutine(Node targetNode, Action onComplete)
+        sequence.Append(_utilityVisual.GetThrowSequence(targetNode.WorldPos));
+        AppendIfExists(sequence, _utilityVisual.GetLandedAnim());
+        sequence.AppendCallback(() => _utilityVisual.HideUtilityModel());
+        AppendIfExists(sequence, GetOnLandedSequence(targetNode));
+
+        sequence.OnComplete(() =>
+        {
+            onComplete?.Invoke();
+            Destroy(gameObject);
+        });
+    }
+    private void AppendIfExists(Sequence seq, Sequence toAppend)
     {
-        Sequence fullAnimSeq = DOTween.Sequence();
-
-        fullAnimSeq.Append(_utilityVisual.GetThrowSequence(targetNode.WorldPos));
-        fullAnimSeq.Append(_utilityVisual.GetLandedAnim());
-        fullAnimSeq.AppendCallback(() => _utilityVisual.HideUtilityModel());
-        yield return fullAnimSeq.WaitForCompletion();
-        yield return OnLanded(targetNode); 
-        Terminate(onComplete);
+        if (toAppend != null)
+            seq.Append(toAppend);
     }
 
-    public override void Terminate(Action onDeathComplete = null)
-    {
-        Destroy(gameObject);
-        onDeathComplete?.Invoke();
-    }
-    
-    protected abstract IEnumerator OnLanded(Node targetNode);
+    protected abstract Sequence GetOnLandedSequence(Node targetNode);
 
     // Editor ====================================================================================
 
@@ -109,7 +120,7 @@ public abstract class UtilityController : GridUnit
             _currentNode.RemoveUtility();
             UnityEditor.EditorUtility.SetDirty(_currentNode);
         }
-        
+
         _currentNode = newNode;
         _currentNode.AddUnit(this);
         _currentNode.AddUtility(this);

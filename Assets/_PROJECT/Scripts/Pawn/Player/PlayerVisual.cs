@@ -8,6 +8,8 @@ public class PlayerVisual : GridUnitVisual
     [Header("Utility Model")]
     [SerializeField] private GameObject _utilityModel;
     
+    [SerializeField] private float _duration = 1f;
+    
     [Header("PickUp Animation")]
     [SerializeField] private float _liftHeight;
     [SerializeField] private float _liftDuration;
@@ -18,12 +20,12 @@ public class PlayerVisual : GridUnitVisual
     }
 
     // Todo: Change later
-    public override Sequence DeadAnim(float duration)
+    public override Sequence DeadAnim()
     {
         Sequence deathSeq = DOTween.Sequence();
             
-        deathSeq.Join(_pawnModel.DORotate(new Vector3(0, 360, 0), duration, RotateMode.FastBeyond360));
-        deathSeq.Join(_pawnModel.DOScale(Vector3.zero, duration).SetEase(Ease.InBack));
+        deathSeq.Join(_pawnModel.DORotate(new Vector3(0, 360, 0), _duration, RotateMode.FastBeyond360));
+        deathSeq.Join(_pawnModel.DOScale(Vector3.zero, _duration).SetEase(Ease.InBack));
             
         return deathSeq;
 

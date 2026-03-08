@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Pawn
 {
-    public class PlayerController : GridUnit
+    public class PlayerController : PawnUnit 
     {
 
         [Header("References")]
@@ -85,46 +85,71 @@ namespace Pawn
 
             StartAction();
             this.SendEvent(new OnPlayerSteppedEvent());
-            StartCoroutine(Move(target));
+            ExecuteMoveSequence(target);
             _tempMoveDirection = Direction.None;
         }
 
 
-        private IEnumerator Move(Node targetNode)
+        private void ExecuteMoveSequence(Node targetNode)
         {
             _isMoving = true;
             _canMove = false;
 
             UpdateNodeData(targetNode);
-
             float duration = TurnManager.Instance.GlobalActionDuration * _actionDurationModifier;
-            yield return _visual.MoveTo(targetNode.WorldPos, duration);
 
-            _isMoving = false;
+            // Bắt đầu ráp nối rạp xiếc:
+            Sequence fullMoveSeq = DOTween.Sequence();
 
-            yield return PostMove(_currentNode);
-            _currentNode.TriggerEnter(this);
-            FinishAction(ShouldEndTurn());
+            // 1. CHẠY: Nhét cái Tween di chuyển vào (Nhớ sửa _visual.MoveTo nhả ra Tween nhé!)
+            fullMoveSeq.Append(_visual.MoveTo(targetNode.WorldPos, duration));
+
+            // 2. CHÉM: Lấy kịch bản kiểm tra và chém địch sau khi tới nơi
+            Sequence postMoveSeq = GetPostMove(_currentNode);
+            if (postMoveSeq != null)
+            {
+                // Tới đích một phát là vung dao chém luôn!
+                fullMoveSeq.Append(postMoveSeq);
+            }
+
+            // 3. DỌN DẸP: Sau khi chạy xong và chém xong xuôi tất cả...
+            fullMoveSeq.OnComplete(() =>
+            {
+                _isMoving = false;
+                _currentNode.TriggerEnter(this); // Đạp trúng bẫy hay lụm đồ gì thì xử lý ở đây
+                FinishAction(ShouldEndTurn());   // Báo cáo hết Turn
+            });
         }
 
 
-        private IEnumerator PostMove(Node targetNode)
+        private Sequence GetPostMove(Node targetNode)
         {
             if (targetNode.HasUnitsOfType<EnemyController>())
             {
                 var enemies = targetNode.GetUnitsByType<EnemyController>().ToList();
-                yield return Attack(enemies);
+        
+                return Attack(enemies);
             }
+    
+            return null;
         }
-        private IEnumerator Attack(List<EnemyController> enemies)
+        private Sequence Attack(List<EnemyController> enemies)
         {
-            int pending = enemies.Count;
+            Sequence attackSeq = DOTween.Sequence();
 
             foreach (var enemy in enemies)
-                enemy.Terminate(() => pending--);
+            {
+                // Gọi cái hàm ông vừa sửa ở bài trước ấy!
+                Sequence deathSeq = enemy.Terminate(); 
+        
+                if (deathSeq != null)
+                {
+                    // Ép tất cả tụi nó hộc máu CÙNG MỘT LÚC tại mốc 0 giây
+                    attackSeq.Insert(0, deathSeq); 
+                }
+            }
 
-            while (pending > 0)
-                yield return null;
+            return attackSeq;
         }
 
         private bool ShouldEndTurn()
@@ -159,22 +184,17 @@ namespace Pawn
             _currentNode.AddUnit(this);
         }
 
-        public override void Terminate(Action onDeathComplete = null)
+        public override Sequence Terminate()
         {
-            Sequence deathSequence = _visual.DeadAnim(1f);
+            Sequence deathSequence = _visual.DeadAnim();
 
             deathSequence.OnComplete(() =>
             {
-                OnDeathEvent(onDeathComplete);
+                this.SendEvent(new OnPlayerDeadEvent());
             });
+            
+            return deathSequence;
         }
-
-        private void OnDeathEvent(Action onDeathComplete = null)
-        {
-            this.SendEvent(new OnPlayerDeadEvent());
-            onDeathComplete?.Invoke();
-        }
-
 
         public void EquipUtility(UtilityController newUtility)
         {

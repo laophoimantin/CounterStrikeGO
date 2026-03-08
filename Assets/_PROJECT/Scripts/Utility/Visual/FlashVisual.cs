@@ -9,7 +9,7 @@ public class FlashVisual : UtilityVisual
         return base.GetThrowSequence(target);
     }
 
-    public override Tween GetLandedAnim()
+    public override Sequence GetLandedAnim()
     {
         return null;
     }

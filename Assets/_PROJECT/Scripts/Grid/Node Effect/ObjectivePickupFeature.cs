@@ -26,10 +26,10 @@ namespace Grid
             _objectiveItem.transform.localPosition = Vector3.zero;
         }
 
-        public override void OnEnter(GridUnit unit)
+        public override void OnEnter(PawnUnit pawnUnit)
         {
             if (_isCollected) return;
-            if (unit is not PlayerController) return;
+            if (pawnUnit is not PlayerController) return;
             Debug.Log("Objective Pickup!");
             _isCollected = true;
             GameManager.Instance.OnPlayerPickedUpObjective();

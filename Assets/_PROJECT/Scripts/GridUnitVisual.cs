@@ -14,11 +14,10 @@ public class GridUnitVisual : MonoBehaviour
             _pawnModel = transform.GetChild(0);
     }
 
-    public virtual IEnumerator MoveTo(Vector3 targetPos, float duration)
+    public Tween MoveTo(Vector3 targetPos, float duration)
     {
-        yield return transform.DOMove(targetPos, duration)
-            .SetEase(Ease.Linear)
-            .WaitForCompletion();
+        return transform.DOMove(targetPos, duration)
+            .SetEase(Ease.Linear);
     }
 
     public virtual IEnumerator RotateTo(Quaternion targetRot, float duration)
@@ -34,11 +33,11 @@ public class GridUnitVisual : MonoBehaviour
             .SetEase(Ease.OutQuad);
     }
 
-    // Test
-    public virtual Sequence DeadAnim(float duration)
+  
+    public virtual Sequence DeadAnim()
     {
         Sequence deathSeq = DOTween.Sequence();
-        deathSeq.Append(_pawnModel.DOScale(Vector3.zero, duration).SetEase(Ease.InBack));
+        deathSeq.Append(_pawnModel.DOScale(Vector3.zero, 1).SetEase(Ease.InBack));
         return deathSeq;
     }
     

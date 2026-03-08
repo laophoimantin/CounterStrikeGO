@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Core.Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,6 +19,8 @@ public class SceneController : MonoBehaviour
     [SerializeField] private bool _dontDestroyOnLoad = true;
 
     [Header("References")]
+    [SerializeField] private EventDispatcher _eventDispatcher;
+    
     [SerializeField] private GameObject _loadingScreen;
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Slider _progressBar;
@@ -97,17 +100,20 @@ public class SceneController : MonoBehaviour
         // =============================================================================
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
+        _eventDispatcher.Clear();
         operation.allowSceneActivation = false; // Prevent auto-jumping
 
         // While loading...
         while (operation.progress < 0.9f)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
-            if (_progressBar != null) _progressBar.value = progress;
+            if (_progressBar != null) 
+                _progressBar.value = progress;
             yield return null;
         }
 
-        if (_progressBar != null) _progressBar.value = 1f;
+        if (_progressBar != null) 
+            _progressBar.value = 1f;
 
         yield return new WaitForSecondsRealtime(0.5f);
 
@@ -118,7 +124,8 @@ public class SceneController : MonoBehaviour
 
         operation.allowSceneActivation = true;
 
-        while (!operation.isDone) yield return null;
+        while (!operation.isDone) 
+            yield return null;
 
         if (_loadingScreen != null)
             _loadingScreen.SetActive(false);

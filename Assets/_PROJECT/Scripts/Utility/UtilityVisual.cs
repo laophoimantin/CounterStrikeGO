@@ -45,5 +45,5 @@ public abstract class UtilityVisual : GridUnitVisual
         return throwSeq;
     }
 
-    public abstract Tween GetLandedAnim();
+    public abstract Sequence GetLandedAnim();
 }

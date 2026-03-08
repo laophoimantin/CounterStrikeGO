@@ -13,7 +13,7 @@ namespace Grid
     {
         [Header("Node Features")]
         [SerializeField] private BaseNodeFeature _feature;
-       
+
         // ------------------------------------------------------------
         [Header("Core")]
         [SerializeField] private int _xValue;
@@ -37,7 +37,7 @@ namespace Grid
 
         // ------------------------------------------------------------
         [Header("Occupancy")]
-        private List<GridUnit> _units = new();
+        private List<GridOccupant> _units = new();
 
         // ------------------------------------------------------------
         [Header("Crowd Control")]
@@ -83,7 +83,7 @@ namespace Grid
         }
 
         // Unit Management
-        public void AddUnit(GridUnit unit)
+        public void AddUnit(GridOccupant unit)
         {
             if (!_units.Contains(unit))
             {
@@ -92,7 +92,7 @@ namespace Grid
             }
         }
 
-        public void RemoveUnit(GridUnit unit)
+        public void RemoveUnit(GridOccupant unit)
         {
             _units.Remove(unit);
             RearrangeUnits();
@@ -103,22 +103,22 @@ namespace Grid
             return _units.Count > 0;
         }
 
-        public bool HasUnitsOfType<T>() where T : GridUnit
+        public bool HasUnitsOfType<T>() where T : PawnUnit
         {
             return _units.Any(u => u is T);
         }
 
-        public IEnumerable<GridUnit> GetAllUnits()
+        public IEnumerable<GridOccupant> GetAllUnits()
         {
             return _units;
         }
 
-        public IEnumerable<T> GetUnitsByType<T>() where T : GridUnit
+        public IEnumerable<T> GetUnitsByType<T>() where T : PawnUnit
         {
             return _units.OfType<T>();
         }
 
-        public T GetUnitByType<T>() where T : GridUnit
+        public T GetUnitByType<T>() where T : PawnUnit
         {
             foreach (var unit in _units)
             {
@@ -133,9 +133,10 @@ namespace Grid
 
         private void RearrangeUnits()
         {
-            List<GridUnit> aliveUnits = _units.Where(u => !u.IsDead).ToList();
+            var activeUnits = _units.Where(o => o.IsActive).ToList();
 
-            int count = _units.Count;
+            //int count = _units.Count;
+            int count = activeUnits.Count;
             if (count == 0) return;
 
             List<Vector3> slots = new List<Vector3>();
@@ -156,17 +157,13 @@ namespace Grid
                 }
             }
 
-            // List<GridUnit> sortedUnits = _units.OrderByDescending(u =>
-            //     Vector3.SqrMagnitude(u.transform.position - transform.position)
-            // ).ToList();
-
-            List<GridUnit> sortedUnits = aliveUnits.OrderByDescending(u =>
+            List<GridOccupant> sortedUnits = activeUnits.OrderByDescending(u =>
                 Vector3.SqrMagnitude(u.transform.position - transform.position)
             ).ToList();
 
             List<Vector3> availableSlots = new List<Vector3>(slots);
 
-            foreach (GridUnit unit in sortedUnits)
+            foreach (GridOccupant unit in sortedUnits)
             {
                 Vector3 bestSlot = Vector3.zero;
                 float bestDist = float.MaxValue;
@@ -192,7 +189,6 @@ namespace Grid
                 }
             }
         }
-
 
         // Neighbors ========================================================================================================================
         public Node GetNodeInDirection(Direction dir)
@@ -285,14 +281,14 @@ namespace Grid
             if (_west != null) yield return _west;
         }
 
-        public void TriggerEnter(GridUnit unit)
+        public void TriggerEnter(PawnUnit pawnUnit)
         {
             if (_feature != null)
             {
-                _feature.OnEnter(unit);
+                _feature.OnEnter(pawnUnit);
             }
 
-            if (unit is PlayerController player)
+            if (pawnUnit is PlayerController player)
             {
                 if (HasUtilityItem)
                 {

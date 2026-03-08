@@ -13,5 +13,5 @@ public abstract class BaseNodeFeature : ScriptableObject
         _currentNode = owner;
     }
 
-    public abstract void OnEnter(GridUnit unit);
+    public abstract void OnEnter(PawnUnit pawnUnit);
 }}

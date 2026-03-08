@@ -4,11 +4,12 @@ using Grid;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 namespace Pawn
 {
-    public class EnemyController : GridUnit
+    public class EnemyController : PawnUnit
     {
 
         [Header("References")]
@@ -29,19 +30,22 @@ namespace Pawn
 
         public Direction CurrentFacingDirection => _facingDirection;
 
-
+        private List<PlayerController> _tempEnemyCache = new (10);
+        
         private List<Node> _astarPath = new();
 
 
         public Node StartNode => 0 < _astarPath.Count ? _astarPath[0] : null;
         public Node NextNode => 0 + 1 < _astarPath.Count ? _astarPath[1] : null;
         public Node UpcomingNode => 0 + 2 < _astarPath.Count ? _astarPath[2] : null;
+        
+        
+        public Action<EnemyController> OnDestroyed;
 
 
         private int _flashTurnsRemaining;
 
 
-        public Action<EnemyController> OnDestroyed;
 
         void OnEnable()
         {
@@ -113,7 +117,10 @@ namespace Pawn
             else if (!HasReachedNoiseDestination())
                 _currentBehavior = _noiseBehavior;
             else
+            {
+                _enemyVisual.HideStunMark();
                 _currentBehavior = _defaultBehavior;
+            }
         }
 
         // --- AI Action & Utility Methods ---
@@ -196,7 +203,7 @@ namespace Pawn
         {
             if (targetNode.HasUnitsOfType<PlayerController>() && !targetNode.IsHidden())
             {
-                GridUnit player = targetNode.GetUnitByType<PlayerController>();
+                PlayerController player = targetNode.GetUnitByType<PlayerController>();
                 player.Terminate();
                 return true;
             }
@@ -204,44 +211,45 @@ namespace Pawn
             return false;
         }
 
-        public override void Terminate(Action onDeathComplete)
+        public override Sequence Terminate()
         {
-            if (_isDead) return;
+            if (_isDead) return null;
             _isDead = true;
 
-            Sequence deathSequence = _visual.DeadAnim(1f);
+            Sequence deathSequence = _visual.DeadAnim();
 
-            deathSequence.OnComplete(() =>
+            deathSequence.AppendCallback(() =>
             {
                 _currentNode.RemoveUnit(this);
                 _currentNode = null;
                 OnDestroyed?.Invoke(this);
-                onDeathComplete?.Invoke();
             });
+
+            deathSequence.Append(_enemyVisual.FlydownAnim());
+            
+            return deathSequence;
         }
 
-        public void HearNoise(Node noiseOrigin, Action onReactionComplete)
+        public Sequence HearNoise(Node noiseOrigin)
         {
             _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
 
-
             if (_astarPath == null || _astarPath.Count < 2)
             {
-                onReactionComplete?.Invoke();
-                return;
+                return null;
             }
 
             Sequence hearNoiseSeq = DOTween.Sequence();
-
             Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
+            
             hearNoiseSeq.Append(_enemyVisual.QuestionMarkAnim());
             hearNoiseSeq.Append(RotateTween(targetDirection, 0.1f));
 
             hearNoiseSeq.OnComplete(() =>
             {
                 _currentBehavior = _noiseBehavior;
-                onReactionComplete?.Invoke();
             });
+            return hearNoiseSeq;
         }
 
         private IEnumerator ReactToNoise(List<Node> path, Action onReactionComplete)
@@ -265,13 +273,21 @@ namespace Pawn
             return _astarPath == null || _astarPath.Count <= 1;
         }
 
-        public void GetFlashed(int duration, Action onReactionComplete)
+        public Sequence GetFlashed(int duration)
         {
-            _currentBehavior = _flashedBehavior;
-            _flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
-            onReactionComplete?.Invoke();
+            Sequence flashedSeq = DOTween.Sequence();
+            flashedSeq.Append(_enemyVisual.StunMarkAnim());
+            flashedSeq.AppendCallback(() =>
+                {
+                    _currentBehavior = _flashedBehavior;
+                    _flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
+                }
+            );
+            return flashedSeq;
         }
 
+        
+        
         private void AdvanceFlashed()
         {
             if (_flashTurnsRemaining > 0)
