@@ -21,8 +21,13 @@ public abstract class UtilityVisual : GridUnitVisual
     public void SwitchToFlyingMode(Vector3 startPos)
     {
         _pawnModel.gameObject.SetActive(false);
+        ShowUtilityModel();
+		_utilityModel.transform.position = startPos + Vector3.up * 2;
+    }
+
+    public void ShowUtilityModel()
+    {
         _utilityModel.gameObject.SetActive(true);
-        _utilityModel.transform.position = startPos + Vector3.up * 2;
     }
 
     public void HideUtilityModel()

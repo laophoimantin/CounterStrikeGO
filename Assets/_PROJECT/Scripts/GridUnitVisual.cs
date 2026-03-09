@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using DG.Tweening;
+using UnityEditor;
 using UnityEngine;
 
 public class GridUnitVisual : MonoBehaviour
@@ -24,19 +25,20 @@ public class GridUnitVisual : MonoBehaviour
             _pawnModel = transform.GetChild(0);
     }
 
-    public Tween MoveTo(Vector3 targetPos, float duration)
+    public Tween ShowBaseModel()
+    {
+        Sequence seq = DOTween.Sequence();
+
+        _pawnModel.gameObject.SetActive(true);
+        return seq;
+    }
+
+	public Tween MoveTo(Vector3 targetPos, float duration)
     {
         return transform.DOMove(targetPos, duration).SetEase(Ease.Linear);
     }
 
-    public virtual IEnumerator RotateTo(Quaternion targetRot, float duration)
-    {
-        yield return _pawnModel.DORotateQuaternion(targetRot, duration)
-            .SetEase(Ease.OutQuad)
-            .WaitForCompletion();
-    }
-
-    public Tween RotateToTween(Quaternion targetRot, float duration)
+    public Tween RotateTo(Quaternion targetRot, float duration)
     {
        return _pawnModel.DORotateQuaternion(targetRot, duration)
             .SetEase(Ease.OutQuad);
@@ -72,14 +74,7 @@ public class GridUnitVisual : MonoBehaviour
     {
         Sequence seq = DOTween.Sequence();
 
-        seq.AppendCallback(() =>
-        {
-            _pawnModel.localRotation = Quaternion.identity;
-        });
-
-        seq.Append(
-            _pawnModel.DOPunchRotation(_punchRotation, _wobbleDuration, _vibrato, _elasticity).SetEase(Ease.OutQuad)
-        );
+        seq.Append(_pawnModel.DOPunchRotation(_punchRotation, _wobbleDuration, _vibrato, _elasticity).SetEase(Ease.OutQuad));
 
         return seq;
     }
@@ -93,6 +88,9 @@ public class GridUnitVisual : MonoBehaviour
         return seq;
     }
     
+
+
+
     public Vector3 GetPosition() => _pawnModel.position;
     public Quaternion GetRotation() => _pawnModel.rotation;
 

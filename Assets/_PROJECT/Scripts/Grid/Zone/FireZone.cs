@@ -5,7 +5,6 @@ namespace Grid
 {
     public class FireZone : Zone
     {
-        public override bool OccupiesSpace => false;
         public override bool IsWalkable() => false;
 
         protected override Tween OnZoneCreated()

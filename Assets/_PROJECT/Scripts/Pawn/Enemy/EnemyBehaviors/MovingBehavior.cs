@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Core.TurnSystem;
 using Grid;
 using UnityEngine;
 
@@ -11,12 +10,15 @@ namespace Pawn
         public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
         {
             var plan = new List<BaseEnemyAction>();
+
+            bool hasMove = false;
+
             Node firstNodeInFront = enemy.GetNodeInFront();
             if (firstNodeInFront != null && firstNodeInFront.IsWalkable())
             {
                 plan.Add(new MoveAction(firstNodeInFront));
-
-                Node secondNodeInFront = enemy.GetNodeInDirection(firstNodeInFront, enemy.CurrentFacingDirection);
+                hasMove = true;
+				Node secondNodeInFront = enemy.GetNodeInDirection(firstNodeInFront, enemy.CurrentFacingDirection);
 
                 if (secondNodeInFront == null || !secondNodeInFront.IsWalkable())
                 {
@@ -28,6 +30,16 @@ namespace Pawn
             {
                 Direction targetDirection = enemy.GetDirectionTurnAround();
                 plan.Add(new RotateAction(targetDirection));
+
+                if (!hasMove)
+                {
+                    hasMove = true;
+                    Node nodeBehind = enemy.GetNodeInBack();
+                    if (nodeBehind != null && nodeBehind.IsWalkable())
+                    {
+                        plan.Add(new MoveAction(nodeBehind));
+                    }
+                }
             }
 
             return plan;

@@ -86,7 +86,6 @@ namespace Pawn
             _tempMoveDirection = Direction.None;
         }
 
-
         private void ExecuteMoveSequence(Node targetNode)
         {
             _isMoving = true;
@@ -95,17 +94,17 @@ namespace Pawn
             UpdateNodeData(targetNode);
             float duration = TurnManager.Instance.GlobalActionDuration * _actionDurationModifier;
 
-            Sequence fullMoveSeq = DOTween.Sequence();
+            Sequence seq = DOTween.Sequence();
 
-            fullMoveSeq.Append(_playerVisual.MoveTo(targetNode.WorldPos, duration));
+            seq.Append(_playerVisual.MoveTo(targetNode.WorldPos, duration));
 
-            Sequence postMoveSeq = GetPostMove(_currentNode);
+			Sequence postMoveSeq = TryAttack(_currentNode);
             if (postMoveSeq != null)
             {
-                fullMoveSeq.Append(postMoveSeq);
+                seq.Append(postMoveSeq);
             }
 
-            fullMoveSeq.OnComplete(() =>
+            seq.OnComplete(() =>
             {
                 _isMoving = false;
                 _currentNode.TriggerEnter(this); 
@@ -114,14 +113,15 @@ namespace Pawn
         }
 
 
-        private Sequence GetPostMove(Node targetNode)
+        private Sequence TryAttack(Node targetNode)
         {
-            if (targetNode.HasUnitsOfType<EnemyController>())
+            if (targetNode.HasUnitsOfType<EnemyController>() && !targetNode.IsHideable())
             {
                 var enemies = targetNode.GetUnitsByType<EnemyController>().ToList();
 
                 return Attack(enemies);
             }
+
 
             return null;
         }

@@ -1401,6 +1401,7 @@ MonoBehaviour:
   _mainMenuSceneName: MainMenu
   _fadeDuration: 0.5
   _dontDestroyOnLoad: 1
+  _eventDispatcher: {fileID: 0}
   _loadingScreen: {fileID: 105114185}
   _canvasGroup: {fileID: 63239477}
   _progressBar: {fileID: 0}
@@ -6050,7 +6051,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2009852121}
   m_Layer: 0
-  m_Name: '> Map ======================== '
+  m_Name: '> Utility ======================== '
   m_TagString: EditorOnly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

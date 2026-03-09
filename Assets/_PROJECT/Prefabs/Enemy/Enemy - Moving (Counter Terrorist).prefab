@@ -213,8 +213,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf178964feb454cba4cf67a62b1fcb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 3045078325667156086}
   _currentNode: {fileID: 0}
+  _visual: {fileID: 3045078325667156086}
+  _moveDuration: 1
+  _rotateDuration: 1
   _defaultBehavior: {fileID: 11400000, guid: e49110add1fc46b43a08e654916b2363, type: 2}
   _noiseBehavior: {fileID: 11400000, guid: e6dbb9ed0df3035458886f567df99a9a, type: 2}
   _flashedBehavior: {fileID: 11400000, guid: 67f4cfff1bb5ab64ea781c6b441e2151, type: 2}
@@ -232,6 +234,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pawnModel: {fileID: 3727935971373223522}
+  _offScreenHeight: 15
+  _duration: 1
+  _punchRotation: {x: 0, y: 0, z: 15}
+  _wobbleDuration: 0.5
+  _vibrato: 10
+  _elasticity: 1
+  _punchPosition: {x: 0, y: 0.2, z: 0}
+  _landDuration: 0.3
+  _landVibrato: 8
+  _markDuration: 1
   _questionMark: {fileID: 6832242492170658496}
   _stunMark: {fileID: 7687509050234431069}
 --- !u!1 &2263954036405103384
@@ -1071,7 +1083,7 @@ GameObject:
   - component: {fileID: 6832242492170658496}
   - component: {fileID: 3925841667981072637}
   m_Layer: 0
-  m_Name: question-mark-silhouette-hand-drawn-in-simple-style-illustration-icon-question-symbol-for-print-and-design-quiz-and-exam-concept-isolated-black-element-on-white-background-vector
+  m_Name: Qustion Mark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1086,7 +1098,7 @@ Transform:
   m_GameObject: {fileID: 6547150535646175207}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.17, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 0.025056718, y: 0.025056718, z: 0.025056718}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1133,12 +1145,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 5af4cd8ac3a0f1744aa447fdbdf7f940, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1a2dcab4fd1dfb9458fd6abbb6fda2d1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 19.2, y: 19.2}
+  m_Size: {x: 24, y: 24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1155,7 +1167,7 @@ GameObject:
   - component: {fileID: 7687509050234431069}
   - component: {fileID: 1692653675813771478}
   m_Layer: 0
-  m_Name: images
+  m_Name: Stun Mark
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1170,7 +1182,7 @@ Transform:
   m_GameObject: {fileID: 7117648510774323751}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 0.16915, y: 0.15, z: 0.16915}
   m_ConstrainProportionsScale: 0
   m_Children: []

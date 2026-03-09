@@ -335,7 +335,7 @@ namespace Grid
             return true;
         }
 
-        public bool IsHidden()
+        public bool IsHideable()
         {
             if (_activeZone != null && _activeZone.IsHideable())
                 return true;

@@ -2,18 +2,16 @@ using Core.Events;
 using Core.TurnSystem;
 using DG.Tweening;
 using Pawn;
+using UnityEngine;
 
 namespace Grid
 {
-    public abstract class Zone : GridOccupant
+    public abstract class Zone : MonoBehaviour
     {
-        protected int _duration;
-        private ZoneVisual _zoneVisual;
-        void Awake()
-        {
-            _zoneVisual = (ZoneVisual)_visual;
-        }
-        
+		protected int _duration;
+        protected Node _currentNode;
+        [SerializeField] private ZoneVisual _zoneVisual;
+     
 
         public virtual Tween Initialize(Node hostNode, int duration)
         {
@@ -22,7 +20,6 @@ namespace Grid
 
             this.Subscribe<OnTurnChangedEvent>(HandleTurnChange);
 
-            _currentNode.AddUnit(this);
             _currentNode.AddZone(this);
 
             Sequence seq = DOTween.Sequence();
@@ -56,12 +53,14 @@ namespace Grid
         public void Expire()
         {
             Sequence seq = DOTween.Sequence();
-            seq.Append(_zoneVisual.FlyAnim());
-            
-            seq.OnComplete(() =>
+            seq.AppendCallback(() =>
             {
                 _currentNode.RemoveZone();
-                _currentNode.RemoveUnit(this);
+
+            });
+            seq.Append(_zoneVisual.FlyAnim());
+            seq.AppendCallback(() =>
+            {
                 Destroy(gameObject);
             });
         }

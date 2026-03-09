@@ -161,8 +161,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1aa1aac0fcf48ddbbb602f7e6615096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentNode: {fileID: 0}
-  _visual: {fileID: 9207896227690240572}
+  _zoneVisual: {fileID: 9207896227690240572}
 --- !u!114 &9207896227690240572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,7 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pawnModel: {fileID: 3053037982316496075}
   _offScreenHeight: 15
-  _duration: 1
+  _duration: 0.3
   _punchRotation: {x: 0, y: 0, z: 15}
   _wobbleDuration: 0.5
   _vibrato: 10
@@ -185,4 +184,3 @@ MonoBehaviour:
   _punchPosition: {x: 0, y: 0.2, z: 0}
   _landDuration: 0.3
   _landVibrato: 8
-  _zoneModel: {fileID: 2372500821207394869}

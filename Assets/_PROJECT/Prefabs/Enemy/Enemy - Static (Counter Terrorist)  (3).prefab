@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 164981727986814539}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.2, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 0.24582021, y: 0.24582021, z: 0.24582021}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -131,8 +131,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf178964feb454cba4cf67a62b1fcb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 6659546829708049627}
   _currentNode: {fileID: 0}
+  _visual: {fileID: 6659546829708049627}
+  _moveDuration: 1
+  _rotateDuration: 1
   _defaultBehavior: {fileID: 11400000, guid: 4e7435721a113354e89501c3aff798df, type: 2}
   _noiseBehavior: {fileID: 11400000, guid: e6dbb9ed0df3035458886f567df99a9a, type: 2}
   _flashedBehavior: {fileID: 11400000, guid: 67f4cfff1bb5ab64ea781c6b441e2151, type: 2}
@@ -150,6 +152,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _pawnModel: {fileID: 402301397555483632}
+  _offScreenHeight: 15
+  _duration: 1
+  _punchRotation: {x: 0, y: 0, z: 15}
+  _wobbleDuration: 0.5
+  _vibrato: 10
+  _elasticity: 1
+  _punchPosition: {x: 0, y: 0.2, z: 0}
+  _landDuration: 0.3
+  _landVibrato: 8
+  _markDuration: 1
   _questionMark: {fileID: 3709704089570881269}
   _stunMark: {fileID: 737867152116949202}
 --- !u!1 &310542838646159663
@@ -1169,7 +1181,7 @@ Transform:
   m_GameObject: {fileID: 5947625248710559349}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.17, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 0.025056718, y: 0.025056718, z: 0.025056718}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1224,7 +1236,7 @@ SpriteRenderer:
   m_Size: {x: 19.2, y: 19.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &6487955067137067533

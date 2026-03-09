@@ -45,4 +45,6 @@ public class PlayerVisual : GridUnitVisual
         _pawnModel.DOKill();
         _pawnModel.DOLocalMoveY(0f, _liftDuration).SetEase(Ease.OutBounce);
     }
+
+
 }
