@@ -7,27 +7,22 @@ namespace Pawn
     [CreateAssetMenu(fileName = "Noise", menuName = "Behav/Noise", order = 10)]
     public class FollowingNoiseBehavior : BaseEnemyBehavior
     {
-        public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
+        protected override void CustomActions(List<BaseEnemyAction> baseList, EnemyController enemy)
         {
-            var plan = new List<BaseEnemyAction>();
-
-
             if (enemy.HasReachedNoiseDestination())
             {
-                return plan;
+                return;
             }
 
             var nextNode = enemy.NextNode;
-            plan.Add(new MoveAction(nextNode));
-
+            baseList.Add(new MoveAction(nextNode));
 
             var upcoming = enemy.UpcomingNode;
             if (upcoming != null)
             {
                 Direction dir = enemy.GetDirectionFromTargetNode(nextNode, upcoming);
-                plan.Add(new RotateAction(dir));
+                baseList.Add(new RotateAction(dir));
             }
-            return plan;
         }
 
      

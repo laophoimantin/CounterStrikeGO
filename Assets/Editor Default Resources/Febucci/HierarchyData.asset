@@ -35,13 +35,7 @@ MonoBehaviour:
     dividerHeigth: 1
     baseLevelColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     branches:
-    - overlayColor: {r: 0.93, g: 1, b: 0.42, a: 0.019607844}
-      colors:
-      - {r: 0.93, g: 1, b: 0.42, a: 0.2}
-      - {r: 1, g: 0.75, b: 0.42, a: 0.2}
-      - {r: 1, g: 0.46, b: 0.31, a: 0.2}
-      - {r: 1, g: 0.35, b: 0.34, a: 0.2}
-    - overlayColor: {r: 1, g: 0.79593545, b: 0.41960788, a: 0.03529412}
+    - overlayColor: {r: 0.93, g: 1, b: 0.42, a: 0}
       colors:
       - {r: 0.93, g: 1, b: 0.42, a: 0.2}
       - {r: 1, g: 0.75, b: 0.42, a: 0.2}

@@ -7,10 +7,10 @@ namespace Pawn
 {
     public abstract class PawnUnit : GridOccupant
     {
-        [SerializeField] protected float _moveDuration = 1;
+        [SerializeField] protected float _actionDuration = 1;
         protected bool _isDead = false;
         public bool IsDead => _isDead;
         public override bool OccupiesSpace => !_isDead;
-        public abstract Sequence Terminate();
+        public abstract Tween Die();
     }
 }

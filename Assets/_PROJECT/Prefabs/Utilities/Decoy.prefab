@@ -191,8 +191,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5281600485480300774}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.03, z: 0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -382,19 +382,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a49ed2033d04f0885664a5587a4c185, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pawnModel: {fileID: 3163547103218849650}
+  _baseModel: {fileID: 3163547103218849650}
   _offScreenHeight: 15
-  _duration: 1
-  _punchRotation: {x: 0, y: 0, z: 15}
+  _flyDuration: 1
+  _wobbleAngle: 0.5
   _wobbleDuration: 0.5
-  _vibrato: 10
-  _elasticity: 1
-  _punchPosition: {x: 0, y: 0.2, z: 0}
-  _landDuration: 0.3
-  _landVibrato: 8
+  _wobbleVibrato: 10
+  _wobbleElasticity: 1
+  _bounceOffset: {x: 0, y: 0.2, z: 0}
+  _bounceDuration: 0.3
+  _bounceVibrato: 8
   _utilityModel: {fileID: 6844427901595026848}
-  _throwHeight: 2
-  _throwDuration: 0.5
+  _throwHeight: 3
+  _throwDuration: 0.7
   _decoyEffect: {fileID: 7394864351744868990}
   _expandScale: 0.7
   _expandDuration: 1

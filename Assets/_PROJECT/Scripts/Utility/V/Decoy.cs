@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class Decoy : UtilityController
 {
-    protected override Sequence GetOnLandedSequence(Node targetNode)
+    protected override Tween GetOnLandedSequence(Node targetNode)
     {
         var nodes = NodeManager.Instance.GetNodesInRange(targetNode, 1, true);
 
@@ -18,7 +18,7 @@ public class Decoy : UtilityController
         {
             foreach (var enemy in node.GetUnitsByType<EnemyController>())
             {
-                if (!enemy.OccupiesSpace) continue;
+                if (enemy.IsFlashed) continue;
 
                 var reaction = enemy.HearNoise(targetNode);
 

@@ -255,6 +255,11 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!4 &71800245 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2393307900391148584, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+  m_PrefabInstance: {fileID: 778847152}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &105114185
 GameObject:
   m_ObjectHideFlags: 0
@@ -1557,7 +1562,7 @@ MonoBehaviour:
   _dontDestroyOnLoad: 0
   _graveyardStartPoint: {fileID: 463209485}
   _spacing: 2
-  _maxPerRow: 2
+  _maxPerCol: 5
 --- !u!4 &463209485
 Transform:
   m_ObjectHideFlags: 0
@@ -1767,8 +1772,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 15e841961b814fd78ad93b9348141972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _mainMenuSceneName: MainMenu
   _fadeDuration: 0.5
   _dontDestroyOnLoad: 1
+  _eventDispatcher: {fileID: 0}
   _loadingScreen: {fileID: 105114185}
   _canvasGroup: {fileID: 63239477}
   _progressBar: {fileID: 0}
@@ -3192,6 +3199,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 183178073398776728, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
+      propertyPath: _usingUtilityModel
+      value: 
+      objectReference: {fileID: 71800245}
     - target: {fileID: 751983764187884313, guid: 05415e6df9b7f0b43830af4c12bc5b08, type: 3}
       propertyPath: _currentNode
       value: 
@@ -3391,8 +3402,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ecf178964feb454cba4cf67a62b1fcb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _visual: {fileID: 859376623}
   _currentNode: {fileID: 1728843440}
+  _visual: {fileID: 859376623}
+  _actionDuration: 1
   _defaultBehavior: {fileID: 11400000, guid: e49110add1fc46b43a08e654916b2363, type: 2}
   _noiseBehavior: {fileID: 11400000, guid: e6dbb9ed0df3035458886f567df99a9a, type: 2}
   _flashedBehavior: {fileID: 11400000, guid: 67f4cfff1bb5ab64ea781c6b441e2151, type: 2}
@@ -3425,7 +3437,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3121c30ab024814a1e8f931047bfd72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pawnModel: {fileID: 499952215}
+  _baseModel: {fileID: 555214110}
+  _offScreenHeight: 15
+  _flyDuration: 1
+  _wobbleRotation: {x: 0, y: 0, z: 15}
+  _wobbleDuration: 0.5
+  _wobbleVibrato: 10
+  _wobbleElasticity: 1
+  _bounceOffset: {x: 0, y: 0.2, z: 0}
+  _bounceDuration: 0.3
+  _bounceVibrato: 8
+  _iconDuration: 1
+  _questionIcon: {fileID: 469182519}
+  _flashedModel: {fileID: 214081883}
+  _flashedIcon: {fileID: 469182519}
+  _floatHeight: 0.2
+  _floatDuration: 0.5
 --- !u!1 &863109009
 GameObject:
   m_ObjectHideFlags: 0

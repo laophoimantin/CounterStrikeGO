@@ -14,7 +14,6 @@ namespace Pawn
         [Header("References")]
         private PlayerVisual _playerVisual;
 
-        [Range(0.1f, 2f)] [SerializeField] private float _actionDurationModifier;
         private bool _isMoving = false;
         private bool _canMove = true;
 
@@ -65,14 +64,7 @@ namespace Pawn
             _tempMoveDirection = direction;
             if (!_canMove || _isMoving || _hasUtility) return;
 
-            Node target = _tempMoveDirection switch
-            {
-                Direction.North => _currentNode.NorthNode,
-                Direction.South => _currentNode.SouthNode,
-                Direction.East => _currentNode.EastNode,
-                Direction.West => _currentNode.WestNode,
-                _ => null
-            };
+            Node target = GetNodeInDirection(_currentNode, direction);
 
             if (target == null || !target.IsWalkable())
             {
@@ -81,7 +73,6 @@ namespace Pawn
             }
 
             StartAction();
-            this.SendEvent(new OnPlayerSteppedEvent());
             ExecuteMoveSequence(target);
             _tempMoveDirection = Direction.None;
         }
@@ -92,55 +83,51 @@ namespace Pawn
             _canMove = false;
 
             UpdateNodeData(targetNode);
-            float duration = TurnManager.Instance.GlobalActionDuration * _actionDurationModifier;
 
             Sequence seq = DOTween.Sequence();
 
-            seq.Append(_playerVisual.MoveTo(targetNode.WorldPos, duration));
+            seq.Append(_playerVisual.MoveTo(targetNode.WorldPos, _actionDuration));
+            TryAddWobble(seq);
 
-			Sequence postMoveSeq = TryAttack(_currentNode);
-            if (postMoveSeq != null)
-            {
-                seq.Append(postMoveSeq);
-            }
+            HandleCombat(targetNode, seq);
 
             seq.OnComplete(() =>
             {
                 _isMoving = false;
-                _currentNode.TriggerEnter(this); 
+                this.SendEvent(new OnPlayerSteppedEvent());
+                _currentNode.TriggerEnter(this);
                 FinishAction(ShouldEndTurn());
             });
         }
 
-
-        private Sequence TryAttack(Node targetNode)
+        private void HandleCombat(Node targetNode, Sequence seq)
         {
-            if (targetNode.HasUnitsOfType<EnemyController>() && !targetNode.IsHideable())
-            {
-                var enemies = targetNode.GetUnitsByType<EnemyController>().ToList();
+            Tween combat = CombatResolver.ResolveAttackOnNode(targetNode);
 
-                return Attack(enemies);
-            }
-
-
-            return null;
+            if (combat != null)
+                seq.Append(combat);
+            
+            // var enemies = targetNode.GetUnitsByType<EnemyController>().ToList();
+            //
+            // if (enemies.Count == 0 || targetNode.IsHideable())
+            //     return;
+            //
+            // foreach (var enemy in enemies)
+            // {
+            //     Tween death = enemy.Die();
+            //
+            //     if (death != null)
+            //     {
+            //         death.OnComplete(() => { enemy.FinishDeath(); });
+            //         seq.Join(death);
+            //     }
+            // }
         }
 
-        private Sequence Attack(List<EnemyController> enemies)
+        private void TryAddWobble(Sequence seq)
         {
-            Sequence attackSeq = DOTween.Sequence();
-
-            foreach (var enemy in enemies)
-            {
-                Sequence deathSeq = enemy.Terminate();
-
-                if (deathSeq != null)
-                {
-                    attackSeq.Insert(0, deathSeq);
-                }
-            }
-
-            return attackSeq;
+            if (Random.value < 0.5f)
+                seq.Join(_playerVisual.Wobble());
         }
 
         private bool ShouldEndTurn()
@@ -177,10 +164,10 @@ namespace Pawn
             _currentNode.AddUnit(this);
         }
 
-        public override Sequence Terminate()
+        public override Tween Die()
         {
             Sequence deathSequence = DOTween.Sequence();
-            deathSequence.Append(_playerVisual.FlyAnim());
+            deathSequence.Append(_playerVisual.FlyUp());
             deathSequence.OnComplete(() => { this.SendEvent(new OnPlayerDeadEvent()); });
             return deathSequence;
         }
@@ -190,7 +177,7 @@ namespace Pawn
             _currentUtility = newUtility;
             _currentUtility.OnPickUp(this);
             _hasUtility = true;
-            _playerVisual.SwitchUtilityModel(_hasUtility);
+            _playerVisual.SetUsingUtilityVisible(_hasUtility);
         }
 
         public void TryUseUtility(Node targetNode)
@@ -210,18 +197,18 @@ namespace Pawn
             _currentUtility.Throw(targetNode, () => FinishAction(endsTurn));
             _currentUtility = null; // Unequip utility
             _hasUtility = false;
-            _playerVisual.SwitchUtilityModel(_hasUtility);
+            _playerVisual.SetUsingUtilityVisible(_hasUtility);
         }
 
         // On Click ====================================================================================
         public void OnPickedUp()
         {
-            _playerVisual.PickedUpAnim();
+            _playerVisual.PickUpAnim();
         }
 
         public void OnDropped()
         {
-            _playerVisual.DroppedAnim();
+            _playerVisual.DropAnim();
         }
 
 

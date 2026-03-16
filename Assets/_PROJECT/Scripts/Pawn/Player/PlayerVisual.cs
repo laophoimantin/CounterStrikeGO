@@ -5,9 +5,9 @@ using UnityEngine;
 
 public class PlayerVisual : GridUnitVisual
 {
-    [Header("Utility Model")]
-    [SerializeField] private GameObject _utilityModel;
-    
+    [Header("Player Model")]
+    [SerializeField] private Transform _normalStateModel;
+    [SerializeField] private Transform _usingUtilityModel;
     
     [Header("PickUp Animation")]
     [SerializeField] private float _liftHeight;
@@ -15,36 +15,36 @@ public class PlayerVisual : GridUnitVisual
 
     void Start()
     {
-        SwitchUtilityModel(false);
+        SetUsingUtilityVisible(false);
     }
 
-    public override Tween FlyAnim()
-    {
-        Sequence deathSeq = DOTween.Sequence();
-            
-        deathSeq.Join(_pawnModel.DORotate(new Vector3(0, 360, 0), _duration, RotateMode.FastBeyond360));
-        deathSeq.Join(_pawnModel.DOScale(Vector3.zero, _duration).SetEase(Ease.InBack));
-            
-        return deathSeq;
-    }
+    // public override Tween FlyUp()
+    // {
+    //     Sequence deathSeq = DOTween.Sequence();
+    //         
+    //     deathSeq.Join(_baseModel.DORotate(new Vector3(0, 360, 0), _flyDuration, RotateMode.FastBeyond360));
+    //     deathSeq.Join(_baseModel.DOScale(Vector3.zero, _flyDuration).SetEase(Ease.InBack));
+    //         
+    //     return deathSeq;
+    // }
 
-    public void SwitchUtilityModel(bool hasUtility)
+    // Utility ===========================================
+    public void SetUsingUtilityVisible(bool hasUtility)
     {
-        _pawnModel.gameObject.SetActive(!hasUtility);
-        _utilityModel.SetActive(hasUtility);
+        _normalStateModel.gameObject.SetActive(!hasUtility);
+        _usingUtilityModel.gameObject.SetActive(hasUtility);
     }
     
-    public void PickedUpAnim()
+    // Pickup ============================================
+    public void PickUpAnim()
     {
-        _pawnModel.DOKill();
-        _pawnModel.DOLocalMoveY(_liftHeight, _liftDuration).SetEase(Ease.OutBack);
+        _baseModel.DOKill();
+        _baseModel.DOLocalMoveY(_liftHeight, _liftDuration).SetEase(Ease.OutBack);
     }
     
-    public void DroppedAnim()
+    public void DropAnim()
     {
-        _pawnModel.DOKill();
-        _pawnModel.DOLocalMoveY(0f, _liftDuration).SetEase(Ease.OutBounce);
+        _baseModel.DOKill();
+        _baseModel.DOLocalMoveY(0f, _liftDuration).SetEase(Ease.OutBounce);
     }
-
-
 }

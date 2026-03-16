@@ -43,7 +43,6 @@ public class ObjectiveItemUI : MonoBehaviour
         KillAllTweens();
         _mainPanel.gameObject.SetActive(true);
         _mainPanel.anchoredPosition = new Vector2(_mainPanel.anchoredPosition.x, offScreenYPos);
-        Debug.Log(_mainPanel.anchoredPosition);
 
         return _mainPanel.DOAnchorPosY(0, _animDuration).SetEase(_easeIn);
     }

@@ -8,7 +8,7 @@ namespace Pawn
     {
         [Header("References")]
         [SerializeField] private PlayerController _player;
-        [SerializeField] private Camera _cam;
+        private Camera _cam;
 
 
         [Header("Settings")]

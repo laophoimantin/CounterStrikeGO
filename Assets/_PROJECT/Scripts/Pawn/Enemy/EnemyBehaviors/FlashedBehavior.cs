@@ -11,16 +11,13 @@ namespace Pawn
     [CreateAssetMenu(fileName = "Flashed", menuName = "Behav/Flashed", order = 11)]
     public class FlashedBehavior : BaseEnemyBehavior
     {
-        public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
+        protected override void CustomActions(List<BaseEnemyAction> baseList, EnemyController enemy)
         {
-            var plan = new List<BaseEnemyAction>();
             if (enemy.HasEndFlashed())
             {
-                return plan;
+                return;
             }
-
-            plan.Add(new WaitAction(0.01f));
-            return plan;
+            baseList.Add(new WaitAction(0.01f));
         }
     }
 }

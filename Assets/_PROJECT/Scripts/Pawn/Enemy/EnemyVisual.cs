@@ -3,50 +3,86 @@ using UnityEngine;
 
 public class EnemyVisual : GridUnitVisual
 {
-	[SerializeField] private float _markDuration = 1f;
-
-	[Header("Marks")]
-	[SerializeField] private Transform _questionMark;
-	[SerializeField] private Transform _stunMark;
-
+	[Header("Enemy Model")]
+	[SerializeField] private GameObject _normalStateModel;
+	[SerializeField] private GameObject _flashedModel;
+	
+	[Header("Icon Animation")]
+	[SerializeField] private float _iconDuration = 1f;
+	[Header("Distracted")]
+	[SerializeField] private Transform _questionIcon;
+	
+	
+	[Header("Flashed")]
+	[SerializeField] private Transform _flashedIcon;
+	[SerializeField] private float _floatHeight = 0.2f;
+	[SerializeField] private float _floatDuration = 0.5f;
+	private float _iconStartY;
+	
 
 
 	void Start()
 	{
-		_questionMark.gameObject.SetActive(false);
-		_stunMark.gameObject.SetActive(false);
+		_normalStateModel.SetActive(true);
+		_flashedModel.SetActive(false);
+		_questionIcon.gameObject.SetActive(false);
+		_flashedIcon.gameObject.SetActive(false);
+		_iconStartY = _flashedIcon.localPosition.y;
 	}
-
-	public Tween DropToGraveyard()
+	
+	// Marks =============================================================
+	public Tween ShowQuestionIcon()
 	{
 		Sequence seq = DOTween.Sequence();
-		Vector3 finalRestingPlace = GraveyardManager.Instance.GetNextSlotPosition();
-
-		seq.Append(DropDown());
+		seq.AppendCallback(() => { _questionIcon.gameObject.SetActive(true); });
+		seq.Append(_questionIcon.DOLocalMoveY(1f, _iconDuration).From(true).SetEase(Ease.OutBounce));
 		return seq;
 	}
-
-	public Tween QuestionMarkAnim()
+	
+	public void HideQuestionIcon()
 	{
-		Sequence seq = DOTween.Sequence();
-		seq.AppendCallback(() => { _questionMark.gameObject.SetActive(true); });
-		seq.Append(_questionMark.DOLocalMoveY(1f, _markDuration).From(true).SetEase(Ease.OutBounce));
-		seq.AppendCallback(() => { _questionMark.gameObject.SetActive(false); });
-		return seq;
+		_questionIcon.DOKill();
+		_questionIcon.gameObject.SetActive(false);
 	}
 
-	public Tween StunMarkAnim()
+	// public Tween ShowStunIcon()
+	// {
+	// 	Sequence seq = DOTween.Sequence();
+	// 	seq.AppendCallback(() =>
+	// 	{
+	// 		SwitchModel(true);
+	// 		_flashedIcon.gameObject.SetActive(true);
+	// 	});
+	// 	//seq.Append(_flashedIcon.DOLocalMoveY(_flashedIcon.localPosition.y + _floatHeight, _floatDuration) .SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo));
+	// 	
+	// 	return seq;
+	// }
+	public void ShowStunIcon()
 	{
-		Sequence seq = DOTween.Sequence();
-		seq.AppendCallback(() => _stunMark.gameObject.SetActive(true));
-		seq.Append(_stunMark.DOLocalMoveY(-1f, _markDuration).From(true).SetEase(Ease.Linear));
+		SwitchModel(true);
+		_flashedIcon.gameObject.SetActive(true);
 
-		return seq;
+		_flashedIcon.DOKill();
+
+		Vector3 resetPos = _flashedIcon.localPosition;
+		resetPos.y = _iconStartY;
+		_flashedIcon.localPosition = resetPos;
+
+		_flashedIcon.DOLocalMoveY(_iconStartY + _floatHeight, _floatDuration)
+			.SetEase(Ease.InOutSine)
+			.SetLoops(-1, LoopType.Yoyo);
 	}
 
-
-	public void HideStunMark()
+	public void HideStunIcon()
 	{
-		_stunMark.gameObject.SetActive(false);
+		_flashedIcon.DOKill();
+		SwitchModel(false);
+		_flashedIcon.gameObject.SetActive(false);
+	}
+	
+	private void SwitchModel(bool isFlashed)
+	{
+		_normalStateModel.SetActive(!isFlashed);
+		_flashedModel.SetActive(isFlashed);
 	}
 }

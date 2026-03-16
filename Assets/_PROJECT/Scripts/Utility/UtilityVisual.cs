@@ -4,6 +4,7 @@ using UnityEngine;
 
 public abstract class UtilityVisual : GridUnitVisual
 {
+    [Header("Utility Model")]
     [SerializeField] protected Transform _utilityModel;
     
     [Header("Throw Animation")]
@@ -14,18 +15,20 @@ public abstract class UtilityVisual : GridUnitVisual
     {
         if (_utilityModel != null)
             _utilityModel.gameObject.SetActive(false);
-        if (_pawnModel != null)
-            _pawnModel.gameObject.SetActive(true);
+        if (_baseModel != null)
+            _baseModel.gameObject.SetActive(true);
     }
 
+    // State ==================================================
+    
     public void SwitchToFlyingMode(Vector3 startPos)
     {
-        _pawnModel.gameObject.SetActive(false);
+        _baseModel.gameObject.SetActive(false);
         ShowUtilityModel();
 		_utilityModel.transform.position = startPos + Vector3.up * 2;
     }
 
-    public void ShowUtilityModel()
+    private void ShowUtilityModel()
     {
         _utilityModel.gameObject.SetActive(true);
     }
@@ -35,6 +38,7 @@ public abstract class UtilityVisual : GridUnitVisual
         _utilityModel.gameObject.SetActive(false);
     }
 
+    // Throw =================================================================
     public virtual Sequence GetThrowSequence(Vector3 targetPos)
     {
         Sequence throwSeq = DOTween.Sequence();
@@ -50,5 +54,6 @@ public abstract class UtilityVisual : GridUnitVisual
         return throwSeq;
     }
 
+    // Land ===================================================================
     public abstract Sequence GetLandedAnim();
 }

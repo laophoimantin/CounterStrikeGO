@@ -8,8 +8,9 @@ namespace Grid
 {
     public abstract class Zone : MonoBehaviour
     {
-		protected int _duration;
+		private int _duration;
         protected Node _currentNode;
+        private bool _isExpired = false;
         [SerializeField] private ZoneVisual _zoneVisual;
      
 
@@ -40,6 +41,8 @@ namespace Grid
 
         private void HandleTurnChange(OnTurnChangedEvent eventData)
         {
+            if (_isExpired) return;
+            
             if (eventData.NewTurn == TurnType.PlayerPlanning)
             {
                 _duration--;
@@ -52,13 +55,13 @@ namespace Grid
 
         public void Expire()
         {
+            _isExpired = true;
             Sequence seq = DOTween.Sequence();
             seq.AppendCallback(() =>
             {
                 _currentNode.RemoveZone();
-
             });
-            seq.Append(_zoneVisual.FlyAnim());
+            seq.Append(_zoneVisual.FlyUp());
             seq.AppendCallback(() =>
             {
                 Destroy(gameObject);

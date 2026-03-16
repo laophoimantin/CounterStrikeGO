@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Pawn;
 using Core.Events;
 using Core.Patterns;
@@ -14,9 +15,9 @@ namespace Core.TurnSystem
         [SerializeField] private float _delayTime = 0.3f;
 
         private readonly List<EnemyController> _activeEnemiesList = new();
-        public bool AreAllEnemiesDefeated() => _activeEnemiesList.Count<=0;
-        
-        private List<EnemyController> _pendingEnemies;
+        public bool AreAllEnemiesDefeated() => _activeEnemiesList.Count <= 0;
+
+        private int _pendingCount;
         private int _finishedCount = 0;
 
         void OnEnable()
@@ -27,7 +28,6 @@ namespace Core.TurnSystem
         void OnDisable()
         {
             this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChange);
-            
         }
 
         // Enemy registration =======================================================
@@ -43,61 +43,46 @@ namespace Core.TurnSystem
 
         private void UnregisterEnemy(EnemyController enemy)
         {
-            if (_activeEnemiesList.Contains(enemy))
-            {
-                _activeEnemiesList.Remove(enemy);
-            }
+            _activeEnemiesList.Remove(enemy);
         }
-
 
         // Turn System =========================================================================
         private void HandleTurnChange(OnTurnChangedEvent eventData)
         {
             if (eventData.NewTurn != TurnType.EnemyPlanning)
                 return;
-            InitializeEnemyTurnState();
-            StartCoroutine(BeginEnemyAction());
+            //InitializeEnemyTurnState();
+            List<EnemyController> snapshot = _activeEnemiesList
+                .Where(enemy => enemy != null)
+                .ToList();
+            StartCoroutine(BeginEnemyAction(snapshot));
         }
 
-        private void InitializeEnemyTurnState()
-        {
-            _finishedCount = 0;
-            _pendingEnemies = new List<EnemyController>(_activeEnemiesList);
-        }
 
-        private IEnumerator BeginEnemyAction()
+        private IEnumerator BeginEnemyAction(List<EnemyController> snapshot)
         {
             yield return new WaitForSeconds(_delayTime);
             this.SendEvent(new OnEnemyActionStartedEvent());
 
-            _pendingEnemies.RemoveAll(e => e == null);
-
-            if (_pendingEnemies.Count == 0)
+            if (snapshot.Count == 0)
             {
-                _pendingEnemies.Clear();
-                StartCoroutine(EndEnemyActionPhase());
+                yield return StartCoroutine(EndEnemyActionPhase());
                 yield break;
             }
+            _finishedCount = 0;
+            _pendingCount = snapshot.Count;
 
-            foreach (var enemy in _pendingEnemies)
+            foreach (var enemy in snapshot)
             {
-                if (enemy != null)
-                {
-                    enemy.StartAction();
-                }
-                else
-                {
-                    OnEnemyFinished(null);
-                }
+                enemy.StartAction();
             }
         }
 
         public void OnEnemyFinished(EnemyController enemy)
         {
             _finishedCount++;
-            if (_finishedCount >= _pendingEnemies.Count)
+            if (_finishedCount >= _pendingCount)
             {
-                _pendingEnemies.Clear();
                 StartCoroutine(EndEnemyActionPhase());
             }
         }

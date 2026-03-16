@@ -74,13 +74,13 @@ public abstract class UtilityController : GridOccupant
             Destroy(gameObject);
         });
     }
-    private void AppendIfExists(Sequence seq, Sequence toAppend)
+    private void AppendIfExists(Sequence seq, Tween toAppend)
     {
         if (toAppend != null)
             seq.Append(toAppend);
     }
 
-    protected abstract Sequence GetOnLandedSequence(Node targetNode);
+    protected abstract Tween GetOnLandedSequence(Node targetNode);
 
     // Editor ====================================================================================
 

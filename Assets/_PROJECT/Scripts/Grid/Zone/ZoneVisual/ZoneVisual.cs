@@ -3,21 +3,20 @@ using UnityEngine;
 
 public class ZoneVisual : GridUnitVisual
 {
-
     void Start()
     {
-        _pawnModel.gameObject.SetActive(false);
-        _pawnModel.localPosition = new Vector3(0, _offScreenHeight, 0);
+        _baseModel.gameObject.SetActive(false);
+        _baseModel.localPosition = new Vector3(0, _offScreenHeight, 0);
     }
 
     public Tween ActivateZoneModel()
     {
         Sequence seq = DOTween.Sequence();
 
-        seq.AppendCallback(() => { _pawnModel.gameObject.SetActive(true); });
+        seq.AppendCallback(() => { _baseModel.gameObject.SetActive(true); });
 
         seq.Append(DropDown());
-        seq.Append(BounceAnim());
+        seq.Append(Bounce());
         return seq;
     }
 }

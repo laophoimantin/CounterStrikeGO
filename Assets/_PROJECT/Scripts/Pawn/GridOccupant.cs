@@ -16,6 +16,6 @@ public abstract class GridOccupant : MonoBehaviour
 
     public void SetVisualOffset(Vector3 offset)
     {
-        _visual.DoOffsetMove(offset);
+        _visual.MoveOffset(offset);
     }
 }

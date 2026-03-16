@@ -12,7 +12,7 @@ namespace Core.TurnSystem
         private bool _actionPhaseActive = false;
         private bool _lock = false;
         private int _turnCount = 0;
-public int TurnCount => _turnCount;
+        public int TurnCount => _turnCount;
         public TurnType CurrentTurn => _currentTurn;
 
 
@@ -78,7 +78,6 @@ public int TurnCount => _turnCount;
         }
 
 
-
         // Player Turn Events
         private void HandlePlayerStarted(OnPlayerActionStartedEvent eventData)
         {
@@ -122,7 +121,7 @@ public int TurnCount => _turnCount;
 
                 case TurnType.PlayerAction:
                     return to == TurnType.PlayerPlanning
-                        || to == TurnType.EnemyPlanning;
+                           || to == TurnType.EnemyPlanning;
 
                 case TurnType.EnemyPlanning:
                     return to == TurnType.EnemyAction;

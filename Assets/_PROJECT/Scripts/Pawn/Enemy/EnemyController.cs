@@ -11,7 +11,6 @@ namespace Pawn
 {
 	public class EnemyController : PawnUnit
 	{
-		[SerializeField] private float _rotateDuration = 1f;
 		[Header("References")]
 		private EnemyVisual _enemyVisual;
 
@@ -21,8 +20,17 @@ namespace Pawn
 		[SerializeField] private FlashedBehavior _flashedBehavior;
 
 		[Header("Enemy State")]
+		private State _currentState;
+		
+	
+		
+		
+		
 		[SerializeField] private Direction _facingDirection = Direction.None;
 
+		private bool _isflashed = false;
+		public bool IsFlashed => _isflashed;
+		
 		private readonly Direction[] _dirs =
 		{
 			Direction.North,
@@ -44,7 +52,6 @@ namespace Pawn
 
 
 		public Action<EnemyController> OnDestroyed;
-
 
 		private int _flashTurnsRemaining;
 
@@ -73,6 +80,50 @@ namespace Pawn
 			_currentBehavior = _defaultBehavior;
 		}
 
+		private void ChangeState(State newState)
+		{
+			if (_currentState == newState)
+				return;
+			
+			ExitState(_currentState);
+			_currentState = newState;
+			EnterState(newState);
+		}
+		private void EnterState(State state)
+		{
+			switch (state)
+			{
+				case State.Normal:
+					_currentBehavior = _defaultBehavior;
+					break;
+
+				case State.Flashed:
+					_currentBehavior = _flashedBehavior;
+					break;
+
+				case State.Distracted:
+					_currentBehavior = _noiseBehavior;
+					break;
+			}
+		}
+		private void ExitState(State state)
+		{
+			switch (state)
+			{
+				case State.Normal:
+					break;
+
+				case State.Flashed:
+					_enemyVisual.HideStunIcon();
+					break;
+
+				case State.Distracted:
+					_enemyVisual.HideQuestionIcon();
+					break;
+			}
+		}
+		
+	
 		public void StartAction()
 		{
 			StartCoroutine(ExecuteBehavior());
@@ -114,13 +165,16 @@ namespace Pawn
 		private void EvaluateState()
 		{
 			if (!HasEndFlashed())
-				_currentBehavior = _flashedBehavior;
+			{
+				ChangeState(State.Flashed);
+			}
 			else if (!HasReachedNoiseDestination())
-				_currentBehavior = _noiseBehavior;
+			{
+				ChangeState(State.Distracted);
+			}
 			else
 			{
-				_enemyVisual.HideStunMark();
-				_currentBehavior = _defaultBehavior;
+				ChangeState(State.Normal);
 			}
 		}
 
@@ -158,7 +212,7 @@ namespace Pawn
 			// Logic
 			Sequence seq = DOTween.Sequence();
 			seq.AppendCallback(() => { UpdateNodeData(targetNode); });
-			seq.Append(_visual.MoveTo(targetNode.WorldPos, _moveDuration));
+			seq.Append(_visual.MoveTo(targetNode.WorldPos, _actionDuration));
 
 			return seq;
 		}
@@ -168,9 +222,8 @@ namespace Pawn
 			Sequence seq = DOTween.Sequence();
 			seq.AppendCallback(() => { SetFacingDirection(newDirection); }
 			);
-
 			Quaternion targetRot = GetRotationForDirection(newDirection);
-			seq.Append(_visual.RotateTo(targetRot, _rotateDuration));
+			seq.Append(_visual.RotateTo(targetRot, _actionDuration));
 			return seq;
 		}
 
@@ -193,37 +246,43 @@ namespace Pawn
 			if (targetNode.HasUnitsOfType<PlayerController>() && !targetNode.IsHideable())
 			{
 				PlayerController player = targetNode.GetUnitByType<PlayerController>();
-				player.Terminate();
+				player.Die();
 				return true;
 			}
 
 			return false;
 		}
 
-		public override Sequence Terminate()
+		public override Tween Die()
 		{
 			if (_isDead) return null;
 			_isDead = true;
-
+			
 			Sequence seq = DOTween.Sequence();
-			seq.Append(_visual.FlyAnim());
-			seq.Append(_enemyVisual.WobbleAnim());
-			Vector3 finalRestingPlace = GraveyardManager.Instance.GetNextSlotPosition();
-			seq.AppendCallback(() =>
-			{
-				SnapPosition(finalRestingPlace);
-			});
-
-			seq.Append(_enemyVisual.DropDown());
+			seq.Append(_enemyVisual.Wobble());
+			seq.Append(_visual.FlyUp());
 			seq.AppendCallback(() =>
 			{
 				_currentNode.RemoveUnit(this);
 				_currentNode = null;
 				OnDestroyed?.Invoke(this);
 			});
-			seq.Append(_enemyVisual.BounceAnim());
-
 			return seq;
+		}
+
+		public void FinishDeath()
+		{
+			Sequence seq = DOTween.Sequence();
+
+			Vector3 finalRestingPlace = GraveyardManager.Instance.GetNextSlotPosition();
+
+			seq.AppendCallback(() =>
+			{
+				SnapPosition(finalRestingPlace);
+			});
+
+			seq.Append(_enemyVisual.DropDown());
+			seq.Append(_enemyVisual.Bounce());
 		}
 
 		public Tween ReactToFire()
@@ -235,7 +294,7 @@ namespace Pawn
 			// Cannot find a walkable node, so terminate
 			if (targetNode == null)
 			{
-				seq.Append(Terminate());
+				seq.Append(Die());
 				return seq;
 			}
 
@@ -275,10 +334,10 @@ namespace Pawn
 			Sequence seq = DOTween.Sequence();
 			Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
 
-			seq.Append(_enemyVisual.QuestionMarkAnim());
+			seq.Append(_enemyVisual.ShowQuestionIcon());
 			seq.Append(Rotate(targetDirection));
 
-			seq.OnComplete(() => { _currentBehavior = _noiseBehavior; });
+			seq.OnComplete(() => { ChangeState(State.Distracted); });
 			return seq;
 		}
 
@@ -298,15 +357,17 @@ namespace Pawn
 			Sequence seq = DOTween.Sequence();
 			seq.AppendCallback(() =>
 				{
-					_currentBehavior = _flashedBehavior;
+					ChangeState(State.Flashed);
+					_isflashed = true;
 					_flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
+					_astarPath?.Clear();
 				}
 			);
-			seq.Append(_enemyVisual.StunMarkAnim());
-			seq.Join(_enemyVisual.WobbleAnim());
+			seq.Append(_enemyVisual.Wobble());
+			seq.JoinCallback(() => { _enemyVisual.ShowStunIcon(); }
+			);
 			return seq;
 		}
-
 
 		private void AdvanceFlashed()
 		{
@@ -508,7 +569,6 @@ namespace Pawn
 
 			SnapPosition(_currentNode.transform.position);
 
-
 			UnityEditor.EditorUtility.SetDirty(this);
 #endif
 		}
@@ -520,13 +580,18 @@ namespace Pawn
 			_currentNode = null;
 		}
 
-
 		private void SnapPosition(Vector3 targetPos)
 		{
-			transform.position = new Vector3(targetPos.x, transform.position.y, targetPos.z);
+			transform.position = new Vector3(targetPos.x, targetPos.y, targetPos.z);
 			_visual.SetPosition(transform.position);
 		}
-
 		#endregion
 	}
+}
+
+public enum State
+{
+	Normal,
+	Flashed,
+	Distracted
 }

@@ -217,17 +217,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0115e2e37e9484098414731bb4f6013, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _textMesh: {fileID: 2952064586748687239}
+  _feature: {fileID: 0}
   _xValue: 0
   _yValue: 0
   _size: 0
-  IsObstacle: 0
+  _isObstacle: 0
   _north: {fileID: 0}
   _south: {fileID: 0}
   _east: {fileID: 0}
   _west: {fileID: 0}
-  _crowdRadius: 0.7
+  _crowdRadius: 1.2
   _utilityItem: {fileID: 0}
+  _textMesh: {fileID: 2952064586748687239}
 --- !u!65 &5496572370412979684
 BoxCollider:
   m_ObjectHideFlags: 0
