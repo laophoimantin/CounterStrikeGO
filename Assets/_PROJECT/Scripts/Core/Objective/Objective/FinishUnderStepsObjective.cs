@@ -1,12 +1,13 @@
 using Core.TurnSystem;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Objectives/Finish Under Turns")]
+[CreateAssetMenu(menuName = "Objective/Finish Under Turns")]
 public class FinishUnderStepsObjective : BaseObjective
 {
+    [Space (10)]
     [SerializeField] private int _maxSteps;
-    public override bool IsComplete(LevelContext context)
+    public override bool IsComplete(LevelResult result)
     {
-        return context.GetData<int>(ContextKey.StepCount, 0) <= _maxSteps;
+        return result.GetData<int>(ContextKey.StepCount, 0) <= _maxSteps;
     }
 }

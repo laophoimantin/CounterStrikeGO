@@ -12,10 +12,10 @@ namespace Core.TurnSystem
 {
     public class EnemyManager : Singleton<EnemyManager>
     {
-        [SerializeField] private float _delayTime = 0.3f;
-
         private readonly List<EnemyController> _activeEnemiesList = new();
+        private bool _hasKilledEnemy;
         public bool AreAllEnemiesDefeated() => _activeEnemiesList.Count <= 0;
+        public bool HasKilledEnemy() => _hasKilledEnemy;
 
         private int _pendingCount;
         private int _finishedCount = 0;
@@ -44,6 +44,8 @@ namespace Core.TurnSystem
         private void UnregisterEnemy(EnemyController enemy)
         {
             _activeEnemiesList.Remove(enemy);
+            if (!_hasKilledEnemy)
+                _hasKilledEnemy = true;
         }
 
         // Turn System =========================================================================
@@ -55,20 +57,20 @@ namespace Core.TurnSystem
             List<EnemyController> snapshot = _activeEnemiesList
                 .Where(enemy => enemy != null)
                 .ToList();
-            StartCoroutine(BeginEnemyAction(snapshot));
+            BeginEnemyAction(snapshot);
         }
 
 
-        private IEnumerator BeginEnemyAction(List<EnemyController> snapshot)
+        private void BeginEnemyAction(List<EnemyController> snapshot)
         {
-            yield return new WaitForSeconds(_delayTime);
             this.SendEvent(new OnEnemyActionStartedEvent());
 
             if (snapshot.Count == 0)
             {
-                yield return StartCoroutine(EndEnemyActionPhase());
-                yield break;
+                EndEnemyActionPhase();
+                return;
             }
+
             _finishedCount = 0;
             _pendingCount = snapshot.Count;
 
@@ -83,13 +85,12 @@ namespace Core.TurnSystem
             _finishedCount++;
             if (_finishedCount >= _pendingCount)
             {
-                StartCoroutine(EndEnemyActionPhase());
+                EndEnemyActionPhase();
             }
         }
 
-        private IEnumerator EndEnemyActionPhase()
+        private void EndEnemyActionPhase()
         {
-            yield return new WaitForSeconds(_delayTime);
             this.SendEvent(new OnEnemyActionFinishedEvent());
         }
     }

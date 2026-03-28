@@ -2,11 +2,11 @@ using Core;
 using Core.TurnSystem;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Objectives/Bring The Bomb")]
+[CreateAssetMenu(menuName = "Objective/Bring The Bomb")]
 public class BringTheBombObjective : BaseObjective
 {
-    public override bool IsComplete(LevelContext context)
+    public override bool IsComplete(LevelResult result)
     {
-        return context.GetData<bool>(ContextKey.HasObjectiveItem, false);
+        return result.GetData<bool>(ContextKey.HasObjectiveItem, false);
     }
 }

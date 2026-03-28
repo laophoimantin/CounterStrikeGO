@@ -49,13 +49,6 @@ namespace Core.Events
         }
     }
 
-    public struct OnPlayerSteppedEvent
-    {
-        
-    }
-    
-    
-    
     
     
 

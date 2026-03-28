@@ -10,23 +10,22 @@ public class SceneController : MonoBehaviour
 {
     public static SceneController Instance { get; private set; }
     
-    [Header("Main Menu")]
-    [SerializeField] private string _mainMenuSceneName = "MainMenu";
+    private bool _isLoading;
     
     [Header("Settings")]
     [SerializeField] private float _fadeDuration = 0.5f;
-    [Tooltip("If true, this object will survive scene changes.")]
     [SerializeField] private bool _dontDestroyOnLoad = true;
 
     [Header("References")]
     [SerializeField] private EventDispatcher _eventDispatcher;
     
+    [Header("Loading Screen")]
     [SerializeField] private GameObject _loadingScreen;
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Slider _progressBar;
 
-    public event Action OnSceneLoadStarted;
-    public event Action OnSceneLoadCompleted;
+    public static event Action OnSceneLoadStarted;
+    public static event Action OnSceneLoadCompleted;
 
     private void Awake()
     {
@@ -46,23 +45,27 @@ public class SceneController : MonoBehaviour
     }
 
     // lmao
-
     #region Public API
 
-    /// Standard Level Transition: Fades out, loads new scene, fades in.
-    public void LoadScene(string sceneName)
+    /// Standard Level Transition: Fades out, loads a new scene, fades in.
+    public void LoadNewScene(string sceneName)
     {
-        StartCoroutine(LoadSceneRoutine(sceneName));
+        LoadScene(sceneName);
     }
 
+    public void LoadGameplayScene()
+    {
+        LoadScene(SceneName.Gameplay);
+    }
     public void LoadMainMenu()
     {
-        LoadScene(_mainMenuSceneName);
+        LoadScene(SceneName.MainMenu);
     }
     public void ReloadCurrentScene()
     {
         LoadScene(SceneManager.GetActiveScene().name);
     }
+    
 
     public void QuitGame()
     {
@@ -79,6 +82,14 @@ public class SceneController : MonoBehaviour
     // lmao
 
     #region Internal Logic
+
+    private void LoadScene(string sceneName)
+    {
+        if (_isLoading) return;
+        _isLoading = true;
+        StartCoroutine(LoadSceneRoutine(sceneName));
+    }
+    
 
     private IEnumerator LoadSceneRoutine(string sceneName)
     {
@@ -153,4 +164,10 @@ public class SceneController : MonoBehaviour
     }
 
     #endregion
+}
+
+public static class SceneName
+{
+    public const string MainMenu = "MainMenu";
+    public const string Gameplay = "Gameplay";
 }

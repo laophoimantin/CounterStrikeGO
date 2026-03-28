@@ -42,6 +42,11 @@ public class NodeEditor : Editor
             ApplyDisconnect(node, Direction.South);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+        
+        
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Delete Self", GUILayout.Width(80)))
+            node.DeleteSelf();
     }
 
     private void ApplyDisconnect(Node node, Direction dir)

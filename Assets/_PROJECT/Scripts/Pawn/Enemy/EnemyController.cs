@@ -22,14 +22,9 @@ namespace Pawn
 		[Header("Enemy State")]
 		private State _currentState;
 		
-	
-		
-		
-		
 		[SerializeField] private Direction _facingDirection = Direction.None;
 
-		private bool _isflashed = false;
-		public bool IsFlashed => _isflashed;
+		public bool IsFlashed => _currentState == State.Flashed;
 		
 		private readonly Direction[] _dirs =
 		{
@@ -40,9 +35,6 @@ namespace Pawn
 		};
 
 		public Direction CurrentFacingDirection => _facingDirection;
-
-		private List<PlayerController> _tempEnemyCache = new(10);
-
 		private List<Node> _astarPath = new();
 
 
@@ -358,7 +350,6 @@ namespace Pawn
 			seq.AppendCallback(() =>
 				{
 					ChangeState(State.Flashed);
-					_isflashed = true;
 					_flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
 					_astarPath?.Clear();
 				}
@@ -411,6 +402,23 @@ namespace Pawn
 		public Node GetNodeInBack()
 		{
 			return GetNodeInDirection(_currentNode, GetDirectionTurnAround());
+		}
+		
+		public Node GetNodeInBackByStep(int step = 1)
+		{
+			Node targetNode = _currentNode;
+			Direction backDirection = GetDirectionTurnAround();
+    
+			for (int i = step; i > 0; i--)
+			{
+				targetNode = GetNodeInDirection(targetNode, backDirection);
+				if (targetNode == null) return null;
+			}
+
+			if (targetNode == _currentNode)
+				return null;
+			
+			return targetNode;
 		}
 
 		/// <summary>

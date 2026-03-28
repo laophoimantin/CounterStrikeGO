@@ -6,15 +6,11 @@ namespace Core.TurnSystem
 {
     public class TurnManager : Singleton<TurnManager>
     {
-        [Header("Timing")] public float GlobalActionDuration = 1f;
-
         private TurnType _currentTurn;
         private bool _actionPhaseActive = false;
         private bool _lock = false;
-        private int _turnCount = 0;
-        public int TurnCount => _turnCount;
-        public TurnType CurrentTurn => _currentTurn;
-
+        
+        public int StepCount { get; private set; }
 
         void OnEnable()
         {
@@ -44,6 +40,11 @@ namespace Core.TurnSystem
 
         void Start()
         {
+            StartTurn();
+        }
+
+        public void StartTurn() // Later: other scripts can call this to start a new level
+        {
             SetTurn(TurnType.PlayerPlanning);
         }
 
@@ -52,7 +53,7 @@ namespace Core.TurnSystem
             _lock = true;
         }
 
-        public void StartActionPhase(TurnType nextActionTurn)
+        private void StartActionPhase(TurnType nextActionTurn)
         {
             if (_actionPhaseActive) return;
             _actionPhaseActive = true;
@@ -60,7 +61,7 @@ namespace Core.TurnSystem
             SetTurn(nextActionTurn);
         }
 
-        public void EndActionPhase(TurnType nextPlainningTurn)
+        private void EndActionPhase(TurnType nextPlainningTurn)
         {
             if (!_actionPhaseActive) return;
             _actionPhaseActive = false;
@@ -82,6 +83,7 @@ namespace Core.TurnSystem
         private void HandlePlayerStarted(OnPlayerActionStartedEvent eventData)
         {
             if (_currentTurn != TurnType.PlayerPlanning) return;
+            StepCount++;
             StartActionPhase(TurnType.PlayerAction);
         }
 
@@ -91,7 +93,6 @@ namespace Core.TurnSystem
             if (eventData.EndTurn)
             {
                 EndActionPhase(TurnType.EnemyPlanning);
-                _turnCount++;
             }
             else
             {

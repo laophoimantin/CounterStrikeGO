@@ -6,6 +6,7 @@ TagManager:
   tags:
   - UI Cam
   - Node
+  - Cam
   layers:
   - Default
   - TransparentFX
@@ -15,8 +16,8 @@ TagManager:
   - UI
   - Player
   - Node
-  - 
-  - 
+  - Deco
+  - UI top
   - 
   - 
   - 

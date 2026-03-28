@@ -13,11 +13,19 @@ public class RuntimeObjective
         IsCompleteNow = isCompletedBefore;
     }
 
-    public void UpdateCompletedState(LevelContext context)
+    public void UpdateCompletedState(LevelResult result)
     {
         if (!IsCompleteBefore)
         {
-            IsCompleteNow = Blueprint.IsComplete(context);
+            IsCompleteNow = Blueprint.IsComplete(result);
+        }
+    }
+    
+    public void TrySave(string levelId)
+    {
+        if (!IsCompleteBefore && IsCompleteNow)
+        {
+            SaveManager.Instance.SetObjectiveComplete(levelId, Blueprint.Id);
         }
     }
 }

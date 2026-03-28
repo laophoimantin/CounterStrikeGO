@@ -58,15 +58,11 @@ public class GridUnitVisual : MonoBehaviour
         return seq;
     }
 
-    public Tween Wobble(bool shouldRandomize = true)
+    public Tween Wobble()
     {
-        //Sequence seq = DOTween.Sequence();
         bool wobbleOnX = UnityEngine.Random.value > 0.8f;
         Vector3 randomPunch = wobbleOnX ? new Vector3(_wobbleAngle, 0, 0) : new Vector3(0, 0, _wobbleAngle);
-        return _baseModel.DOPunchRotation(randomPunch, _wobbleDuration, _wobbleVibrato, _wobbleElasticity)
-            .SetEase(Ease.OutQuad);
-        // seq.Append(_baseModel.DOPunchRotation(_wobbleRotation, _wobbleDuration, _wobbleVibrato, _wobbleElasticity).SetEase(Ease.OutQuad));
-        // return seq;
+        return _baseModel.DOPunchRotation(randomPunch, _wobbleDuration, _wobbleVibrato, _wobbleElasticity).SetEase(Ease.OutQuad);
     }
 
     public Tween Bounce()

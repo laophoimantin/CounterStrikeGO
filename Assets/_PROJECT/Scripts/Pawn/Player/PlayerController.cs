@@ -71,10 +71,10 @@ namespace Pawn
                 _tempMoveDirection = Direction.None;
                 return;
             }
-
+            
+            _tempMoveDirection = Direction.None;
             StartAction();
             ExecuteMoveSequence(target);
-            _tempMoveDirection = Direction.None;
         }
 
         private void ExecuteMoveSequence(Node targetNode)
@@ -94,7 +94,6 @@ namespace Pawn
             seq.OnComplete(() =>
             {
                 _isMoving = false;
-                this.SendEvent(new OnPlayerSteppedEvent());
                 _currentNode.TriggerEnter(this);
                 FinishAction(ShouldEndTurn());
             });
@@ -132,10 +131,10 @@ namespace Pawn
 
         private bool ShouldEndTurn()
         {
-            if (_hasUtility)
-            {
-                return false;
-            }
+            // if (_hasUtility)
+            // {
+            //     return false;
+            // }
 
             return true;
         }
@@ -167,6 +166,7 @@ namespace Pawn
         public override Tween Die()
         {
             Sequence deathSequence = DOTween.Sequence();
+            deathSequence.Append(_playerVisual.Wobble());
             deathSequence.Append(_playerVisual.FlyUp());
             deathSequence.OnComplete(() => { this.SendEvent(new OnPlayerDeadEvent()); });
             return deathSequence;
@@ -194,6 +194,7 @@ namespace Pawn
         private void UseUtility(Node targetNode)
         {
             bool endsTurn = _currentUtility.EndsTurn;
+            _playerVisual.Wobble();
             _currentUtility.Throw(targetNode, () => FinishAction(endsTurn));
             _currentUtility = null; // Unequip utility
             _hasUtility = false;

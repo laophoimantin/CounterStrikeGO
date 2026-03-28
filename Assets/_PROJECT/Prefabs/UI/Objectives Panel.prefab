@@ -1344,11 +1344,11 @@ MonoBehaviour:
   _resetButton2: {fileID: 5418548495389183650}
   _objectiveContainer: {fileID: 2481552203912442912}
   _objectiveItemUIPrefab: {fileID: 6009122708404166497, guid: d9c90b977b07f3943a9022e0e0cef252, type: 3}
-  _itemStaggerDelay: 0.3
-  _animDuration: 0.5
+  _itemStaggerDelay: 0.1
+  _animDuration: 0.7
   _startYOffset: -500
-  _easeOpen: 16
-  _easeClose: 16
+  _easeOpen: 6
+  _easeClose: 11
   _offScreenPos: {fileID: 1278523389413413701}
 --- !u!1 &7280045306062186162
 GameObject:

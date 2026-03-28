@@ -6,10 +6,12 @@ namespace Pawn
 {
     public class ClickHandler : MonoBehaviour
     {
+        public static bool IsPlayerInteracting { get; private set; }
+        
         [Header("References")]
         [SerializeField] private PlayerController _player;
         private Camera _cam;
-
+        
 
         [Header("Settings")]
         [SerializeField] private LayerMask _playerLayer;
@@ -22,7 +24,11 @@ namespace Pawn
         void Start()
         {
             if (_cam == null)
+            {
                 _cam = Camera.main;
+            }
+            
+            IsPlayerInteracting = false;
         }
 
         private void Update()
@@ -37,10 +43,19 @@ namespace Pawn
             else
             {
                 if (Input.GetMouseButtonDown(0))
+                {
                     TryStartDrag();
+                    if (_dragging) 
+                    {
+                        IsPlayerInteracting = true;
+                    }
+                }
 
                 if (Input.GetMouseButtonUp(0))
+                {
                     TryEndDrag();
+                    IsPlayerInteracting = false;
+                }
             }
         }
 

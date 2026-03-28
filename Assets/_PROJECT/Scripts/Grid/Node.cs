@@ -344,6 +344,23 @@ namespace Grid
         }
 
 
+        //Editor only
+        public void DeleteSelf()
+        {
+            DetachLink(_north, n => n._south = null);
+            DetachLink(_south, n => n._north = null);
+            DetachLink(_east, n => n._west = null);
+            DetachLink(_west, n => n._east = null);
+
+            void DetachLink(Node neighbour, Action<Node> unlink)
+            {
+                if (neighbour != null)
+                    unlink(neighbour);
+            }
+
+            DestroyImmediate(gameObject);
+        }
+
         // Gizmos ================================================================================================
 #if UNITY_EDITOR
         private void OnDrawGizmos()

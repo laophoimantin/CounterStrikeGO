@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,7 +18,7 @@ public class InGameMenuController : MonoBehaviour
         _openMenuButton.onClick.RemoveAllListeners();
         _resetButton.onClick.RemoveAllListeners();
         _hintButton.onClick.RemoveAllListeners();
-        
+
         _openMenuButton.onClick.AddListener(OpenMenu);
         _resetButton.onClick.AddListener(ResetGame);
         _hintButton.onClick.AddListener(ShowHint);
@@ -39,7 +36,7 @@ public class InGameMenuController : MonoBehaviour
 
     private void Exit()
     {
-        SceneController.Instance.LoadScene(_mainMenuScene);
+        SceneController.Instance.LoadNewScene(_mainMenuScene);
     }
 
     private void ShowHint()

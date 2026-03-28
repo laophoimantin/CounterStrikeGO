@@ -25,7 +25,7 @@ public abstract class UtilityVisual : GridUnitVisual
     {
         _baseModel.gameObject.SetActive(false);
         ShowUtilityModel();
-		_utilityModel.transform.position = startPos + Vector3.up * 2;
+		_utilityModel.transform.position = startPos + Vector3.up * 5;
     }
 
     private void ShowUtilityModel()

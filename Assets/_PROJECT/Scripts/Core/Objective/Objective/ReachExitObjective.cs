@@ -1,9 +1,9 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "ReachExitObjective", menuName = "Objective/ReachExitObjective", order = 1)]
+[CreateAssetMenu(menuName = "Objective/ReachExitObjective", order = 0)]
 public class ReachExitObjective : BaseObjective 
 {
-    public override bool IsComplete(LevelContext context)
+    public override bool IsComplete(LevelResult result)
     {
         return true;
     }

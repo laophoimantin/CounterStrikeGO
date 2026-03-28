@@ -10,12 +10,13 @@ namespace Grid
     {
         [SerializeField] private GameObject _objectiveItemPrefab;
         private GameObject _objectiveItem;
-        private bool _isCollected;
+        private bool _isCollected = false;
 
         public override void Initialize(Node owner)
         {
             base.Initialize(owner);
 
+            _isCollected = false;
             if (_objectiveItemPrefab == null)
             {
                 Debug.LogError("Objective Item is null!");
@@ -28,9 +29,8 @@ namespace Grid
 
         public override void OnEnter(PawnUnit pawnUnit)
         {
-            if (_isCollected) return;
-            if (pawnUnit is not PlayerController) return;
-            Debug.Log("Objective Pickup!");
+            if (_isCollected || pawnUnit is not PlayerController) return; 
+
             _isCollected = true;
             GameManager.Instance.OnPlayerPickedUpObjective();
             HideItem();

@@ -2,113 +2,150 @@ using System.Collections.Generic;
 using System.IO;
 using Core.Patterns;
 using Newtonsoft.Json;
+using UnityEditor;
 using UnityEngine;
 
 public class SaveManager : Singleton<SaveManager>
 {
-    //[SerializeField] private string _saveFilePath = Path.Combine(Application.persistentDataPath, "hitman_wizards_save.json");
-    [SerializeField] private string _saveFilePath;
+    private const string SAVE_DIR_NAME = "SaveFiles";
+    private const string SAVE_FILE_NAME = "PlayerSave.json";
+    
+    private string SaveDirectory => Path.Combine(Application.persistentDataPath, SAVE_DIR_NAME);
+    private string SaveFileName => Path.Combine(SaveDirectory, SAVE_FILE_NAME);
 
-    // Đây là trí nhớ ngắn hạn của game. Mọi truy xuất lúc đang chơi sẽ lấy từ đây.
     public GameSaveData CurrentData { get; private set; }
 
     protected override void Awake()
     {
         base.Awake();
-
-        LoadGame(); // Vừa bật game lên là bắt thằng thủ kho đi kiểm kê hàng hóa ngay!
+        LoadSaveFile();
     }
-
-    // --- BƯỚC 1: LOAD (Lấy từ ổ cứng lên RAM) ---
-    public void LoadGame()
+    
+#if UNITY_EDITOR
+    [UnityEditor.MenuItem("Tools/Clear Player Save")]
+    public static void DeleteSaveFile()
     {
-        if (File.Exists(_saveFilePath))
+        string path = Path.Combine(Application.persistentDataPath, SAVE_DIR_NAME, SAVE_FILE_NAME);
+        if (File.Exists(path))
         {
-            try
-            {
-                string json = File.ReadAllText(_saveFilePath);
-                // Ma thuật của Newtonsoft đây:
-                CurrentData = JsonConvert.DeserializeObject<GameSaveData>(json);
-                //Debug.Log("Load Save File thành công!");
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogError($"File save bị thiu rồi: {e.Message}");
-                CreateNewSave();
-            }
-        }
-        else
-        {
-            Debug.Log("Chưa có file save, tạo mới!");
-            CreateNewSave();
+            File.Delete(path);
         }
     }
+#endif
 
-    private void CreateNewSave()
+    private void LoadSaveFile()
     {
-        CurrentData = new GameSaveData();
-        // Mở khóa sẵn level 1 cho người chơi khỏi chửi
-        CurrentData.Levels["level_1"] = new LevelSaveData { IsUnlocked = true };
-        SaveGame(); // Ép lưu ngay lập tức để tạo file vật lý
-    }
-
-    // --- BƯỚC 2: GIAO TIẾP VỚI BÊN NGOÀI (Lấy & Ghi vào RAM) ---
-
-    public bool IsObjectiveComplete(string levelId, string objectiveId)
-    {
-        if (CurrentData.Levels.TryGetValue(levelId, out LevelSaveData levelData))
+        if (TryLoadPlayerSave())
         {
-            if (levelData.ObjectiveStates.TryGetValue(objectiveId, out bool isComplete))
-            {
-                return isComplete; // Trả về true/false từ file save
-            }
+            Debug.Log("Old save loaded successfully!");
+            return;
         }
 
-        return false; // Mặc định chưa hoàn thành
+        Debug.Log("No save found, created new!");
+        CreateNewSave();
     }
 
-    public void MarkObjectiveComplete(string levelId, string objectiveId)
+    private bool TryLoadPlayerSave()
     {
-        // Nếu level chưa tồn tại trong save thì đẻ ra nó
-        if (!CurrentData.Levels.ContainsKey(levelId))
-            CurrentData.Levels[levelId] = new LevelSaveData();
+        if (!File.Exists(SaveFileName)) return false;
 
-        CurrentData.Levels[levelId].ObjectiveStates[objectiveId] = true;
-    }
-
-    // --- BƯỚC 3: SAVE (Ghi từ RAM xuống ổ cứng) ---
-    public void SaveGame()
-    {
         try
         {
-            // Formatting.Indented để file JSON mở ra đọc bằng mắt người cho đẹp lúc Debug
-            string json = JsonConvert.SerializeObject(CurrentData, Formatting.Indented);
-            File.WriteAllText(_saveFilePath, json);
-            Debug.Log("Đã lưu game vào két sắt!");
+            string json = File.ReadAllText(SaveFileName);
+            var data = JsonConvert.DeserializeObject<GameSaveData>(json);
+
+            if (data == null)
+            {
+                Debug.LogWarning("File exists but deserialize returned null");
+                return false;
+            }
+
+            CurrentData = data;
+            return true;
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"Lưu game thất bại: {e.Message}");
+            Debug.LogError($"Player save is corrupted: {e.Message}");
+            return false;
         }
+    }
+    
+    private void CreateNewSave()
+    {
+        CurrentData = new GameSaveData();
+        SaveGame();
+    }
+    
+    
+    // Objective completion
+    public bool IsObjectiveComplete(string levelId, string objectiveId)
+    {
+        var level = GetLevelData(levelId);
+        return level != null && level.completedObjectiveIds.Contains(objectiveId);
+    }
+
+    public void SetObjectiveComplete(string levelId, string objectiveId)
+    {
+        var level = GetOrCreateLevelData(levelId);
+        level.completedObjectiveIds.Add(objectiveId); 
+    }
+
+    // Level unlock
+    public bool IsLevelUnlocked(string levelId, bool isUnlockedByDefault = false)
+    {
+        var level = GetOrCreateLevelData(levelId, isUnlockedByDefault);
+        return level.isUnlocked;
+    }
+
+    public void SetLevelUnlocked(string levelId)
+    {
+        var level = GetOrCreateLevelData(levelId);
+        level.isUnlocked = true;
+    }
+    
+    // Helpers
+    private LevelSaveData GetLevelData(string levelId)
+    {
+        if (CurrentData.levels.TryGetValue(levelId, out var level))
+        {
+            return level;
+        }
+        return null;
+    }
+
+    private LevelSaveData GetOrCreateLevelData(string levelId, bool isUnlockedByDefault = false)
+    {
+        if (!CurrentData.levels.TryGetValue(levelId, out var level))
+        {
+            level = new LevelSaveData { isUnlocked = isUnlockedByDefault };
+            CurrentData.levels.Add(levelId, level);
+        }
+        return level;
+    }
+
+    public void SaveGame()
+    {
+        if (!Directory.Exists(SaveDirectory))
+        {
+            Directory.CreateDirectory(SaveDirectory);
+        }
+
+        string json = JsonConvert.SerializeObject(CurrentData, Formatting.Indented);
+        File.WriteAllText(SaveFileName, json);
     }
 }
 
 [System.Serializable]
 public class GameSaveData
 {
-    // Key: LevelId (ví dụ: "level_1"), Value: Dữ liệu của level đó
-    public Dictionary<string, LevelSaveData> Levels = new Dictionary<string, LevelSaveData>();
-
-    // Sau này ông muốn nhét thêm Settings (Âm thanh, Đồ họa) hay Inventory thì nhét vào đây!
-    // public PlayerSettings Settings = new PlayerSettings(); 
+    [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
+    public Dictionary<string, LevelSaveData> levels = new Dictionary<string, LevelSaveData>();
 }
 
 [System.Serializable]
 public class LevelSaveData
 {
-    public bool IsUnlocked;
-
-    // Key: ObjectiveId (ví dụ: "kill_boss"), Value: Đã hoàn thành chưa (true/false)
-    // Tạm biệt cái List ngu học O(N) của ông nhé!
-    public Dictionary<string, bool> ObjectiveStates = new Dictionary<string, bool>();
+    public bool isUnlocked;
+    [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
+    public HashSet<string> completedObjectiveIds = new();
 }

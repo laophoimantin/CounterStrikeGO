@@ -1,11 +1,11 @@
 using Core.TurnSystem;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Objectives/Eliminate All")]
+[CreateAssetMenu(menuName = "Objective/Eliminate All")]
 public class EliminateAllObjective : BaseObjective
 {
 
-    public override bool IsComplete(LevelContext context)
+    public override bool IsComplete(LevelResult result)
     {
         return EnemyManager.Instance.AreAllEnemiesDefeated();
     }

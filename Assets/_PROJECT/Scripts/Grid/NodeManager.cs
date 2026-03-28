@@ -9,23 +9,22 @@ namespace Grid
 {
     public class NodeManager : Singleton<NodeManager>
     {
-        [SerializeField] private int _widthX;
-        [SerializeField] private int _heightY;
-        [SerializeField] private float _cellSize;
+        [Header("References")]
         [SerializeField] private Transform _cellContainer;
         [SerializeField] Node _nodePrefab;
+        
+        private int _widthX;
+        private int _heightY;
+        private float _cellSize;
 
         [SerializeField] private List<Node> _allNodes = new();
         private Dictionary<Vector2Int, Node> _nodeGrid = new();
+        public IReadOnlyList<Node> AllNodes => _allNodes;
 
         protected override void Awake()
         {
             base.Awake();
             RebuildNodeGrid();
-        }
-        void Start()
-        {
-            
         }
         public void GenerateMap(int width, int height, float size)
         {
@@ -80,15 +79,6 @@ namespace Grid
             }
             return result;
         }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -179,7 +169,8 @@ namespace Grid
 
         public void RebuildNodeGrid()
         {
-            if (_allNodes == null) _allNodes = new List<Node>();
+            if (_allNodes == null) 
+                _allNodes = new List<Node>();
 
             int removedCount = _allNodes.RemoveAll(n => n == null);
             if (removedCount > 0)

@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
   m_Name: Level 1
   m_EditorClassIdentifier: 
-  _levelId: 1
+  _nextLevel: {fileID: 11400000, guid: e1236faeae4233c4085b2f6eb41374db, type: 2}
+  _isUnlockedByDefault: 1
+  _levelDisplayNumber: 1
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
-  _optionalObjectives:
-  - {fileID: 11400000, guid: f7f10e55f115c6447980f6e7c08acdf3, type: 2}
-  - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}
+  _optionalObjectives: []

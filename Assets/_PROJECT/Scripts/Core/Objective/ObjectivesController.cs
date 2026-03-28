@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
+using Core.Patterns;
 using UnityEngine;
 
-public class ObjectivesController : MonoBehaviour
+public class ObjectivesController : MonoBehaviour 
 {
     private RuntimeObjective _mainObjective;
     private List<RuntimeObjective> _optionalObjectives = new();
@@ -10,39 +10,60 @@ public class ObjectivesController : MonoBehaviour
     
     [SerializeField] private ObjectivesPanel _objectivesPanel;
 
-    private LevelContext _context;
-
-    public void Initialize(LevelData currentLevelData, LevelContext context)
+    public void Initialize(LevelData currentLevelData)
     {
+        Cleanup();
+        
         _currentLevelId = currentLevelData.LevelId;
-        _context = context;
 
-        
-        bool isMainDone = SaveManager.Instance.IsObjectiveComplete(_currentLevelId, currentLevelData.MainObjective.Id);
-        _mainObjective = new RuntimeObjective(currentLevelData.MainObjective, isMainDone);
-        _objectivesPanel.SpawnObjective(_mainObjective);
-        
-       foreach (var obj in currentLevelData.OptionalObjectives)
+        InitializeObjectives(currentLevelData);
+        InitializePanel();
+    }
+
+    
+    private void Cleanup()
+    {
+        _mainObjective = null;
+        _optionalObjectives.Clear();
+        _objectivesPanel.Clear();
+    }
+    // =======================================================================================
+    
+    private void InitializeObjectives(LevelData levelData)
+    {
+        bool isMainDone = SaveManager.Instance.IsObjectiveComplete(_currentLevelId, levelData.MainObjective.Id);
+        _mainObjective = new RuntimeObjective(levelData.MainObjective, isMainDone);
+
+        foreach (var obj in levelData.OptionalObjectives)
         {
             bool isOptDone = SaveManager.Instance.IsObjectiveComplete(_currentLevelId, obj.Id);
-            var optObj = new RuntimeObjective(obj, isOptDone);
-            _optionalObjectives.Add(optObj);
-            _objectivesPanel.SpawnObjective(optObj);
+            _optionalObjectives.Add(new RuntimeObjective(obj, isOptDone));
         }
-        _objectivesPanel.Initialize();
+    }
+
+    private void InitializePanel()
+    {
+        _objectivesPanel.Initialize(_mainObjective, _optionalObjectives);
     }
 
     public bool IsMainComplete()
     {
-        _mainObjective.UpdateCompletedState(_context);
         return _mainObjective.IsCompleteNow;
     }
 
-    public void UpdateOptionalCompletedState()
+    public void EvaluateAll(LevelResult result)
     {
+        _mainObjective.UpdateCompletedState(result);
         foreach (var obj in _optionalObjectives)
-        {
-            obj.UpdateCompletedState(_context);
-        }
+            obj.UpdateCompletedState(result);
+    }
+    
+    public void SaveAll()
+    {
+        _mainObjective.TrySave(_currentLevelId);
+        foreach (var obj in _optionalObjectives)
+            obj.TrySave(_currentLevelId);
+
+        SaveManager.Instance.SaveGame(); 
     }
 }

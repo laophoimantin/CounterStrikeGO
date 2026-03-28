@@ -2,65 +2,58 @@ using Core.Events;
 using Core.Patterns;
 using Core.TurnSystem;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 namespace Core
 {
     public class GameManager : Singleton<GameManager>
     {
-        [Header("Data")]
-        [SerializeField] private LevelData _currentLevelData;
+        private LevelData _currentLevelData;
+        private LevelData _nextLevelData;
         
         [Header("References")]
         [SerializeField] private ObjectivesController _objectivesController;
 
-        private LevelContext _context;
+        private LevelResult _result;
         bool _isGameOver = false;
-
-        protected override void Awake()
+        
+        void Start()
         {
-            base.Awake();
-
-            _context = new LevelContext();
-            
-            // DataLoader.Instance.SetLevelSaveDataBaseOnIdIsUnlocked(true, _currentLevelData.Id);
-            
-            if (_objectivesController != null)
-                _objectivesController.Initialize(_currentLevelData, _context);
+            InitLevel();
+        }
+        
+        private void InitLevel()
+        {
+            _isGameOver = false;
+            _result = new LevelResult();
+            _currentLevelData = SessionData.CurrentLevelData;
+            _nextLevelData = SessionData.NextLevelDataToLoad;
+            _objectivesController.Initialize(_currentLevelData);
         }
 
         void OnEnable()
         {
             this.Subscribe<OnPlayerDeadEvent>(LoseGame);
-            this.Subscribe<OnPlayerSteppedEvent>(OnPlayerStep);
         }
 
         void OnDisable()
         {
             this.Unsubscribe<OnPlayerDeadEvent>(LoseGame);
-            this.Unsubscribe<OnPlayerSteppedEvent>(OnPlayerStep);
         }
 
         // =============================================================================================================
 
         public void OnPlayerPickedUpObjective()
         {
-            _context.SetData<bool>(ContextKey.HasObjectiveItem, true);
-        }
-
-        private void OnPlayerStep(OnPlayerSteppedEvent e)
-        {
-            int currentSteps = _context.GetData<int>(ContextKey.StepCount, 0); 
-    
-            _context.SetData(ContextKey.StepCount, currentSteps + 1);
+            _result.SetData<bool>(ContextKey.HasObjectiveItem, true);
         }
 
         public void EvaluateWin()
         {
+            _result.SetData(ContextKey.StepCount, TurnManager.Instance.StepCount);
+            _objectivesController.EvaluateAll(_result);
             if (!_objectivesController.IsMainComplete())
                 return;
 
-            _objectivesController.UpdateOptionalCompletedState();
             WinGame();
         }
 
@@ -69,16 +62,32 @@ namespace Core
             if (_isGameOver) return;
 
             _isGameOver = true;
-            this.SendEvent(new OnGameEndedEvent { });
-            Debug.Log("LEVEL COMPLETE!");
+            _objectivesController.SaveAll();
+            if (_nextLevelData != null)
+                SaveManager.Instance.SetLevelUnlocked(_nextLevelData.LevelId);
+            
+            _objectivesController.SaveAll();
+            this.SendEvent(new OnGameEndedEvent());
         }
+
 
         private void LoseGame(OnPlayerDeadEvent eventData)
         {
             if (_isGameOver) return;
             _isGameOver = true;
             SceneController.Instance.ReloadCurrentScene();
-            Debug.Log("GAME OVER");
+        }
+        
+        public void RequestNextLevel()
+        {
+            if (_nextLevelData == null)
+            {
+                SceneController.Instance.LoadMainMenu();
+                return; 
+            }
+
+            SessionData.SetCurrentLevelData(_nextLevelData);
+            SceneController.Instance.LoadGameplayScene();
         }
     }
 }
