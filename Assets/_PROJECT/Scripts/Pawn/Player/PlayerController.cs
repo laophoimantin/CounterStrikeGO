@@ -15,7 +15,7 @@ namespace Pawn
         private PlayerVisual _playerVisual;
 
         private bool _isMoving = false;
-        private bool _canMove = true;
+        private bool _canAct = true;
 
         private Direction _tempMoveDirection = Direction.None;
         private UtilityController _currentUtility;
@@ -35,26 +35,30 @@ namespace Pawn
 
         void Start()
         {
-            if (_currentNode != null)
-            {
-                _currentNode.AddUnit(this);
-                transform.position = _currentNode.WorldPos;
-            }
-            else
-            {
-                Debug.LogWarning($"{gameObject.name} has no node assigned!");
-            }
-
+            InitializeOnCurrentNode();
             _playerVisual = _visual as PlayerVisual;
             if (_playerVisual == null)
                 Debug.Log("VISUALLLLLL!");
+        }
+        
+        private void InitializeOnCurrentNode()
+        {
+            if (_currentNode == null)
+            {
+                Debug.LogWarning($"{gameObject.name} has no node assigned!");
+                return;
+            }
+
+            _currentNode.AddUnit(this);
+            transform.position = _currentNode.WorldPos;
         }
  
 
         // Turn System =========================================================================
         private void HandleTurnChanged(OnTurnChangedEvent eventData)
         {
-            _canMove = (eventData.NewTurn == TurnType.PlayerPlanning);
+            _canAct = (eventData.NewTurn == TurnType.PlayerPlanning);
+            
             if (eventData.NewTurn == TurnType.PlayerPlanning && _tempMoveDirection != Direction.None)
                 TryMoveTo(_tempMoveDirection);
         }
@@ -64,7 +68,7 @@ namespace Pawn
         {
             _tempMoveDirection = direction;
 
-            if (!_canMove || _isMoving || _hasUtility) return;
+            if (!_canAct || _isMoving || _hasUtility) return;
 
             Node target = GetNodeInDirection(_currentNode, direction);
 
@@ -76,21 +80,20 @@ namespace Pawn
             
             _tempMoveDirection = Direction.None;
             StartAction();
-            ExecuteMoveSequence(target);
+            PlayMoveSequence(target);
         }
 
-        private void ExecuteMoveSequence(Node targetNode)
+        private void PlayMoveSequence(Node targetNode)
         {
             _isMoving = true;
-            _canMove = false;
+            _canAct = false;
 
             UpdateNodeData(targetNode);
 
             Sequence seq = DOTween.Sequence();
 
             seq.Append(_playerVisual.MoveTo(targetNode.WorldPos, _actionDuration));
-            TryAddWobble(seq);
-
+            _playerVisual.TryAddWobble(seq);
             HandleCombat(targetNode, seq);
 
             seq.OnComplete(() =>
@@ -107,29 +110,8 @@ namespace Pawn
 
             if (combat != null)
                 seq.Append(combat);
-            
-            // var enemies = targetNode.GetUnitsByType<EnemyController>().ToList();
-            //
-            // if (enemies.Count == 0 || targetNode.IsHideable())
-            //     return;
-            //
-            // foreach (var enemy in enemies)
-            // {
-            //     Tween death = enemy.Die();
-            //
-            //     if (death != null)
-            //     {
-            //         death.OnComplete(() => { enemy.FinishDeath(); });
-            //         seq.Join(death);
-            //     }
-            // }
         }
 
-        private void TryAddWobble(Sequence seq)
-        {
-            if (Random.value < 0.5f)
-                seq.Join(_playerVisual.Wobble());
-        }
 
         private bool ShouldEndTurn()
         {
@@ -150,7 +132,6 @@ namespace Pawn
         {
             this.SendEvent(new OnPlayerActionFinishedEvent(shouldEnd));
         }
-
 
         private void UpdateNodeData(Node newNode)
         {

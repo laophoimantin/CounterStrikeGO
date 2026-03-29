@@ -27,6 +27,7 @@ public class GridUnitVisual : MonoBehaviour
     // Movement ======================================
     public Tween MoveTo(Vector3 targetPos, float duration)
     {
+        // Move the whole transform
         return transform.DOMove(targetPos, duration).SetEase(Ease.Linear);
     }
 
@@ -41,14 +42,14 @@ public class GridUnitVisual : MonoBehaviour
     }
 
     // Feedback Animations ================================
-    public virtual Tween FlyUp()
+    public Tween FlyUp()
     {
         Sequence sequence = DOTween.Sequence();
         sequence.Append(_baseModel.DOLocalMoveY(_baseModel.position.y + _offScreenHeight, _flyDuration).SetEase(Ease.InSine));
         return sequence;
     }
 
-    public virtual Tween DropDown()
+    public Tween DropDown()
     {
         Sequence seq = DOTween.Sequence();
 
@@ -56,6 +57,12 @@ public class GridUnitVisual : MonoBehaviour
 
         seq.Append(_baseModel.DOLocalMoveY(0, _flyDuration).SetEase(Ease.InSine));
         return seq;
+    }
+
+    public void TryAddWobble(Sequence seq)
+    {
+        if (UnityEngine.Random.value < 0.5f)
+            seq.Join(Wobble());
     }
 
     public Tween Wobble()

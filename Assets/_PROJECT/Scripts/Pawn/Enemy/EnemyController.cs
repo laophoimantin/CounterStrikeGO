@@ -201,7 +201,6 @@ namespace Pawn
 
 		public Sequence Move(Node targetNode)
 		{
-			// Logic
 			Sequence seq = DOTween.Sequence();
 			seq.AppendCallback(() => { UpdateNodeData(targetNode); });
 			seq.Append(_visual.MoveTo(targetNode.WorldPos, _actionDuration));
@@ -212,8 +211,7 @@ namespace Pawn
 		public Sequence Rotate(Direction newDirection)
 		{
 			Sequence seq = DOTween.Sequence();
-			seq.AppendCallback(() => { SetFacingDirection(newDirection); }
-			);
+			seq.AppendCallback(() => { SetFacingDirection(newDirection); });
 			Quaternion targetRot = GetRotationForDirection(newDirection);
 			seq.Append(_visual.RotateTo(targetRot, _actionDuration));
 			return seq;
