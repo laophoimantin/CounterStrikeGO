@@ -12,10 +12,10 @@ namespace Grid
         [Header("References")]
         [SerializeField] private Transform _cellContainer;
         [SerializeField] Node _nodePrefab;
-        
-        private int _widthX;
-        private int _heightY;
-        private float _cellSize;
+
+        [SerializeField] private int _widthX;
+        [SerializeField] private int _heightY;
+        [SerializeField] private float _cellSize;
 
         [SerializeField] private List<Node> _allNodes = new();
         private Dictionary<Vector2Int, Node> _nodeGrid = new();
@@ -26,6 +26,7 @@ namespace Grid
             base.Awake();
             RebuildNodeGrid();
         }
+
         public void GenerateMap(int width, int height, float size)
         {
             _widthX = width;
@@ -59,7 +60,7 @@ namespace Grid
             Vector2Int centerCoord = centerNode.Get2DCoordinate();
             var result = new List<Node>();
 
-            
+
             for (int dx = -range; dx <= range; dx++)
             {
                 for (int dy = -range; dy <= range; dy++)
@@ -70,16 +71,16 @@ namespace Grid
                     // Chebyshev distance check (square range)
                     if (Mathf.Max(Mathf.Abs(dx), Mathf.Abs(dy)) > range)
                         continue;
-                    
+
                     Vector2Int coord = centerCoord + new Vector2Int(dx, dy);
-                    
+
                     if (_nodeGrid.TryGetValue(coord, out Node node))
                         result.Add(node);
                 }
             }
+
             return result;
         }
-
 
 
         private void SpawnNode(int x, int y, float cellSize)
@@ -159,17 +160,29 @@ namespace Grid
                 Mathf.RoundToInt(z)
             );
 
+            Debug.Log($"Grid pos: {gridPos}");
+            
             if (_nodeGrid.TryGetValue(gridPos, out Node node))
             {
                 return node;
             }
 
+            if (_nodeGrid == null || _nodeGrid.Count == 0)
+            {
+                Debug.LogError("Node grid is null!");
+            }
             return null;
         }
 
+        public void ReAssign(int width, int height, float size)
+        {
+            _widthX = width;
+            _heightY = height;
+            _cellSize = size;
+        }
         public void RebuildNodeGrid()
         {
-            if (_allNodes == null) 
+            if (_allNodes == null)
                 _allNodes = new List<Node>();
 
             int removedCount = _allNodes.RemoveAll(n => n == null);

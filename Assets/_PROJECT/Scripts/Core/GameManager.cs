@@ -9,24 +9,35 @@ namespace Core
     {
         private LevelData _currentLevelData;
         private LevelData _nextLevelData;
-        
+
         [Header("References")]
+        [SerializeField] private LevelSpawner _levelSpawner;
         [SerializeField] private ObjectivesController _objectivesController;
 
         private LevelResult _result;
-        bool _isGameOver = false;
-        
+
+        public bool IsGameOver { get; private set; }
+
+        [Header("Testing")]
+        [SerializeField] private LevelData _testData;
+
         void Start()
         {
             InitLevel();
         }
-        
+
         private void InitLevel()
         {
-            _isGameOver = false;
+            if (SessionData.CurrentLevelData == null)
+            {
+                SessionData.SetCurrentLevelData(_testData);
+            }
+
+            IsGameOver = false;
             _result = new LevelResult();
             _currentLevelData = SessionData.CurrentLevelData;
             _nextLevelData = SessionData.NextLevelDataToLoad;
+            _levelSpawner.GenerateMap(_currentLevelData);
             _objectivesController.Initialize(_currentLevelData);
         }
 
@@ -59,31 +70,33 @@ namespace Core
 
         private void WinGame()
         {
-            if (_isGameOver) return;
+            if (IsGameOver) return;
+            IsGameOver = true;
 
-            _isGameOver = true;
-            _objectivesController.SaveAll();
+            _objectivesController.SaveObjectiveStatus();
             if (_nextLevelData != null)
                 SaveManager.Instance.SetLevelUnlocked(_nextLevelData.LevelId);
-            
-            _objectivesController.SaveAll();
+
+            SaveManager.Instance.SaveGame();
+
             this.SendEvent(new OnGameEndedEvent());
         }
 
 
         private void LoseGame(OnPlayerDeadEvent eventData)
         {
-            if (_isGameOver) return;
-            _isGameOver = true;
+            if (IsGameOver) return;
+            IsGameOver = true;
+
             SceneController.Instance.ReloadCurrentScene();
         }
-        
+
         public void RequestNextLevel()
         {
             if (_nextLevelData == null)
             {
                 SceneController.Instance.LoadMainMenu();
-                return; 
+                return;
             }
 
             SessionData.SetCurrentLevelData(_nextLevelData);

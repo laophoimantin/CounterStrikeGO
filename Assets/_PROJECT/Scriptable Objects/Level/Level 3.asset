@@ -12,10 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
   m_Name: Level 3
   m_EditorClassIdentifier: 
+  _mapPrefab: {fileID: 2983686552691948410, guid: eb18b3ddf81be554a868065ebbabb4fd, type: 3}
   _nextLevel: {fileID: 0}
   _isUnlockedByDefault: 0
   _levelDisplayNumber: 3
-  _mainObjective: {fileID: 11400000, guid: c1b26155802e7c54bbe387deb6656025, type: 2}
+  _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
-  - {fileID: 11400000, guid: 2356b0ef4f1ecbf40b1625975caab8cb, type: 2}
   - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}

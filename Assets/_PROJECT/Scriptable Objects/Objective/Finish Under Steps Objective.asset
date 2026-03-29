@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0e97cc6ad246e09e22ca0dcbc5daad, type: 3}
   m_Name: Finish Under Steps Objective
   m_EditorClassIdentifier: 
-  _id: 
   _icon: {fileID: 21300000, guid: c8c9ce529d78e094dbdee662f4d72917, type: 3}
-  _description: Finish under 1 step
+  _description: 29 turns or fewer
   _maxSteps: 100

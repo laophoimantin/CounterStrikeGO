@@ -32,13 +32,6 @@ public class MainMenuUI : MonoBehaviour
         _mainButton.onClick.AddListener(ShowPanel);
          _returnButton.onClick.AddListener(HidePanel);
     }
-
-    void OnDestroy()
-    {
-        _mainButton.onClick.RemoveListener(ShowPanel);
-        _returnButton.onClick.RemoveListener(HidePanel);
-        _panelSeq?.Kill();
-    }
     
     void Start()
     {

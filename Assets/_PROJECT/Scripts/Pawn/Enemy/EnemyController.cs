@@ -43,7 +43,7 @@ namespace Pawn
 		public Node UpcomingNode => 0 + 2 < _astarPath.Count ? _astarPath[2] : null;
 
 
-		public Action<EnemyController> OnDestroyed;
+		public Action<EnemyController> OnDeath;
 
 		private int _flashTurnsRemaining;
 
@@ -257,7 +257,7 @@ namespace Pawn
 			{
 				_currentNode.RemoveUnit(this);
 				_currentNode = null;
-				OnDestroyed?.Invoke(this);
+				OnDeath?.Invoke(this);
 			});
 			return seq;
 		}

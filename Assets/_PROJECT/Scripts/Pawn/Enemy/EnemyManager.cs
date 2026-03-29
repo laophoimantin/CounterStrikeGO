@@ -13,7 +13,7 @@ namespace Core.TurnSystem
     public class EnemyManager : Singleton<EnemyManager>
     {
         private readonly List<EnemyController> _activeEnemiesList = new();
-        private bool _hasKilledEnemy;
+        private bool _hasKilledEnemy = false;
         public bool AreAllEnemiesDefeated() => _activeEnemiesList.Count <= 0;
         public bool HasKilledEnemy() => _hasKilledEnemy;
 
@@ -37,7 +37,7 @@ namespace Core.TurnSystem
             if (!_activeEnemiesList.Contains(enemy))
             {
                 _activeEnemiesList.Add(enemy);
-                enemy.OnDestroyed += UnregisterEnemy;
+                enemy.OnDeath += UnregisterEnemy;
             }
         }
 
@@ -46,6 +46,13 @@ namespace Core.TurnSystem
             _activeEnemiesList.Remove(enemy);
             if (!_hasKilledEnemy)
                 _hasKilledEnemy = true;
+
+            if (_pendingCount > 0)
+            {
+                _pendingCount--;
+                if (_finishedCount >= _pendingCount)
+                    EndEnemyActionPhase();
+            }
         }
 
         // Turn System =========================================================================
@@ -53,22 +60,23 @@ namespace Core.TurnSystem
         {
             if (eventData.NewTurn != TurnType.EnemyPlanning)
                 return;
-            //InitializeEnemyTurnState();
             List<EnemyController> snapshot = _activeEnemiesList
                 .Where(enemy => enemy != null)
                 .ToList();
-            BeginEnemyAction(snapshot);
+            StartCoroutine(BeginEnemyAction(snapshot));
         }
 
 
-        private void BeginEnemyAction(List<EnemyController> snapshot)
+        // Keep IENumerator, do not change
+        private IEnumerator BeginEnemyAction(List<EnemyController> snapshot)
         {
+            yield return new WaitForSeconds(0.1f); // Do not delete
             this.SendEvent(new OnEnemyActionStartedEvent());
 
             if (snapshot.Count == 0)
             {
-                EndEnemyActionPhase();
-                return;
+                yield return StartCoroutine(EndEnemyActionPhase());
+                yield break;
             }
 
             _finishedCount = 0;
@@ -85,12 +93,13 @@ namespace Core.TurnSystem
             _finishedCount++;
             if (_finishedCount >= _pendingCount)
             {
-                EndEnemyActionPhase();
+                StartCoroutine(EndEnemyActionPhase());
             }
         }
 
-        private void EndEnemyActionPhase()
+        private IEnumerator EndEnemyActionPhase()
         {
+            yield return new WaitForSeconds(0.1f);  // Do not delete
             this.SendEvent(new OnEnemyActionFinishedEvent());
         }
     }

@@ -10,13 +10,9 @@ public class LevelBuilderManager : MonoBehaviour
 	[SerializeField] private int _mapHeight;
 	[SerializeField] private float _cellSize;
 
-	[SerializeField] private Node _nodePrefab;
-	[SerializeField] private Transform _cellContainer;
-	
 	public void GenerateNodeMap()
 	{
 		_nodeManager.GenerateMap(_mapWidth, _mapHeight, _cellSize);
-
 	}
 
 	public void DeleteMap()
@@ -32,5 +28,6 @@ public class LevelBuilderManager : MonoBehaviour
 	public void RebuildNodeGrid()
 	{
 		_nodeManager.RebuildNodeGrid();
+		_nodeManager.ReAssign(_mapWidth, _mapHeight, _cellSize);
 	}
 }

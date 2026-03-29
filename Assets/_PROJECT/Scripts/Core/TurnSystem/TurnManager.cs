@@ -40,11 +40,6 @@ namespace Core.TurnSystem
 
         void Start()
         {
-            StartTurn();
-        }
-
-        public void StartTurn() // Later: other scripts can call this to start a new level
-        {
             SetTurn(TurnType.PlayerPlanning);
         }
 
@@ -75,7 +70,7 @@ namespace Core.TurnSystem
             if (!IsValidTransition(_currentTurn, next)) return;
 
             _currentTurn = next;
-            this.SendEvent(new OnTurnChangedEvent { NewTurn = next });
+            this.SendEvent(new OnTurnChangedEvent { NewTurn = _currentTurn });
         }
 
 

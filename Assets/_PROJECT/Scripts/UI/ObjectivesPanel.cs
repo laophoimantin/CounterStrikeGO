@@ -67,13 +67,14 @@ public class ObjectivesPanel : MonoBehaviour
 
     public void Initialize(RuntimeObjective main, List<RuntimeObjective> optionals)
     {
+        Clear();
         SpawnObjective(main);
         foreach (var obj in optionals)
             SpawnObjective(obj);
-        EndableButtons();
+        EnableButtons();
     }
 
-    public void Clear()
+    private void Clear()
     {
         _panelSeq?.Kill();
 
@@ -188,11 +189,10 @@ public class ObjectivesPanel : MonoBehaviour
     private void OnNextLevelClicked()
     {
         DisableButtons();
-
         GameManager.Instance.RequestNextLevel();
     }
 
-    private void EndableButtons()
+    private void EnableButtons()
     {
         SetButtonInteractable(true);
     }

@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6a7d04532694260829bd1855b58cbc6, type: 3}
   m_Name: ReachExitObjective
   m_EditorClassIdentifier: 
-  _id: 
   _icon: {fileID: 21300000, guid: 7835e1a35173faf4c8737378215ff5dd, type: 3}
-  _description: Exit
+  _description: Complete Level

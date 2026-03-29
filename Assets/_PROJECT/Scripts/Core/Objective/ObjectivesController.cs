@@ -13,7 +13,6 @@ public class ObjectivesController : MonoBehaviour
     public void Initialize(LevelData currentLevelData)
     {
         Cleanup();
-        
         _currentLevelId = currentLevelData.LevelId;
 
         InitializeObjectives(currentLevelData);
@@ -25,7 +24,6 @@ public class ObjectivesController : MonoBehaviour
     {
         _mainObjective = null;
         _optionalObjectives.Clear();
-        _objectivesPanel.Clear();
     }
     // =======================================================================================
     
@@ -58,7 +56,7 @@ public class ObjectivesController : MonoBehaviour
             obj.UpdateCompletedState(result);
     }
     
-    public void SaveAll()
+    public void SaveObjectiveStatus()
     {
         _mainObjective.TrySave(_currentLevelId);
         foreach (var obj in _optionalObjectives)

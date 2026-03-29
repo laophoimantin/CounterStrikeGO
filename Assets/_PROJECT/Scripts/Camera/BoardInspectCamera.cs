@@ -1,3 +1,4 @@
+using Core;
 using Pawn;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ public class BoardInspectCamera : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform _cam;
-    [SerializeField] private Transform _target;
+    private Transform _target;
 
     [Header("Default Camera Settings")]
     [SerializeField] private float _distance = 10f;
@@ -28,7 +29,12 @@ public class BoardInspectCamera : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (_target == null) return;
+        HandleCameraOrbit();
+    }
+
+    private void HandleCameraOrbit()
+    {
+        if (_target == null || GameManager.Instance.IsGameOver) return;
 
         if (Input.GetMouseButton(0) && !ClickHandler.IsPlayerInteracting)
         {
@@ -48,5 +54,10 @@ public class BoardInspectCamera : MonoBehaviour
 
         _cam.position = position;
         _cam.LookAt(_target);
+    }
+
+    public void AssignFocusPoint(Transform target)
+    {
+        _target = target;
     }
 }

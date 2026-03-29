@@ -24,8 +24,6 @@ public class SceneController : MonoBehaviour
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Slider _progressBar;
 
-    public static event Action OnSceneLoadStarted;
-    public static event Action OnSceneLoadCompleted;
 
     private void Awake()
     {
@@ -93,8 +91,6 @@ public class SceneController : MonoBehaviour
 
     private IEnumerator LoadSceneRoutine(string sceneName)
     {
-        OnSceneLoadStarted?.Invoke();
-
         _canvasGroup.blocksRaycasts = true;
 
         // PHASE 1: TRANSITION TO LOADING SCREEN
@@ -144,7 +140,7 @@ public class SceneController : MonoBehaviour
         yield return Fade(1f, 0f);
 
         _canvasGroup.blocksRaycasts = false;
-        OnSceneLoadCompleted?.Invoke();
+        _isLoading = false; 
     }
 
     private IEnumerator Fade(float startAlpha, float endAlpha)

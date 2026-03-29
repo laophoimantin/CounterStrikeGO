@@ -49,6 +49,7 @@ namespace Pawn
             if (_playerVisual == null)
                 Debug.Log("VISUALLLLLL!");
         }
+ 
 
         // Turn System =========================================================================
         private void HandleTurnChanged(OnTurnChangedEvent eventData)
@@ -62,6 +63,7 @@ namespace Pawn
         public void TryMoveTo(Direction direction)
         {
             _tempMoveDirection = direction;
+
             if (!_canMove || _isMoving || _hasUtility) return;
 
             Node target = GetNodeInDirection(_currentNode, direction);
@@ -235,7 +237,7 @@ namespace Pawn
             else
             {
                 // Snap to nearest node
-                newNode = FindObjectOfType<NodeManager>().GetNodeFromWorldPosition(transform.position);
+                newNode = FindObjectOfType<NodeManager>().GetNodeFromWorldPosition(transform.localPosition);
             }
 
             if (newNode == null)

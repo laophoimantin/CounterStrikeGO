@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad61c325cced4338b4e3ed66619fb940, type: 3}
   m_Name: Bring The Bomb Objective
   m_EditorClassIdentifier: 
-  _id: 
   _icon: {fileID: 21300000, guid: ab95f504713ed764d9172a817ae23de2, type: 3}
-  _description: Bring the bomb
+  _description: Collect C4
