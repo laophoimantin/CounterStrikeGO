@@ -157,8 +157,6 @@ public class NodeManager : Singleton<NodeManager>
             Mathf.RoundToInt(z)
         );
 
-        Debug.Log($"Grid pos: {gridPos}");
-
         if (_nodeGrid.TryGetValue(gridPos, out Node node))
         {
             return node;

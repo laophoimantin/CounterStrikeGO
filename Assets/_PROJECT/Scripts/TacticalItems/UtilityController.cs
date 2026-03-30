@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 
-public abstract class UtilityController : GridOccupant
+public abstract class UtilityController : GridOccupant, IPickupable
 {
     public override bool OccupiesSpace => true;
 
@@ -55,6 +55,16 @@ public abstract class UtilityController : GridOccupant
 
         _collider.enabled = false;
         _utilityVisual.SwitchToFlyingMode(player.transform.position);
+    }
+    public void OnPickUpBy(PawnUnit picker)
+    {
+        IUtilityEquipper receiver = picker.GetComponent<IUtilityEquipper>();
+        if (receiver != null)
+        {
+            receiver.EquipUtility(this); 
+            UnregisterFromNode(); 
+            _utilityVisual.SwitchToFlyingMode(picker.transform.position);
+        }
     }
 
     public void Throw(Node targetNode, Action onComplete)
@@ -145,4 +155,6 @@ public abstract class UtilityController : GridOccupant
 #endif
 
     #endregion
+
+  
 }

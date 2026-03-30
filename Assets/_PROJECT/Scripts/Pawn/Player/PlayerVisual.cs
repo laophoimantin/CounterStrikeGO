@@ -16,16 +16,6 @@ public class PlayerVisual : GridUnitVisual
         SetUsingUtilityVisible(false);
     }
 
-    // public override Tween FlyUp()
-    // {
-    //     Sequence deathSeq = DOTween.Sequence();
-    //         
-    //     deathSeq.Join(_baseModel.DORotate(new Vector3(0, 360, 0), _flyDuration, RotateMode.FastBeyond360));
-    //     deathSeq.Join(_baseModel.DOScale(Vector3.zero, _flyDuration).SetEase(Ease.InBack));
-    //         
-    //     return deathSeq;
-    // }
-
     // Utility ===========================================
     public void SetUsingUtilityVisible(bool hasUtility)
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ClickHandler : MonoBehaviour
+public class PlayerInteractionHandler : MonoBehaviour
 {
     public static bool IsPlayerInteracting { get; private set; }
 

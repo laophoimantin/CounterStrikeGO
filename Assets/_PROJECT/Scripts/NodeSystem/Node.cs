@@ -40,8 +40,9 @@ public class Node : MonoBehaviour
 
     // ------------------------------------------------------------
     [Header("Utility")]
-    [SerializeField] private UtilityController _utilityItem;
-    public bool HasUtilityItem => _utilityItem != null;
+    [SerializeField] private IPickupable _item;
+    private bool HasItem => _item != null;
+
     private BaseZone _activeBaseZone;
 
     [Header("Debug")]
@@ -283,25 +284,23 @@ public class Node : MonoBehaviour
             _feature.OnEnter(pawnUnit);
         }
 
-        if (pawnUnit is PlayerController player)
+        if (HasItem)
         {
-            if (HasUtilityItem)
-            {
-                player.EquipUtility(_utilityItem);
-                _utilityItem = null;
-            }
+            //player.EquipUtility(_utilityItem);
+            //_utilityItem = null;
+            _item.OnPickUpBy(pawnUnit);
         }
     }
 
     // Utility ====================
-    public void AddUtility(UtilityController utility)
+    public void AddUtility(IPickupable utility)
     {
-        _utilityItem = utility;
+        _item = utility;
     }
 
     public void RemoveUtility()
     {
-        _utilityItem = null;
+        _item = null;
     }
 
     // Zone ==================================================================================================
@@ -337,7 +336,6 @@ public class Node : MonoBehaviour
 
         return false;
     }
-
 
     //Editor only
     public void DeleteSelf()

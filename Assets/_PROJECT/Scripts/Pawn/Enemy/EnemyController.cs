@@ -179,15 +179,10 @@ public class EnemyController : PawnUnit
 
         while (nodeToScan != null && range > 0)
         {
-            if (nodeToScan.HasUnitsOfType<PlayerController>())
-            {
-                return true;
-            }
+            if (!nodeToScan.IsWalkable()) return false; 
+            if (nodeToScan.IsHideable()) return false; 
 
-            if (!nodeToScan.IsWalkable())
-            {
-                return false;
-            }
+            if (nodeToScan.HasUnitsOfType<PlayerController>()) return true;
 
             range--;
             nodeToScan = GetNodeInDirection(nodeToScan, _facingDirection);

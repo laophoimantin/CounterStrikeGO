@@ -34,7 +34,7 @@ public class BoardInspectCamera : MonoBehaviour
     {
         if (_target == null || GameManager.Instance.IsGameOver) return;
 
-        if (Input.GetMouseButton(0) && !ClickHandler.IsPlayerInteracting)
+        if (Input.GetMouseButton(0) && !PlayerInteractionHandler.IsPlayerInteracting)
         {
             _currentYaw += Input.GetAxis("Mouse X") * _orbitSpeed;
             _currentPitch -= Input.GetAxis("Mouse Y") * _orbitSpeed;

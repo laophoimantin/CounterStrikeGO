@@ -3,7 +3,7 @@ using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 
-public class PlayerController : PawnUnit
+public class PlayerController : PawnUnit, IUtilityEquipper
 {
     [Header("References")]
     private PlayerVisual _playerVisual;
@@ -31,8 +31,6 @@ public class PlayerController : PawnUnit
     {
         InitializeOnCurrentNode();
         _playerVisual = _visual as PlayerVisual;
-        if (_playerVisual == null)
-            Debug.Log("VISUALLLLLL!");
     }
 
     private void InitializeOnCurrentNode()
@@ -173,9 +171,14 @@ public class PlayerController : PawnUnit
         bool endsTurn = _currentUtility.EndsTurn;
         _playerVisual.Wobble();
         _currentUtility.Throw(targetNode, () => FinishAction(endsTurn));
-        _currentUtility = null; // Unequip utility
-        _hasUtility = false;
+        UnEquipItem();
         _playerVisual.SetUsingUtilityVisible(_hasUtility);
+    }
+
+    private void UnEquipItem()
+    {
+        _currentUtility = null; 
+        _hasUtility = false;
     }
 
     // On Click ====================================================================================
@@ -188,7 +191,6 @@ public class PlayerController : PawnUnit
     {
         _playerVisual.DropAnim();
     }
-
 
     // Editor ====================================================================================
 
@@ -252,4 +254,6 @@ public class PlayerController : PawnUnit
 #endif
 
     #endregion
+
+ 
 }
