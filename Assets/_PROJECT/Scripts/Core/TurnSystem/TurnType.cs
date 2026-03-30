@@ -1,11 +1,8 @@
-namespace Core.TurnSystem
+public enum TurnType
 {
-    public enum TurnType
-    {
-        PlayerPlanning,
-        PlayerAction,
-        EnemyPlanning,
-        EnemyAction,
-        TurnTransition
-    }
+    PlayerPlanning,
+    PlayerAction,
+    EnemyPlanning,
+    EnemyAction,
+    TurnTransition
 }

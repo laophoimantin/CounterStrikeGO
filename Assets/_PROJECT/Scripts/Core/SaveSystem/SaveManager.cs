@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
-using Core.Patterns;
 using Newtonsoft.Json;
 using UnityEditor;
 using UnityEngine;
@@ -9,7 +9,7 @@ public class SaveManager : Singleton<SaveManager>
 {
     private const string SAVE_DIR_NAME = "SaveFiles";
     private const string SAVE_FILE_NAME = "PlayerSave.json";
-    
+
     private string SaveDirectory => Path.Combine(Application.persistentDataPath, SAVE_DIR_NAME);
     private string SaveFileName => Path.Combine(SaveDirectory, SAVE_FILE_NAME);
 
@@ -20,9 +20,9 @@ public class SaveManager : Singleton<SaveManager>
         base.Awake();
         LoadSaveFile();
     }
-    
+
 #if UNITY_EDITOR
-    [UnityEditor.MenuItem("Tools/Clear Player Save")]
+    [MenuItem("Tools/Clear Player Save")]
     public static void DeleteSaveFile()
     {
         string path = Path.Combine(Application.persistentDataPath, SAVE_DIR_NAME, SAVE_FILE_NAME);
@@ -63,20 +63,20 @@ public class SaveManager : Singleton<SaveManager>
             CurrentData = data;
             return true;
         }
-        catch (System.Exception e)
+        catch (Exception e)
         {
             Debug.LogError($"Player save is corrupted: {e.Message}");
             return false;
         }
     }
-    
+
     private void CreateNewSave()
     {
         CurrentData = new GameSaveData();
         SaveGame();
     }
-    
-    
+
+
     // Objective completion
     public bool IsObjectiveComplete(string levelId, string objectiveId)
     {
@@ -87,7 +87,7 @@ public class SaveManager : Singleton<SaveManager>
     public void SetObjectiveComplete(string levelId, string objectiveId)
     {
         var level = GetOrCreateLevelData(levelId);
-        level.completedObjectiveIds.Add(objectiveId); 
+        level.completedObjectiveIds.Add(objectiveId);
     }
 
     // Level unlock
@@ -102,7 +102,7 @@ public class SaveManager : Singleton<SaveManager>
         var level = GetOrCreateLevelData(levelId);
         level.isUnlocked = true;
     }
-    
+
     // Helpers
     private LevelSaveData GetLevelData(string levelId)
     {
@@ -110,6 +110,7 @@ public class SaveManager : Singleton<SaveManager>
         {
             return level;
         }
+
         return null;
     }
 
@@ -120,6 +121,7 @@ public class SaveManager : Singleton<SaveManager>
             level = new LevelSaveData { isUnlocked = isUnlockedByDefault };
             CurrentData.levels.Add(levelId, level);
         }
+
         return level;
     }
 
@@ -135,14 +137,14 @@ public class SaveManager : Singleton<SaveManager>
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class GameSaveData
 {
     [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Reuse)]
     public Dictionary<string, LevelSaveData> levels = new Dictionary<string, LevelSaveData>();
 }
 
-[System.Serializable]
+[Serializable]
 public class LevelSaveData
 {
     public bool isUnlocked;

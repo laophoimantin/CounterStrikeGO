@@ -8,10 +8,10 @@ public class ObjectiveItemUI : MonoBehaviour
     [Header("UI Elements")]
     [SerializeField] private Image _icon;
     [SerializeField] private TextMeshProUGUI _description;
-    
+
     [Header("UI Panels")]
     [SerializeField] private RectTransform _mainPanel;
-    
+
     [Header("Complete Mark")]
     [SerializeField] private RectTransform _completeMark;
     [SerializeField] private CanvasGroup _completeMarkGroup;
@@ -20,7 +20,7 @@ public class ObjectiveItemUI : MonoBehaviour
     [SerializeField] private float _animDuration = 1f;
     [SerializeField] private Ease _easeIn = Ease.InOutQuint;
     [SerializeField] private Ease _easeOut = Ease.InOutQuint;
-    
+
     [Header("Complete Mark Settings")]
     [SerializeField] private float _markDuration = 0.5f;
     [SerializeField] private Ease _markEase = Ease.InOutQuint;
@@ -31,7 +31,7 @@ public class ObjectiveItemUI : MonoBehaviour
     private bool _wasAlreadyComplete;
 
     private Sequence _winSeq;
-    
+
     public void Initialize(RuntimeObjective data)
     {
         _data = data;
@@ -39,7 +39,7 @@ public class ObjectiveItemUI : MonoBehaviour
         _description.text = data.Blueprint.Description;
 
         _wasAlreadyComplete = data.IsCompleteNow;
-        
+
         _completeMark.gameObject.SetActive(_wasAlreadyComplete);
         _completeMarkGroup.alpha = _wasAlreadyComplete ? 1f : 0f;
     }
@@ -63,14 +63,14 @@ public class ObjectiveItemUI : MonoBehaviour
     {
         _winSeq?.Kill();
         KillAllTweens();
-        
+
         _mainPanel.gameObject.SetActive(true);
         _mainPanel.anchoredPosition = new Vector2(_mainPanel.anchoredPosition.x, offScreenYPos);
-        
+
         _winSeq = DOTween.Sequence();
-        
+
         _winSeq.Append(_mainPanel.DOAnchorPosY(0, _animDuration).SetEase(_easeIn));
-        
+
         if (!_wasAlreadyComplete && _data.IsCompleteNow)
         {
             _winSeq.Append(MarkAnimation());
@@ -83,7 +83,7 @@ public class ObjectiveItemUI : MonoBehaviour
     {
         Sequence markSeq = DOTween.Sequence();
         _completeMark.gameObject.SetActive(true);
-        _completeMark.localScale = Vector3.one; 
+        _completeMark.localScale = Vector3.one;
         _completeMarkGroup.alpha = 1f;
 
         markSeq.Append(_completeMark.DOScale(Vector3.one * 2, _markDuration).From().SetEase(_markEase));
@@ -92,11 +92,11 @@ public class ObjectiveItemUI : MonoBehaviour
 
         return markSeq;
     }
-    
+
     private void KillAllTweens()
     {
         _mainPanel.DOKill();
-        _completeMark.DOKill();     
+        _completeMark.DOKill();
         _completeMarkGroup.DOKill();
     }
 }

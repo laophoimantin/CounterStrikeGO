@@ -1,28 +1,25 @@
 using System.Collections;
 using UnityEngine;
 
-namespace Pawn
+public class WaitAction : BaseEnemyAction
 {
-    public class WaitAction : BaseEnemyAction
+    private float _duration;
+    private float _delay;
+
+    public WaitAction(float duration)
     {
-        private float _duration;
-        private float _delay;
+        _duration = duration;
+    }
 
-        public WaitAction(float duration)
+    public override IEnumerator Execute(EnemyController enemy)
+    {
+        if (_duration > 0f)
         {
-            _duration = duration;
+            yield return new WaitForSeconds(_duration);
         }
-
-        public override IEnumerator Execute(EnemyController enemy)
+        else
         {
-            if (_duration > 0f)
-            {
-                yield return new WaitForSeconds(_duration);
-            }
-            else
-            {
-                yield return null;
-            }
+            yield return null;
         }
     }
 }

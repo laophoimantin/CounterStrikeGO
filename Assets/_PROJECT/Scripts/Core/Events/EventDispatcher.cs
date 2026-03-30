@@ -1,65 +1,60 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Core.Patterns;
 using UnityEngine;
-using Core.Events;
 
-namespace Core.Events
+public class EventDispatcher : Singleton<EventDispatcher>
 {
-    public class EventDispatcher : Singleton<EventDispatcher>
+    private readonly Dictionary<Type, List<object>> _eventHandlers = new();
+    public void Clear() => _eventHandlers.Clear();
+
+    public void Subscribe<T>(Action<T> callback) where T : struct
     {
-        private readonly Dictionary<Type, List<object>> _eventHandlers = new();
-        public void Clear() => _eventHandlers.Clear();
+        var eventType = typeof(T);
 
-        public void Subscribe<T>(Action<T> callback) where T : struct
+        if (!_eventHandlers.ContainsKey(eventType))
         {
-            var eventType = typeof(T);
-
-            if (!_eventHandlers.ContainsKey(eventType))
-            {
-                _eventHandlers[eventType] = new List<object>();
-            }
-
-            if (!_eventHandlers[eventType].Contains(callback))
-            {
-                _eventHandlers[eventType].Add(callback);
-            }
+            _eventHandlers[eventType] = new List<object>();
         }
 
-        public void Unsubscribe<T>(Action<T> callback) where T : struct
+        if (!_eventHandlers[eventType].Contains(callback))
         {
-            var eventType = typeof(T);
-
-            if (!_eventHandlers.TryGetValue(eventType, out var handlers)) return;
-            handlers.Remove(callback);
-            if (handlers.Count == 0)
-            {
-                _eventHandlers.Remove(eventType);
-            }
+            _eventHandlers[eventType].Add(callback);
         }
+    }
 
-        public void SendEvent<T>(T eventData) where T : struct
+    public void Unsubscribe<T>(Action<T> callback) where T : struct
+    {
+        var eventType = typeof(T);
+
+        if (!_eventHandlers.TryGetValue(eventType, out var handlers)) return;
+        handlers.Remove(callback);
+        if (handlers.Count == 0)
         {
-            var eventType = typeof(T);
-
-            if (!_eventHandlers.TryGetValue(eventType, out var eventHandler)) return;
-            foreach (var handler in eventHandler.ToList())
-            {
-                ((Action<T>)handler).Invoke(eventData);
-            }
+            _eventHandlers.Remove(eventType);
         }
+    }
 
-        public void ClearAll()
+    public void SendEvent<T>(T eventData) where T : struct
+    {
+        var eventType = typeof(T);
+
+        if (!_eventHandlers.TryGetValue(eventType, out var eventHandler)) return;
+        foreach (var handler in eventHandler.ToList())
         {
-            _eventHandlers.Clear();
+            ((Action<T>)handler).Invoke(eventData);
         }
+    }
 
-        private void OnDestroy()
-        {
-            if (!Application.isPlaying) return;
-            ClearAll();
-        }
+    public void ClearAll()
+    {
+        _eventHandlers.Clear();
+    }
+
+    private void OnDestroy()
+    {
+        if (!Application.isPlaying) return;
+        ClearAll();
     }
 }
 

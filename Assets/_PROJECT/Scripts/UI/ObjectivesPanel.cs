@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using Core;
-using Core.Events;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;

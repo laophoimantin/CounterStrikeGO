@@ -1,0 +1,11 @@
+using DG.Tweening;
+using UnityEngine;
+
+public abstract class PawnUnit : GridOccupant
+{
+    [SerializeField] protected float _actionDuration = 1;
+    protected bool _isDead = false;
+    public bool IsDead => _isDead;
+    public override bool OccupiesSpace => !_isDead;
+    public abstract Tween Die();
+}

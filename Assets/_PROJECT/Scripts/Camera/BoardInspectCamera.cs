@@ -1,5 +1,3 @@
-using Core;
-using Pawn;
 using UnityEngine;
 
 public class BoardInspectCamera : MonoBehaviour

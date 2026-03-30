@@ -1,7 +1,5 @@
-using Pawn;
 using UnityEditor;
 using UnityEngine;
-using Grid;
 
 [CustomEditor(typeof(UtilityController), true)]
 public class UtitityEditor : Editor

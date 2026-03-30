@@ -1,106 +1,100 @@
-using Core.Events;
-using Core.Patterns;
-using Core.TurnSystem;
 using UnityEngine;
 
-namespace Core
+public class GameManager : Singleton<GameManager>
 {
-    public class GameManager : Singleton<GameManager>
+    private LevelData _currentLevelData;
+    private LevelData _nextLevelData;
+
+    [Header("References")]
+    [SerializeField] private LevelSpawner _levelSpawner;
+    [SerializeField] private ObjectivesController _objectivesController;
+
+    private LevelResult _result;
+
+    public bool IsGameOver { get; private set; }
+
+    [Header("Testing")]
+    [SerializeField] private LevelData _testData;
+
+    void Start()
     {
-        private LevelData _currentLevelData;
-        private LevelData _nextLevelData;
+        InitLevel();
+    }
 
-        [Header("References")]
-        [SerializeField] private LevelSpawner _levelSpawner;
-        [SerializeField] private ObjectivesController _objectivesController;
-
-        private LevelResult _result;
-
-        public bool IsGameOver { get; private set; }
-
-        [Header("Testing")]
-        [SerializeField] private LevelData _testData;
-
-        void Start()
+    private void InitLevel()
+    {
+        if (SessionData.CurrentLevelData == null)
         {
-            InitLevel();
+            SessionData.SetCurrentLevelData(_testData);
         }
 
-        private void InitLevel()
-        {
-            if (SessionData.CurrentLevelData == null)
-            {
-                SessionData.SetCurrentLevelData(_testData);
-            }
+        IsGameOver = false;
+        _result = new LevelResult();
+        _currentLevelData = SessionData.CurrentLevelData;
+        _nextLevelData = SessionData.NextLevelDataToLoad;
+        _levelSpawner.GenerateMap(_currentLevelData);
+        _objectivesController.Initialize(_currentLevelData);
+    }
 
-            IsGameOver = false;
-            _result = new LevelResult();
-            _currentLevelData = SessionData.CurrentLevelData;
-            _nextLevelData = SessionData.NextLevelDataToLoad;
-            _levelSpawner.GenerateMap(_currentLevelData);
-            _objectivesController.Initialize(_currentLevelData);
+    void OnEnable()
+    {
+        this.Subscribe<OnPlayerDeadEvent>(LoseGame);
+    }
+
+    void OnDisable()
+    {
+        this.Unsubscribe<OnPlayerDeadEvent>(LoseGame);
+    }
+
+    // =============================================================================================================
+
+    public void OnPlayerPickedUpObjective()
+    {
+        _result.SetData<bool>(ContextKey.HasObjectiveItem, true);
+    }
+
+    public void EvaluateWin()
+    {
+        _result.SetData(ContextKey.StepCount, TurnManager.Instance.StepCount);
+        _objectivesController.EvaluateAll(_result);
+        if (!_objectivesController.IsMainComplete())
+            return;
+
+        WinGame();
+    }
+
+    private void WinGame()
+    {
+        if (IsGameOver) return;
+        IsGameOver = true;
+
+        _objectivesController.SaveObjectiveStatus();
+        if (_nextLevelData != null)
+            SaveManager.Instance.SetLevelUnlocked(_nextLevelData.LevelId);
+
+        SaveManager.Instance.SaveGame();
+
+        this.SendEvent(new OnGameEndedEvent());
+    }
+
+
+    private void LoseGame(OnPlayerDeadEvent eventData)
+    {
+        if (IsGameOver) return;
+        IsGameOver = true;
+
+        SceneController.Instance.ReloadCurrentScene();
+    }
+
+    public void RequestNextLevel()
+    {
+        if (_nextLevelData == null)
+        {
+            SceneController.Instance.LoadMainMenu();
+            return;
         }
 
-        void OnEnable()
-        {
-            this.Subscribe<OnPlayerDeadEvent>(LoseGame);
-        }
-
-        void OnDisable()
-        {
-            this.Unsubscribe<OnPlayerDeadEvent>(LoseGame);
-        }
-
-        // =============================================================================================================
-
-        public void OnPlayerPickedUpObjective()
-        {
-            _result.SetData<bool>(ContextKey.HasObjectiveItem, true);
-        }
-
-        public void EvaluateWin()
-        {
-            _result.SetData(ContextKey.StepCount, TurnManager.Instance.StepCount);
-            _objectivesController.EvaluateAll(_result);
-            if (!_objectivesController.IsMainComplete())
-                return;
-
-            WinGame();
-        }
-
-        private void WinGame()
-        {
-            if (IsGameOver) return;
-            IsGameOver = true;
-
-            _objectivesController.SaveObjectiveStatus();
-            if (_nextLevelData != null)
-                SaveManager.Instance.SetLevelUnlocked(_nextLevelData.LevelId);
-
-            SaveManager.Instance.SaveGame();
-
-            this.SendEvent(new OnGameEndedEvent());
-        }
-
-
-        private void LoseGame(OnPlayerDeadEvent eventData)
-        {
-            if (IsGameOver) return;
-            IsGameOver = true;
-
-            SceneController.Instance.ReloadCurrentScene();
-        }
-
-        public void RequestNextLevel()
-        {
-            if (_nextLevelData == null)
-            {
-                SceneController.Instance.LoadMainMenu();
-                return;
-            }
-
-            SessionData.SetCurrentLevelData(_nextLevelData);
-            SceneController.Instance.LoadGameplayScene();
-        }
+        SessionData.SetCurrentLevelData(_nextLevelData);
+        SceneController.Instance.LoadGameplayScene();
     }
 }

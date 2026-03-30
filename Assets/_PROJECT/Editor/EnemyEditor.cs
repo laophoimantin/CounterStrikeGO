@@ -1,5 +1,3 @@
-using Pawn;
-using Grid;
 using UnityEditor;
 using UnityEngine;
 

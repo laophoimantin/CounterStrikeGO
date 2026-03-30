@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using Grid;
 
 [CustomEditor(typeof(Node))]
 public class NodeEditor : Editor

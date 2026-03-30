@@ -1,6 +1,5 @@
-using System;
 using System.Collections;
-using Core.Events;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -9,16 +8,16 @@ using UnityEngine.UI;
 public class SceneController : MonoBehaviour
 {
     public static SceneController Instance { get; private set; }
-    
+
     private bool _isLoading;
-    
+
     [Header("Settings")]
     [SerializeField] private float _fadeDuration = 0.5f;
     [SerializeField] private bool _dontDestroyOnLoad = true;
 
     [Header("References")]
     [SerializeField] private EventDispatcher _eventDispatcher;
-    
+
     [Header("Loading Screen")]
     [SerializeField] private GameObject _loadingScreen;
     [SerializeField] private CanvasGroup _canvasGroup;
@@ -43,6 +42,7 @@ public class SceneController : MonoBehaviour
     }
 
     // lmao
+
     #region Public API
 
     /// Standard Level Transition: Fades out, loads a new scene, fades in.
@@ -55,21 +55,23 @@ public class SceneController : MonoBehaviour
     {
         LoadScene(SceneName.Gameplay);
     }
+
     public void LoadMainMenu()
     {
         LoadScene(SceneName.MainMenu);
     }
+
     public void ReloadCurrentScene()
     {
         LoadScene(SceneManager.GetActiveScene().name);
     }
-    
+
 
     public void QuitGame()
     {
         Debug.Log("Quitting Game...");
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+        EditorApplication.isPlaying = false;
 #else
             Application.Quit();
 #endif
@@ -87,7 +89,7 @@ public class SceneController : MonoBehaviour
         _isLoading = true;
         StartCoroutine(LoadSceneRoutine(sceneName));
     }
-    
+
 
     private IEnumerator LoadSceneRoutine(string sceneName)
     {
@@ -114,12 +116,12 @@ public class SceneController : MonoBehaviour
         while (operation.progress < 0.9f)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
-            if (_progressBar != null) 
+            if (_progressBar != null)
                 _progressBar.value = progress;
             yield return null;
         }
 
-        if (_progressBar != null) 
+        if (_progressBar != null)
             _progressBar.value = 1f;
 
         yield return new WaitForSecondsRealtime(0.5f);
@@ -131,7 +133,7 @@ public class SceneController : MonoBehaviour
 
         operation.allowSceneActivation = true;
 
-        while (!operation.isDone) 
+        while (!operation.isDone)
             yield return null;
 
         if (_loadingScreen != null)
@@ -140,7 +142,7 @@ public class SceneController : MonoBehaviour
         yield return Fade(1f, 0f);
 
         _canvasGroup.blocksRaycasts = false;
-        _isLoading = false; 
+        _isLoading = false;
     }
 
     private IEnumerator Fade(float startAlpha, float endAlpha)
