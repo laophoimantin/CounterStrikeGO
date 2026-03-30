@@ -146,6 +146,7 @@ MonoBehaviour:
   _currentNode: {fileID: 0}
   _visual: {fileID: 6659546829708049627}
   _actionDuration: 0.3
+  _team: 2
   _defaultBehavior: {fileID: 11400000, guid: 4e7435721a113354e89501c3aff798df, type: 2}
   _noiseBehavior: {fileID: 11400000, guid: e6dbb9ed0df3035458886f567df99a9a, type: 2}
   _flashedBehavior: {fileID: 11400000, guid: 67f4cfff1bb5ab64ea781c6b441e2151, type: 2}

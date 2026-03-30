@@ -6,7 +6,6 @@ using UnityEngine;
 public class EventDispatcher : Singleton<EventDispatcher>
 {
     private readonly Dictionary<Type, List<object>> _eventHandlers = new();
-    public void Clear() => _eventHandlers.Clear();
 
     public void Subscribe<T>(Action<T> callback) where T : struct
     {

@@ -23,8 +23,7 @@ public class PlayerController : PawnUnit, IUtilityEquipper
 
     void OnDisable()
     {
-        if (EventDispatcher.Instance != null)
-            this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChanged);
+        this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChanged);
     }
 
     void Start()
@@ -50,7 +49,6 @@ public class PlayerController : PawnUnit, IUtilityEquipper
     private void HandleTurnChanged(OnTurnChangedEvent eventData)
     {
         _canAct = (eventData.NewTurn == TurnType.PlayerPlanning);
-
         if (eventData.NewTurn == TurnType.PlayerPlanning && _tempMoveDirection != Direction.None)
             TryMoveTo(_tempMoveDirection);
     }
@@ -59,8 +57,7 @@ public class PlayerController : PawnUnit, IUtilityEquipper
     public void TryMoveTo(Direction direction)
     {
         _tempMoveDirection = direction;
-
-        if (!_canAct || _isMoving || _hasUtility) return;
+        if (!_canAct || _hasUtility || _isMoving) return;
 
         Node target = GetNodeInDirection(_currentNode, direction);
 
@@ -86,7 +83,7 @@ public class PlayerController : PawnUnit, IUtilityEquipper
 
         seq.Append(_playerVisual.MoveTo(targetNode.WorldPos, _actionDuration));
         _playerVisual.TryAddWobble(seq);
-        HandleCombat(targetNode, seq);
+        TryAttack(targetNode, seq);
 
         seq.OnComplete(() =>
         {
@@ -96,9 +93,9 @@ public class PlayerController : PawnUnit, IUtilityEquipper
         });
     }
 
-    private void HandleCombat(Node targetNode, Sequence seq)
+    private void TryAttack(Node targetNode, Sequence seq)
     {
-        Tween combat = EnemyCombatResolver.ResolveAttackOnNode(targetNode);
+        Tween combat = CombatResolver.ResolveAttackOnNode(targetNode, _team);
 
         if (combat != null)
             seq.Append(combat);
@@ -156,7 +153,8 @@ public class PlayerController : PawnUnit, IUtilityEquipper
 
     public void TryUseUtility(Node targetNode)
     {
-        if (!_hasUtility) return;
+        if (!_canAct || !_hasUtility) return;
+
         List<Node> validNodes = NodeManager.Instance.GetNodesInRange(_currentNode, _currentUtility.ThrowRange);
         if (validNodes.Contains(targetNode))
         {
@@ -176,7 +174,7 @@ public class PlayerController : PawnUnit, IUtilityEquipper
 
     private void UnEquipItem()
     {
-        _currentUtility = null; 
+        _currentUtility = null;
         _hasUtility = false;
     }
 
@@ -253,6 +251,4 @@ public class PlayerController : PawnUnit, IUtilityEquipper
 #endif
 
     #endregion
-
- 
 }

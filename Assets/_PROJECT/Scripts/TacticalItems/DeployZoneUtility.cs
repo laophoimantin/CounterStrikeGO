@@ -7,7 +7,7 @@ public class DeployZoneUtility : UtilityController
     [SerializeField] private BaseZone _baseZonePrefab;
     [SerializeField] private int _duration = 3;
 
-    protected override Tween GetOnLandedSequence(Node targetNode)
+    protected override Tween GetOnLandedSequence(Node targetNode, Team team)
     {
         Sequence seq = DOTween.Sequence();
         seq.Append(SpawnZone(targetNode));

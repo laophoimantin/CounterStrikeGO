@@ -9,6 +9,8 @@ public class Node : MonoBehaviour
     [Header("Node Features")]
     [SerializeField] private BaseNodeFeature _feature;
 
+    public Action OnOccupancyChanged;
+    
     // ------------------------------------------------------------
     [Header("Core")]
     [SerializeField] private int _xValue;
@@ -33,10 +35,6 @@ public class Node : MonoBehaviour
     // ------------------------------------------------------------
     [Header("Occupancy")]
     private List<GridOccupant> _units = new();
-
-    // ------------------------------------------------------------
-    [Header("Crowd Control")]
-    [SerializeField] private float _crowdRadius = 0.35f;
 
     // ------------------------------------------------------------
     [Header("Utility")]
@@ -78,25 +76,20 @@ public class Node : MonoBehaviour
         _textMesh.gameObject.SetActive(false);
     }
 
-    // Unit Management
+    // Unit Management =================================================================================================
     public void AddUnit(GridOccupant unit)
     {
         if (!_units.Contains(unit))
         {
             _units.Add(unit);
-            RearrangeUnits();
+            OnOccupancyChanged?.Invoke();
         }
     }
 
     public void RemoveUnit(GridOccupant unit)
     {
         _units.Remove(unit);
-        RearrangeUnits();
-    }
-
-    public bool HasUnitsOfType<T>() where T : PawnUnit
-    {
-        return _units.Any(u => u is T);
+        OnOccupancyChanged?.Invoke();
     }
 
     public IReadOnlyList<GridOccupant> GetAllOccupants()
@@ -104,84 +97,7 @@ public class Node : MonoBehaviour
         return _units;
     }
 
-    public IEnumerable<T> GetUnitsByType<T>() where T : PawnUnit
-    {
-        return _units.OfType<T>();
-    }
-
-    public T GetUnitByType<T>() where T : PawnUnit
-    {
-        foreach (var unit in _units)
-        {
-            if (unit is T typedUnit)
-            {
-                return typedUnit;
-            }
-        }
-
-        return null;
-    }
-
-    private void RearrangeUnits()
-    {
-        var activeUnits = _units.Where(o => o.OccupiesSpace).ToList();
-
-        //int count = _units.Count;
-        int count = activeUnits.Count;
-        if (count == 0) return;
-
-        List<Vector3> slots = new List<Vector3>();
-
-        if (count == 1)
-        {
-            slots.Add(Vector3.zero);
-        }
-        else
-        {
-            float angleStep = 360f / count;
-            for (int i = 0; i < count; i++)
-            {
-                float angle = i * angleStep * Mathf.Deg2Rad;
-                float x = Mathf.Cos(angle) * _crowdRadius;
-                float z = Mathf.Sin(angle) * _crowdRadius;
-                slots.Add(new Vector3(x, 0, z));
-            }
-        }
-
-        List<GridOccupant> sortedUnits = activeUnits.OrderByDescending(u =>
-            Vector3.SqrMagnitude(u.transform.position - transform.position)
-        ).ToList();
-
-        List<Vector3> availableSlots = new List<Vector3>(slots);
-
-        foreach (GridOccupant unit in sortedUnits)
-        {
-            Vector3 bestSlot = Vector3.zero;
-            float bestDist = float.MaxValue;
-            int bestSlotIndex = -1;
-
-            for (int i = 0; i < availableSlots.Count; i++)
-            {
-                Vector3 worldSlotPos = transform.TransformPoint(availableSlots[i]);
-                float dist = Vector3.SqrMagnitude(unit.transform.position - worldSlotPos);
-
-                if (dist < bestDist)
-                {
-                    bestDist = dist;
-                    bestSlot = availableSlots[i];
-                    bestSlotIndex = i;
-                }
-            }
-
-            if (bestSlotIndex != -1)
-            {
-                unit.SetVisualOffset(bestSlot);
-                availableSlots.RemoveAt(bestSlotIndex);
-            }
-        }
-    }
-
-    // Neighbors ========================================================================================================================
+    // Neighbors =======================================================================================================
     public Node GetNodeInDirection(Direction dir)
     {
         return dir switch
@@ -281,24 +197,22 @@ public class Node : MonoBehaviour
 
         if (HasItem)
         {
-            //player.EquipUtility(_utilityItem);
-            //_utilityItem = null;
             _item.OnPickUpBy(pawnUnit);
         }
     }
 
-    // Utility ====================
-    public void AddUtility(IPickupable utility)
+    // Utility =========================================================================================================
+    public void AddItem(IPickupable utility)
     {
         _item = utility;
     }
 
-    public void RemoveUtility()
+    public void RemoveItem()
     {
         _item = null;
     }
 
-    // Zone ==================================================================================================
+    // Zone ============================================================================================================
     public void AddZone(BaseZone newBaseZone)
     {
         if (_activeBaseZone != null)
@@ -332,7 +246,7 @@ public class Node : MonoBehaviour
         return false;
     }
 
-    //Editor only
+#if UNITY_EDITOR
     public void DeleteSelf()
     {
         DetachLink(_north, n => n._south = null);
@@ -348,9 +262,8 @@ public class Node : MonoBehaviour
 
         DestroyImmediate(gameObject);
     }
-
-    // Gizmos ================================================================================================
-#if UNITY_EDITOR
+    
+    // Gizmos
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -369,8 +282,6 @@ public class Node : MonoBehaviour
         {
             Gizmos.color = Color.red;
         }
-
-        //Gizmos.DrawWireSphere(center, 0.5f);
 
         Gizmos.color = Color.cyan;
         if (_north) DrawConnection(_north);

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class TurnManager : Singleton<TurnManager>
 {
     private TurnType _currentTurn;
@@ -110,8 +112,7 @@ public class TurnManager : Singleton<TurnManager>
                 return to == TurnType.PlayerAction;
 
             case TurnType.PlayerAction:
-                return to == TurnType.PlayerPlanning
-                       || to == TurnType.EnemyPlanning;
+                return to == TurnType.PlayerPlanning || to == TurnType.EnemyPlanning;
 
             case TurnType.EnemyPlanning:
                 return to == TurnType.EnemyAction;

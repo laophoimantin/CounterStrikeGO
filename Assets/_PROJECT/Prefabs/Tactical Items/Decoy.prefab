@@ -201,6 +201,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentNode: {fileID: 0}
   _visual: {fileID: 4839947585339817458}
+  _team: 1
   _throwRange: 10
   _endsTurn: 0
   _collider: {fileID: 7168953816085663151}

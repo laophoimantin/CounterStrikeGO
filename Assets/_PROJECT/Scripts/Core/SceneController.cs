@@ -109,7 +109,7 @@ public class SceneController : MonoBehaviour
         // =============================================================================
 
         AsyncOperation operation = SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
-        _eventDispatcher.Clear();
+        _eventDispatcher.ClearAll();
         operation.allowSceneActivation = false; // Prevent auto-jumping
 
         // While loading...
@@ -130,7 +130,7 @@ public class SceneController : MonoBehaviour
         // =============================================================================
 
         yield return Fade(0f, 1f);
-
+        _eventDispatcher.ClearAll();
         operation.allowSceneActivation = true;
 
         while (!operation.isDone)

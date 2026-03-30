@@ -116,6 +116,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentNode: {fileID: 0}
   _visual: {fileID: 8138534694073362513}
+  _team: 1
   _throwRange: 3
   _endsTurn: 1
   _collider: {fileID: 1778499257861461408}

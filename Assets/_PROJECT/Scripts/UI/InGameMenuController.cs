@@ -5,7 +5,6 @@ public class InGameMenuController : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private ObjectivesPanel _objectivesPanel;
-    [SerializeField] private string _mainMenuScene = "MainMenu";
 
     [Header("Buttons")]
     [SerializeField] private Button _openMenuButton;

@@ -116,6 +116,7 @@ MonoBehaviour:
   _currentNode: {fileID: 0}
   _visual: {fileID: 183178073398776728}
   _actionDuration: 0.3
+  _team: 1
 --- !u!114 &183178073398776728
 MonoBehaviour:
   m_ObjectHideFlags: 0

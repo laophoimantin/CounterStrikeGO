@@ -2,8 +2,8 @@ using DG.Tweening;
 
 public class Grenade : UtilityController
 {
-    protected override Tween GetOnLandedSequence(Node targetNode)
+    protected override Tween GetOnLandedSequence(Node targetNode, Team team)
     {
-        return EnemyCombatResolver.ResolveAttackOnNode(targetNode, false);
+        return CombatResolver.ResolveAttackOnNode(targetNode, team, false);
     }
 }

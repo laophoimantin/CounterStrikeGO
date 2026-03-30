@@ -4,11 +4,12 @@ using UnityEngine;
 public abstract class BaseEnemyBehavior : ScriptableObject
 {
     // Always make sure there is something on the list for the enemy to do!!!!
-    public List<BaseEnemyAction> PlanActions(EnemyController enemy)
+    [SerializeField] protected int _attackRange = 1;
+    public virtual List<BaseEnemyAction> PlanActions(EnemyController enemy)
     {
         var plan = new List<BaseEnemyAction>();
 
-        if (enemy.ScanForPlayerInFront(1))
+        if (enemy.ScanForPlayerInFront(_attackRange))
         {
             Node targetNode = enemy.GetNodeInFront();
             plan.Add(new MoveAction(targetNode));

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab94a74a8bc14ebcbd75952144a64a36, type: 3}
   m_Name: Stand
   m_EditorClassIdentifier: 
-  _actionDurationModifier: 1
+  _attackRange: 1

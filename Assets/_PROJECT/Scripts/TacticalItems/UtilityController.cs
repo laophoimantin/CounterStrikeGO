@@ -7,6 +7,8 @@ public abstract class UtilityController : GridOccupant, IPickupable
 {
     public override bool OccupiesSpace => true;
 
+    [SerializeField] private Team _team;
+
     [Header("Settings")]
     [SerializeField] private int _throwRange = 1;
     [SerializeField] private bool _endsTurn = true;
@@ -36,7 +38,7 @@ public abstract class UtilityController : GridOccupant, IPickupable
         if (_currentNode == null) return;
 
         _currentNode.AddUnit(this);
-        _currentNode.AddUtility(this);
+        _currentNode.AddItem(this);
     }
 
     private void UnregisterFromNode()
@@ -44,7 +46,7 @@ public abstract class UtilityController : GridOccupant, IPickupable
         if (_currentNode == null) return;
 
         _currentNode.RemoveUnit(this);
-        _currentNode.RemoveUtility();
+        _currentNode.RemoveItem();
 
         _currentNode = null;
     }
@@ -54,8 +56,8 @@ public abstract class UtilityController : GridOccupant, IPickupable
         IUtilityEquipper receiver = picker.GetComponent<IUtilityEquipper>();
         if (receiver != null)
         {
-            receiver.EquipUtility(this); 
-            UnregisterFromNode(); 
+            receiver.EquipUtility(this);
+            UnregisterFromNode();
             _utilityVisual.SwitchToFlyingMode(picker.transform.position);
         }
     }
@@ -67,7 +69,7 @@ public abstract class UtilityController : GridOccupant, IPickupable
         sequence.Append(_utilityVisual.GetThrowSequence(targetNode.WorldPos));
         AppendIfExists(sequence, _utilityVisual.GetLandedAnim());
         sequence.AppendCallback(() => _utilityVisual.HideUtilityModel());
-        AppendIfExists(sequence, GetOnLandedSequence(targetNode));
+        AppendIfExists(sequence, GetOnLandedSequence(targetNode, _team));
 
         sequence.OnComplete(() =>
         {
@@ -79,10 +81,13 @@ public abstract class UtilityController : GridOccupant, IPickupable
     private void AppendIfExists(Sequence seq, Tween toAppend)
     {
         if (toAppend != null)
+        {
             seq.Append(toAppend);
+        }
     }
 
-    protected abstract Tween GetOnLandedSequence(Node targetNode);
+    protected abstract Tween GetOnLandedSequence(Node targetNode, Team team);
+
 
     // Editor ====================================================================================
 
@@ -119,13 +124,12 @@ public abstract class UtilityController : GridOccupant, IPickupable
         if (_currentNode != null)
         {
             _currentNode.RemoveUnit(this);
-            _currentNode.RemoveUtility();
+            _currentNode.RemoveItem();
             EditorUtility.SetDirty(_currentNode);
         }
 
         _currentNode = newNode;
-        _currentNode.AddUnit(this);
-        _currentNode.AddUtility(this);
+        RegisterToNode();
 
         // Visual Snap
         transform.position = _currentNode.transform.position;
@@ -148,6 +152,4 @@ public abstract class UtilityController : GridOccupant, IPickupable
 #endif
 
     #endregion
-
-  
 }

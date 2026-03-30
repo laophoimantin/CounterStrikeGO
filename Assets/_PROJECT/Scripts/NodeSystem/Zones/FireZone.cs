@@ -6,20 +6,37 @@ public class FireZone : BaseZone
 
     protected override Tween OnZoneCreated()
     {
-        return PushEnemiesAway();
+        return BurnOccupants();
     }
 
-    private Tween PushEnemiesAway()
+    private Tween BurnOccupants()
     {
         Sequence seq = DOTween.Sequence();
         bool hasReaction = false;
-        foreach (var enemy in _currentNode.GetUnitsByType<EnemyController>())
+      
+        foreach (GridOccupant occupant in _currentNode.GetAllOccupants())
         {
-            var death = enemy.ReactToFire();
-            if (death == null) continue;
-            seq.Insert(0, death);
-            hasReaction = true;
+            IBurnable meat = occupant.GetComponent<IBurnable>();
+            
+            if (meat != null)
+            {
+                Tween roastAnim = meat.Burn();
+
+                if (roastAnim != null)
+                {
+                    seq.Insert(0, roastAnim);
+                    hasReaction = true;
+                }
+            }
         }
+        
+        // foreach (var enemy in _currentNode.GetUnitsByType<EnemyController>())
+        // {
+        //     var death = enemy.ReactToFire();
+        //     if (death == null) continue;
+        //     seq.Insert(0, death);
+        //     hasReaction = true;
+        // }
 
         return hasReaction ? seq : null;
     }

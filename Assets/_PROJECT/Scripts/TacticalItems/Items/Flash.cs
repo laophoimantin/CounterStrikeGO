@@ -5,7 +5,7 @@ public class Flash : UtilityController
 {
     [SerializeField] private int _flashAmount = 2;
 
-    protected override Tween GetOnLandedSequence(Node targetNode)
+    protected override Tween GetOnLandedSequence(Node targetNode, Team team)
     {
         var nodes = NodeManager.Instance.GetNodesInRange(targetNode, 1, true);
 
@@ -14,17 +14,33 @@ public class Flash : UtilityController
 
         foreach (var node in nodes)
         {
-            foreach (var enemy in node.GetUnitsByType<EnemyController>())
+            foreach (GridOccupant occupant in node.GetAllOccupants())
             {
-                if (!enemy.OccupiesSpace) continue;
+                IFlashable victimWithEyes = occupant.GetComponent<IFlashable>();
+                
+                if (victimWithEyes != null)
+                {
+                    Tween reaction = victimWithEyes.GetFlashed(_flashAmount);
 
-                var reaction = enemy.GetFlashed(_flashAmount);
-
-                if (reaction == null) continue;
-
-                seq.Insert(0, reaction);
-                hasReaction = true;
+                    if (reaction != null) 
+                    {
+                        seq.Insert(0, reaction);
+                        hasReaction = true;
+                    }
+                }
             }
+            
+            // foreach (var enemy in node.GetUnitsByType<EnemyController>())
+            // {
+            //     if (!enemy.OccupiesSpace) continue;
+            //
+            //     var reaction = enemy.GetFlashed(_flashAmount);
+            //
+            //     if (reaction == null) continue;
+            //
+            //     seq.Insert(0, reaction);
+            //     hasReaction = true;
+            // }
         }
 
         return hasReaction ? seq : null;

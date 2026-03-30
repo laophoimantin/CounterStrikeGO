@@ -5,7 +5,7 @@ using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 
-public class EnemyController : PawnUnit
+public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 {
     [Header("References")]
     private EnemyVisual _enemyVisual;
@@ -180,15 +180,37 @@ public class EnemyController : PawnUnit
         while (nodeToScan != null && range > 0)
         {
             if (!nodeToScan.IsWalkable()) return false; 
+        
             if (nodeToScan.IsHideable()) return false; 
 
-            if (nodeToScan.HasUnitsOfType<PlayerController>()) return true;
+            foreach (GridOccupant occupant in nodeToScan.GetAllOccupants())
+            {
+                if (occupant is PawnUnit victim && IsEnemyOf(victim))
+                {
+                    return true; 
+                }
+            }
 
             range--;
             nodeToScan = GetNodeInDirection(nodeToScan, _facingDirection);
         }
 
-        return false;
+        return false; 
+        
+        // Node nodeToScan = GetNodeInFront();
+        //
+        // while (nodeToScan != null && range > 0)
+        // {
+        //     if (!nodeToScan.IsWalkable()) return false; 
+        //     if (nodeToScan.IsHideable()) return false; 
+        //
+        //     if (nodeToScan.HasUnitsOfType<PlayerController>()) return true;
+        //
+        //     range--;
+        //     nodeToScan = GetNodeInDirection(nodeToScan, _facingDirection);
+        // }
+        //
+        // return false;
     }
 
 
@@ -226,10 +248,10 @@ public class EnemyController : PawnUnit
 
     private bool TryAttack(Node targetNode)
     {
-        if (targetNode.HasUnitsOfType<PlayerController>() && !targetNode.IsHideable())
+        Tween attackResult = CombatResolver.ResolveAttackOnNode(targetNode, _team, true);
+
+        if (attackResult != null)
         {
-            PlayerController player = targetNode.GetUnitByType<PlayerController>();
-            player.Die();
             return true;
         }
 
@@ -250,6 +272,10 @@ public class EnemyController : PawnUnit
             _currentNode = null;
             OnDeath?.Invoke(this);
         });
+        seq.OnComplete(() =>
+        {
+            FinishDeath();
+        });
         return seq;
     }
 
@@ -265,13 +291,13 @@ public class EnemyController : PawnUnit
         seq.Append(_enemyVisual.Bounce());
     }
 
-    public Tween ReactToFire()
+    public Tween Burn()
     {
         Sequence seq = DOTween.Sequence();
 
         Node targetNode = FindWalkableNodeFromFacing();
 
-        // Cannot find a walkable node, so terminate
+        // Cannot find a walkable node, so die
         if (targetNode == null)
         {
             seq.Append(Die());
@@ -302,14 +328,15 @@ public class EnemyController : PawnUnit
     }
 
 
-    public Sequence HearNoise(Node noiseOrigin)
+    public Tween HearNoise(Node noiseOrigin)
     {
+        if (IsFlashed || IsDead) 
+            return null;
+        
         _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
 
         if (_astarPath == null || _astarPath.Count < 2)
-        {
             return null;
-        }
 
         Sequence seq = DOTween.Sequence();
         Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
@@ -332,7 +359,7 @@ public class EnemyController : PawnUnit
         return _astarPath == null || _astarPath.Count <= 1;
     }
 
-    public Sequence GetFlashed(int duration)
+    public Tween GetFlashed(int duration)
     {
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(() =>

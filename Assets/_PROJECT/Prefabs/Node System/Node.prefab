@@ -181,6 +181,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2410919371223571292}
   - component: {fileID: 9014059609191413951}
+  - component: {fileID: 3244454169705117644}
   - component: {fileID: 5496572370412979684}
   m_Layer: 7
   m_Name: Node
@@ -226,9 +227,20 @@ MonoBehaviour:
   _south: {fileID: 0}
   _east: {fileID: 0}
   _west: {fileID: 0}
-  _crowdRadius: 1.2
-  _utilityItem: {fileID: 0}
   _textMesh: {fileID: 2952064586748687239}
+--- !u!114 &3244454169705117644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5974608156862433047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11563b14ecc14680974cbd8ca5bb1bb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _crowdRadius: 1.3
 --- !u!65 &5496572370412979684
 BoxCollider:
   m_ObjectHideFlags: 0
