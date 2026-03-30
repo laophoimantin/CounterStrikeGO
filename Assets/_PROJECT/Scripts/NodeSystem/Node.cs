@@ -94,17 +94,12 @@ public class Node : MonoBehaviour
         RearrangeUnits();
     }
 
-    public bool HasUnit()
-    {
-        return _units.Count > 0;
-    }
-
     public bool HasUnitsOfType<T>() where T : PawnUnit
     {
         return _units.Any(u => u is T);
     }
 
-    public IEnumerable<GridOccupant> GetAllUnits()
+    public IReadOnlyList<GridOccupant> GetAllOccupants()
     {
         return _units;
     }

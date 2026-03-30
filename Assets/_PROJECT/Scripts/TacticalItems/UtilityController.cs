@@ -49,13 +49,6 @@ public abstract class UtilityController : GridOccupant, IPickupable
         _currentNode = null;
     }
 
-    public void OnPickUp(PlayerController player)
-    {
-        UnregisterFromNode();
-
-        _collider.enabled = false;
-        _utilityVisual.SwitchToFlyingMode(player.transform.position);
-    }
     public void OnPickUpBy(PawnUnit picker)
     {
         IUtilityEquipper receiver = picker.GetComponent<IUtilityEquipper>();

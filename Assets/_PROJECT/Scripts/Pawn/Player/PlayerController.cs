@@ -150,9 +150,8 @@ public class PlayerController : PawnUnit, IUtilityEquipper
     public void EquipUtility(UtilityController newUtility)
     {
         _currentUtility = newUtility;
-        _currentUtility.OnPickUp(this);
         _hasUtility = true;
-        _playerVisual.SetUsingUtilityVisible(_hasUtility);
+        _playerVisual.SetUsingUtilityState(_hasUtility);
     }
 
     public void TryUseUtility(Node targetNode)
@@ -172,7 +171,7 @@ public class PlayerController : PawnUnit, IUtilityEquipper
         _playerVisual.Wobble();
         _currentUtility.Throw(targetNode, () => FinishAction(endsTurn));
         UnEquipItem();
-        _playerVisual.SetUsingUtilityVisible(_hasUtility);
+        _playerVisual.SetUsingUtilityState(_hasUtility);
     }
 
     private void UnEquipItem()
