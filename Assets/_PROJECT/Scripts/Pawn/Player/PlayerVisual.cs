@@ -13,11 +13,11 @@ public class PlayerVisual : GridUnitVisual
 
     void Start()
     {
-        SetUsingUtilityState(false);
+        SetHoldingItemState(false);
     }
 
     // Utility ===========================================
-    public void SetUsingUtilityState(bool hasUtility)
+    public void SetHoldingItemState(bool hasUtility)
     {
         _normalStateModel.gameObject.SetActive(!hasUtility);
         _usingUtilityModel.gameObject.SetActive(hasUtility);

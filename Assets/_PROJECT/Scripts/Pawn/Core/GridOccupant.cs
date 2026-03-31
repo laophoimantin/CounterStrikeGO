@@ -17,4 +17,27 @@ public abstract class GridOccupant : MonoBehaviour
     {
         _visual.MoveOffset(offset);
     }
+    
+    public void ChangeNode(Node newNode)
+    {
+        if (newNode == null) return;
+
+        if (_currentNode != null)
+        {
+            _currentNode.RemoveUnit(this);
+        }
+
+        _currentNode = newNode;
+        _currentNode.AddUnit(this);
+    }
+    
+    protected void UnAssignCurrentNode()
+    {
+        if (_currentNode != null)
+        {
+            _currentNode.RemoveUnit(this);
+        }
+        _currentNode = null;
+    }
+    
 }

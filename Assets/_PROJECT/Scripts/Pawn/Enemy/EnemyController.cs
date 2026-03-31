@@ -9,6 +9,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 {
     [Header("References")]
     private EnemyVisual _enemyVisual;
+    private UnitCombat _unitCombat;
 
     private BaseEnemyBehavior _currentBehavior;
     [SerializeField] private BaseEnemyBehavior _defaultBehavior;
@@ -16,10 +17,8 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     [SerializeField] private FlashedBehavior _flashedBehavior;
 
     [Header("Enemy State")]
-    private State _currentState;
-
     [SerializeField] private Direction _facingDirection = Direction.None;
-
+    private State _currentState;
     public bool IsFlashed => _currentState == State.Flashed;
 
     private readonly Direction[] _dirs =
@@ -49,23 +48,33 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         EnemyManager.Instance.RegisterEnemy(this);
     }
 
-    void Start()
+    void Awake()
     {
         if (_currentNode == null)
+        {
             Debug.LogWarning($"{gameObject.name} has no node assigned!!!");
+            return;
+        }
         if (_defaultBehavior == null || _noiseBehavior == null)
+        {
             Debug.LogWarning($"{gameObject.name} has no behavior assigned!!!");
+            return;
+        }
         if (_facingDirection == Direction.None)
+        {
             Debug.LogWarning($"{gameObject.name} has no facing direction assigned!!!");
-
+            return;
+        }
+        
+        _enemyVisual = _visual as EnemyVisual;
+        _currentBehavior = _defaultBehavior;
+        
+        _unitCombat = GetComponent<UnitCombat>();
+    }
+    void Start()
+    {
         if (_currentNode != null)
             _currentNode.AddUnit(this);
-
-        _enemyVisual = _visual as EnemyVisual;
-        if (_enemyVisual == null)
-            Debug.Log("VISUALLLLLL!");
-
-        _currentBehavior = _defaultBehavior;
     }
 
     private void ChangeState(State newState)
@@ -121,7 +130,11 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
     private IEnumerator ExecuteBehavior()
     {
-        if (_isDead) yield break;
+        if (_isDead) 
+        {
+            FinishTurn(); 
+            yield break; 
+        }
 
         List<BaseEnemyAction> plan = _currentBehavior.PlanActions(this);
 
@@ -135,11 +148,24 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         {
             yield return action.Execute(this);
 
-            if (TryAttack(_currentNode))
+            Tween attackTween = _unitCombat.GetAttackTween(_currentNode);
+
+            if (attackTween != null)
             {
-                yield break;
+                yield return attackTween.WaitForCompletion();
+                break;
             }
         }
+        
+        // foreach (BaseEnemyAction action in plan)
+        // {
+        //     yield return action.Execute(this);
+        //
+        //     if (TryAttack(_currentNode))
+        //     {
+        //         yield break;
+        //     }
+        // }
 
         FinishTurn();
     }
@@ -214,10 +240,11 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     }
 
 
+    // Basic Movement
     public Sequence Move(Node targetNode)
     {
         Sequence seq = DOTween.Sequence();
-        seq.AppendCallback(() => { UpdateNodeData(targetNode); });
+        seq.AppendCallback(() => { ChangeNode(targetNode); });
         seq.Append(_visual.MoveTo(targetNode.WorldPos, _actionDuration));
 
         return seq;
@@ -232,32 +259,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         return seq;
     }
 
-
-    private void UpdateNodeData(Node newNode)
-    {
-        if (newNode == null) return;
-
-        if (_currentNode != null)
-        {
-            _currentNode.RemoveUnit(this);
-        }
-
-        _currentNode = newNode;
-        _currentNode.AddUnit(this);
-    }
-
-    private bool TryAttack(Node targetNode)
-    {
-        Tween attackResult = CombatResolver.ResolveAttackOnNode(targetNode, _team, true);
-
-        if (attackResult != null)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
+    // Die
     public override Tween Die()
     {
         if (_isDead) return null;
@@ -268,8 +270,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         seq.Append(_visual.FlyUp());
         seq.AppendCallback(() =>
         {
-            _currentNode.RemoveUnit(this);
-            _currentNode = null;
+            UnAssignCurrentNode();
             OnDeath?.Invoke(this);
         });
         seq.OnComplete(() =>
@@ -279,7 +280,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         return seq;
     }
 
-    public void FinishDeath()
+    private void FinishDeath()
     {
         Sequence seq = DOTween.Sequence();
 
@@ -291,6 +292,8 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         seq.Append(_enemyVisual.Bounce());
     }
 
+    
+    // Molotov-ed
     public Tween Burn()
     {
         Sequence seq = DOTween.Sequence();
@@ -327,10 +330,10 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         return null;
     }
 
-
+   // Decoy-ed
     public Tween HearNoise(Node noiseOrigin)
     {
-        if (IsFlashed || IsDead) 
+        if (IsFlashed || _isDead) 
             return null;
         
         _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
@@ -358,7 +361,8 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     {
         return _astarPath == null || _astarPath.Count <= 1;
     }
-
+    
+    // Flash-ed
     public Tween GetFlashed(int duration)
     {
         Sequence seq = DOTween.Sequence();
@@ -388,7 +392,13 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
     #endregion
 
-
+    
+    private void SnapPosition(Vector3 targetPos)
+    {
+        transform.position = new Vector3(targetPos.x, targetPos.y, targetPos.z);
+        _visual.SetPosition(transform.position);
+    }
+    
     #region Helper Methods
 
     // 1. STATE MANAGEMENT (Setters & Core Getters)
@@ -435,6 +445,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
         return targetNode;
     }
+
 
     /// <summary>
     /// Returns the neighbor of a specific node in a specific direction
@@ -587,28 +598,17 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
             EditorUtility.SetDirty(_currentNode);
         }
 
-        _currentNode = newNode;
-        _currentNode.AddUnit(this);
-
-        SnapPosition(_currentNode.transform.position);
+        ChangeNode(newNode);
+        transform.position = newNode.WorldPos;
+        _visual.SetPosition(transform.position);
 
         EditorUtility.SetDirty(this);
 #endif
     }
 
-    public void UnAssignNode()
-    {
-        if (_currentNode == null) return;
-        _currentNode.RemoveUnit(this);
-        _currentNode = null;
-    }
 
-    private void SnapPosition(Vector3 targetPos)
-    {
-        transform.position = new Vector3(targetPos.x, targetPos.y, targetPos.z);
-        _visual.SetPosition(transform.position);
-    }
 
+ 
     #endregion
 }
 

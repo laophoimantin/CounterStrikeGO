@@ -20,11 +20,11 @@ public class EnemyEditor : Editor
             Undo.RecordObject(script, "Snap Enemy State");     // Save Script variables
             script.SetOrMoveNode();
         }
-        if (GUILayout.Button("Unassign Node"))
-        {
-            Undo.RecordObject(script, "Unassign Node");
-            script.UnAssignNode();
-        }
+        // if (GUILayout.Button("Unassign Node"))
+        // {
+        //     Undo.RecordObject(script, "Unassign Node");
+        //     script.UnAssignNode();
+        // }
         GUILayout.EndHorizontal();
 
         EditorGUILayout.Space();

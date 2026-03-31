@@ -3,18 +3,20 @@ using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 
-public class PlayerController : PawnUnit, IUtilityEquipper
+public class PlayerController : PawnUnit
 {
-    [Header("References")]
     private PlayerVisual _playerVisual;
+    public PlayerVisual PlayerVisual => _playerVisual;
 
-    private bool _isMoving = false;
+    [Header("References")]
+    [SerializeField] private UnitCombat _unitCombat;
+    [SerializeField] private PlayerMovement _playerMovement;
+    [SerializeField] private PlayerUtilityHandler _utilityHandler;
+
     private bool _canAct = true;
 
     private Direction _tempMoveDirection = Direction.None;
-    private UtilityController _currentUtility;
-    private bool _hasUtility = false;
-    public bool HasUtility => _hasUtility;
+    public bool HasUtility => _utilityHandler.HasItem;
 
     void OnEnable()
     {
@@ -26,13 +28,7 @@ public class PlayerController : PawnUnit, IUtilityEquipper
         this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChanged);
     }
 
-    void Start()
-    {
-        InitializeOnCurrentNode();
-        _playerVisual = _visual as PlayerVisual;
-    }
-
-    private void InitializeOnCurrentNode()
+    void Awake()
     {
         if (_currentNode == null)
         {
@@ -40,10 +36,16 @@ public class PlayerController : PawnUnit, IUtilityEquipper
             return;
         }
 
-        _currentNode.AddUnit(this);
-        transform.position = _currentNode.WorldPos;
+        _playerVisual = _visual as PlayerVisual;
     }
 
+    void Start()
+    {
+        if (_currentNode != null)
+        {
+            SnapToNode(_currentNode);
+        }
+    }
 
     // Turn System =========================================================================
     private void HandleTurnChanged(OnTurnChangedEvent eventData)
@@ -57,9 +59,9 @@ public class PlayerController : PawnUnit, IUtilityEquipper
     public void TryMoveTo(Direction direction)
     {
         _tempMoveDirection = direction;
-        if (!_canAct || _hasUtility || _isMoving) return;
+        if (!_canAct || _utilityHandler.HasItem || _playerMovement.IsMoving) return;
 
-        Node target = GetNodeInDirection(_currentNode, direction);
+        Node target = _currentNode.GetNodeInDirection(direction);
 
         if (target == null || !target.IsWalkable())
         {
@@ -74,41 +76,25 @@ public class PlayerController : PawnUnit, IUtilityEquipper
 
     private void PlayMoveSequence(Node targetNode)
     {
-        _isMoving = true;
         _canAct = false;
 
-        UpdateNodeData(targetNode);
+        ChangeNode(targetNode);
 
         Sequence seq = DOTween.Sequence();
 
-        seq.Append(_playerVisual.MoveTo(targetNode.WorldPos, _actionDuration));
-        _playerVisual.TryAddWobble(seq);
-        TryAttack(targetNode, seq);
+        _playerMovement.AppendMoveSequence(targetNode, seq, _actionDuration);
+        _unitCombat.AppendAttackSequence(targetNode, seq);
 
         seq.OnComplete(() =>
         {
-            _isMoving = false;
             _currentNode.TriggerEnter(this);
             FinishAction(ShouldEndTurn());
         });
     }
 
-    private void TryAttack(Node targetNode, Sequence seq)
-    {
-        Tween combat = CombatResolver.ResolveAttackOnNode(targetNode, _team);
-
-        if (combat != null)
-            seq.Append(combat);
-    }
-
 
     private bool ShouldEndTurn()
     {
-        // if (_hasUtility)
-        // {
-        //     return false;
-        // }
-
         return true;
     }
 
@@ -122,19 +108,6 @@ public class PlayerController : PawnUnit, IUtilityEquipper
         this.SendEvent(new OnPlayerActionFinishedEvent(shouldEnd));
     }
 
-    private void UpdateNodeData(Node newNode)
-    {
-        if (newNode == null) return;
-
-        if (_currentNode != null)
-        {
-            _currentNode.RemoveUnit(this);
-        }
-
-        _currentNode = newNode;
-        _currentNode.AddUnit(this);
-    }
-
     public override Tween Die()
     {
         Sequence deathSequence = DOTween.Sequence();
@@ -144,38 +117,11 @@ public class PlayerController : PawnUnit, IUtilityEquipper
         return deathSequence;
     }
 
-    public void EquipUtility(UtilityController newUtility)
+    public void Input_TryUseUtility(Node targetNode)
     {
-        _currentUtility = newUtility;
-        _hasUtility = true;
-        _playerVisual.SetUsingUtilityState(_hasUtility);
-    }
-
-    public void TryUseUtility(Node targetNode)
-    {
-        if (!_canAct || !_hasUtility) return;
-
-        List<Node> validNodes = NodeManager.Instance.GetNodesInRange(_currentNode, _currentUtility.ThrowRange);
-        if (validNodes.Contains(targetNode))
-        {
-            StartAction();
-            UseUtility(targetNode);
-        }
-    }
-
-    private void UseUtility(Node targetNode)
-    {
-        bool endsTurn = _currentUtility.EndsTurn;
-        _playerVisual.Wobble();
-        _currentUtility.Throw(targetNode, () => FinishAction(endsTurn));
-        UnEquipItem();
-        _playerVisual.SetUsingUtilityState(_hasUtility);
-    }
-
-    private void UnEquipItem()
-    {
-        _currentUtility = null;
-        _hasUtility = false;
+        if (!_canAct || !_utilityHandler.HasItem) return;
+        StartAction();
+        _utilityHandler.TryUseUtility(targetNode, (endsTurn) => FinishAction(endsTurn));
     }
 
     // On Click ====================================================================================
@@ -187,6 +133,16 @@ public class PlayerController : PawnUnit, IUtilityEquipper
     public void OnDropped()
     {
         _playerVisual.DropAnim();
+    }
+
+    private void SnapToNode(Node node)
+    {
+        if (node == null) return;
+
+        transform.position = node.WorldPos;
+        _playerVisual.SetPosition(transform.position);
+
+        ChangeNode(node);
     }
 
     // Editor ====================================================================================
@@ -206,11 +162,10 @@ public class PlayerController : PawnUnit, IUtilityEquipper
 
         if (dir.HasValue)
         {
-            newNode = GetNodeInDirection(_currentNode, dir.Value);
+            newNode = _currentNode.GetNodeInDirection(dir.Value);
         }
         else
         {
-            // Snap to nearest node
             newNode = FindObjectOfType<NodeManager>().GetNodeFromWorldPosition(transform.localPosition);
         }
 
@@ -227,26 +182,13 @@ public class PlayerController : PawnUnit, IUtilityEquipper
             EditorUtility.SetDirty(_currentNode);
         }
 
-        _currentNode = newNode;
-        _currentNode.AddUnit(this);
+        ChangeNode(newNode);
 
-        // Visual Snap
-        transform.position = _currentNode.transform.position;
+        transform.position = newNode.WorldPos;
+        _visual.SetPosition(transform.position);
+
 
         EditorUtility.SetDirty(this);
-    }
-
-    private Node GetNodeInDirection(Node node, Direction dir)
-    {
-        if (node == null) return null;
-        return dir switch
-        {
-            Direction.North => node.NorthNode,
-            Direction.South => node.SouthNode,
-            Direction.East => node.EastNode,
-            Direction.West => node.WestNode,
-            _ => null
-        };
     }
 #endif
 

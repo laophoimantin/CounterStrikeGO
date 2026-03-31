@@ -11,7 +11,7 @@ public abstract class UtilityController : GridOccupant, IPickupable
 
     [Header("Settings")]
     [SerializeField] private int _throwRange = 1;
-    [SerializeField] private bool _endsTurn = true;
+    [SerializeField] private bool _endsTurn = true; // Decide if after using this utility, the next turn is still player turn or enemy turn
     public int ThrowRange => _throwRange;
     public bool EndsTurn => _endsTurn;
 

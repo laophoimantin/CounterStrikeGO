@@ -75,9 +75,12 @@ GameObject:
   m_Component:
   - component: {fileID: 2602258866804015155}
   - component: {fileID: 751983764187884313}
+  - component: {fileID: 4402514588270791858}
   - component: {fileID: 183178073398776728}
-  - component: {fileID: 8434330557803540304}
+  - component: {fileID: 6990278436149699068}
+  - component: {fileID: 6446875606712989626}
   - component: {fileID: 2537493411860163889}
+  - component: {fileID: 8434330557803540304}
   m_Layer: 6
   m_Name: Player (Terrorist)
   m_TagString: Player
@@ -117,6 +120,21 @@ MonoBehaviour:
   _visual: {fileID: 183178073398776728}
   _actionDuration: 0.3
   _team: 1
+  _unitCombat: {fileID: 4402514588270791858}
+  _playerMovement: {fileID: 6990278436149699068}
+  _utilityHandler: {fileID: 6446875606712989626}
+--- !u!114 &4402514588270791858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5250013960275831423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d23d206075d847ca99182deb541d7982, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &183178073398776728
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -143,27 +161,30 @@ MonoBehaviour:
   _usingUtilityModel: {fileID: 2393307900391148584}
   _liftHeight: 0.5
   _liftDuration: 0.3
---- !u!65 &8434330557803540304
-BoxCollider:
+--- !u!114 &6990278436149699068
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5250013960275831423}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 3.5, y: 3.738033, z: 3.5}
-  m_Center: {x: 0, y: 1.9798824, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8abab871397742868580c3814f28e1ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6446875606712989626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5250013960275831423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ce1b3afca934220a66903e6386f52ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &2537493411860163889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,6 +205,27 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   _dragThresholdPercent: 0.05
+--- !u!65 &8434330557803540304
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5250013960275831423}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 4.1312065, y: 4.4121675, z: 4.1312065}
+  m_Center: {x: 0, y: 1.9798824, z: 0}
 --- !u!1 &7148909749116769077
 GameObject:
   m_ObjectHideFlags: 0

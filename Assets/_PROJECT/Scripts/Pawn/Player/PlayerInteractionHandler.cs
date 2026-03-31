@@ -64,7 +64,8 @@ public class PlayerInteractionHandler : MonoBehaviour
 
             if (clickedNode != null)
             {
-                _player.TryUseUtility(clickedNode);
+                //_player.TryUseUtility(clickedNode);
+                _player.Input_TryUseUtility(clickedNode);
             }
         }
     }
