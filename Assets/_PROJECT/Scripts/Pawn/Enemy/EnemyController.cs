@@ -32,10 +32,9 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public Direction CurrentFacingDirection => _facingDirection;
     private List<Node> _astarPath = new();
 
-
     public Node StartNode => 0 < _astarPath.Count ? _astarPath[0] : null;
-    public Node NextNode => 0 + 1 < _astarPath.Count ? _astarPath[1] : null;
-    public Node UpcomingNode => 0 + 2 < _astarPath.Count ? _astarPath[2] : null;
+    public Node NextNode => 1 < _astarPath.Count ? _astarPath[1] : null;
+    public Node UpcomingNode => 2 < _astarPath.Count ? _astarPath[2] : null;
 
 
     public Action<EnemyController> OnDeath;
@@ -55,22 +54,25 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
             Debug.LogWarning($"{gameObject.name} has no node assigned!!!");
             return;
         }
+
         if (_defaultBehavior == null || _noiseBehavior == null)
         {
             Debug.LogWarning($"{gameObject.name} has no behavior assigned!!!");
             return;
         }
+
         if (_facingDirection == Direction.None)
         {
             Debug.LogWarning($"{gameObject.name} has no facing direction assigned!!!");
             return;
         }
-        
+
         _enemyVisual = _visual as EnemyVisual;
         _currentBehavior = _defaultBehavior;
-        
+
         _unitCombat = GetComponent<UnitCombat>();
     }
+
     void Start()
     {
         if (_currentNode != null)
@@ -130,10 +132,10 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
     private IEnumerator ExecuteBehavior()
     {
-        if (_isDead) 
+        if (_isDead)
         {
-            FinishTurn(); 
-            yield break; 
+            FinishTurn();
+            yield break;
         }
 
         List<BaseEnemyAction> plan = _currentBehavior.PlanActions(this);
@@ -156,16 +158,6 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
                 break;
             }
         }
-        
-        // foreach (BaseEnemyAction action in plan)
-        // {
-        //     yield return action.Execute(this);
-        //
-        //     if (TryAttack(_currentNode))
-        //     {
-        //         yield break;
-        //     }
-        // }
 
         FinishTurn();
     }
@@ -199,21 +191,21 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
     #region Actions Methods
 
-    public bool ScanForPlayerInFront(int range)
+    public bool ScanForTargetInFront(int range)
     {
         Node nodeToScan = GetNodeInFront();
 
         while (nodeToScan != null && range > 0)
         {
-            if (!nodeToScan.IsWalkable()) return false; 
-        
-            if (nodeToScan.IsHideable()) return false; 
+            if (!nodeToScan.IsWalkable()) return false;
+
+            if (nodeToScan.IsHideable()) return false;
 
             foreach (GridOccupant occupant in nodeToScan.GetAllOccupants())
             {
                 if (occupant is PawnUnit victim && IsEnemyOf(victim))
                 {
-                    return true; 
+                    return true;
                 }
             }
 
@@ -221,22 +213,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
             nodeToScan = GetNodeInDirection(nodeToScan, _facingDirection);
         }
 
-        return false; 
-        
-        // Node nodeToScan = GetNodeInFront();
-        //
-        // while (nodeToScan != null && range > 0)
-        // {
-        //     if (!nodeToScan.IsWalkable()) return false; 
-        //     if (nodeToScan.IsHideable()) return false; 
-        //
-        //     if (nodeToScan.HasUnitsOfType<PlayerController>()) return true;
-        //
-        //     range--;
-        //     nodeToScan = GetNodeInDirection(nodeToScan, _facingDirection);
-        // }
-        //
-        // return false;
+        return false;
     }
 
 
@@ -273,10 +250,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
             UnAssignCurrentNode();
             OnDeath?.Invoke(this);
         });
-        seq.OnComplete(() =>
-        {
-            FinishDeath();
-        });
+        seq.OnComplete(() => { FinishDeath(); });
         return seq;
     }
 
@@ -292,7 +266,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         seq.Append(_enemyVisual.Bounce());
     }
 
-    
+
     // Molotov-ed
     public Tween Burn()
     {
@@ -330,12 +304,12 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         return null;
     }
 
-   // Decoy-ed
+    // Decoy-ed
     public Tween HearNoise(Node noiseOrigin)
     {
-        if (IsFlashed || _isDead) 
+        if (IsFlashed || _isDead)
             return null;
-        
+
         _astarPath = AstarPathfinder.FindPath(_currentNode, noiseOrigin);
 
         if (_astarPath == null || _astarPath.Count < 2)
@@ -361,7 +335,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     {
         return _astarPath == null || _astarPath.Count <= 1;
     }
-    
+
     // Flash-ed
     public Tween GetFlashed(int duration)
     {
@@ -392,13 +366,13 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
     #endregion
 
-    
+
     private void SnapPosition(Vector3 targetPos)
     {
         transform.position = new Vector3(targetPos.x, targetPos.y, targetPos.z);
         _visual.SetPosition(transform.position);
     }
-    
+
     #region Helper Methods
 
     // 1. STATE MANAGEMENT (Setters & Core Getters)
@@ -549,19 +523,19 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public Direction GetDirectionClockwise() => GetDirectionByStep(+1);
     public Direction GetDirectionCounterClockwise() => GetDirectionByStep(-1);
 
-    #endregion
+    #endregion  
 
 
     // Editor ====================================================================================
 
     #region Editor Methods
 
+#if UNITY_EDITOR
     public void SetDirection(Direction dir)
     {
         _visual.SetRotation(GetRotationForDirection(dir));
         SetFacingDirection(dir);
     }
-#if UNITY_EDITOR
     public void SetOrMoveNode(Direction? dir = null)
     {
         NodeManager manager = NodeManager.Instance;
@@ -603,12 +577,9 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         _visual.SetPosition(transform.position);
 
         EditorUtility.SetDirty(this);
-#endif
     }
+#endif
 
-
-
- 
     #endregion
 }
 
