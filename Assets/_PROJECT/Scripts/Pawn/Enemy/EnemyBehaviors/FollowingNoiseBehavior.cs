@@ -6,15 +6,16 @@ public class FollowingNoiseBehavior : BaseEnemyBehavior
 {
     protected override void CustomActions(List<BaseEnemyAction> baseList, EnemyController enemy)
     {
-        if (enemy.HasReachedNoiseDestination())
+        var navigator = enemy.PathNavigator;
+        var nextNode = navigator.NextNode;
+        if (nextNode == null)
         {
             return;
         }
 
-        var nextNode = enemy.NextNode;
         baseList.Add(new MoveAction(nextNode));
 
-        var upcoming = enemy.UpcomingNode;
+        var upcoming = navigator.UpcomingNode;
         if (upcoming != null)
         {
             Direction dir = GridMathUtility.GetDirectionFromTargetNode(nextNode, upcoming);

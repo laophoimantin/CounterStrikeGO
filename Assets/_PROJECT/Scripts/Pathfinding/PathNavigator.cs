@@ -15,11 +15,6 @@ public class PathNavigator : MonoBehaviour
     public void SetDestination(Node startNode, Node targetNode)
     {
         _currentPath = AstarPathfinder.FindPath(startNode, targetNode);
-        
-        if (!HasPath)
-        {
-            Debug.LogWarning($"{gameObject.name} tài xế báo cáo: Đéo tìm thấy đường đi sếp ơi!");
-        }
     }
 
     public void AdvancePath()
