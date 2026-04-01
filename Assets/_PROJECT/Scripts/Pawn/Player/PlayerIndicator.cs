@@ -63,10 +63,7 @@ public class PlayerIndicator : MonoBehaviour
 
     private void UpdateIndicators()
     {
-        Debug.Log($"Currentnode {_player.CurrentNode == null}");
-
         if (_player == null || _player.CurrentNode == null) return;
-
 
         transform.position = _player.transform.position + _offset;
 

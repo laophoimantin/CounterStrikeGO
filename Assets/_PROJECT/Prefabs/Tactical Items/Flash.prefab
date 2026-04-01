@@ -273,7 +273,6 @@ MonoBehaviour:
   _team: 1
   _throwRange: 10
   _endsTurn: 1
-  _collider: {fileID: 4451240819417628474}
   _flashAmount: 2
 --- !u!114 &4458046867740189460
 MonoBehaviour:

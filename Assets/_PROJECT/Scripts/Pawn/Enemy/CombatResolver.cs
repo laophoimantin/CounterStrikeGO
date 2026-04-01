@@ -55,11 +55,6 @@ public static class CombatResolver
         return victims;
     }
     
-    
-    
-    
-    
-    
     public static Tween ResolveAttackOnNode(Node node,Team attackerTeam, bool checkHideable = true)
     {
         if (node == null || (checkHideable && node.IsHideable()))

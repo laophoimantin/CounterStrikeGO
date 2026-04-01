@@ -23,3 +23,28 @@ public class FollowingNoiseBehavior : BaseEnemyBehavior
         }
     }
 }
+
+//public abstract class BaseEnemyState
+//{
+//    protected EnemyController controller;
+//    public BaseEnemyState(EnemyController controller)
+//    {
+//        this.controller = controller;
+//    }
+
+//    public virtual void OnEnter() { }
+//	public virtual void OnUpdate() { }
+//	public virtual void OnExit() { }
+//}
+
+//public class EnemyStunState : BaseEnemyState
+//{
+//    public EnemyStunState(EnemyController controller) : base(controller)
+//    {
+//    }
+
+//    public override void OnExit()
+//    {
+//        controller.EnemyVisual.HideStunIcon();
+//	}
+//}

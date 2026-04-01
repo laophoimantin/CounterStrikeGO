@@ -139,10 +139,13 @@ public class SceneController : MonoBehaviour
         if (_loadingScreen != null)
             _loadingScreen.SetActive(false);
 
-        yield return Fade(1f, 0f);
+        //yield return Fade(1f, 0f);
 
-        _canvasGroup.blocksRaycasts = false;
-        _isLoading = false;
+        ScreenFader.OnFadeOut(_canvasGroup, _fadeDuration, () =>
+        {
+			_canvasGroup.blocksRaycasts = false;
+			_isLoading = false;
+		});
     }
 
     private IEnumerator Fade(float startAlpha, float endAlpha)

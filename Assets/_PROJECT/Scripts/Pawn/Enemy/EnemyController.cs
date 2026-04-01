@@ -25,13 +25,20 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     [SerializeField] private FollowingNoiseBehavior _noiseBehavior;
     [SerializeField] private FlashedBehavior _flashedBehavior;
 
+    public BaseEnemyBehavior DefaultBehavior => _defaultBehavior;
+    public FollowingNoiseBehavior FollowingNoiseBehavior => _noiseBehavior;
+    public FlashedBehavior FlashedBehavior => _flashedBehavior;
+
+
     [Header("Enemy State")]
     [SerializeField] private Direction _facingDirection = Direction.None;
-    private State _currentState = State.Normal;
+	private IEnemyState _currentState;
+
+	private State _currentStateOld = State.Normal;
 
     public Direction CurrentFacingDirection => _facingDirection;
 
-    private bool IsFlashed => _currentState == State.Flashed;
+    private bool IsFlashed => _currentStateOld == State.Flashed;
 
     private int _flashTurnsRemaining;
     public Action<EnemyController> OnDeath;
@@ -72,53 +79,18 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         _currentBehavior = _defaultBehavior;
     }
 
-    private void ChangeState(State newState)
-    {
-        if (_currentState == newState)
-            return;
+	public void ChangeState(IEnemyState newState)
+	{
+		if (_currentState != null && _currentState.GetType() == newState.GetType())
+		{
+			return;
+		}
 
-        ExitState(_currentState);
-        _currentState = newState;
-        EnterState(newState);
-    }
-
-    private void EnterState(State state)
-    {
-        switch (state)
-        {
-            case State.Normal:
-                _currentBehavior = _defaultBehavior;
-                break;
-
-            case State.Flashed:
-                _currentBehavior = _flashedBehavior;
-                break;
-
-            case State.Distracted:
-                _currentBehavior = _noiseBehavior;
-                break;
-        }
-    }
-
-    private void ExitState(State state)
-    {
-        switch (state)
-        {
-            case State.Normal:
-                break;
-
-            case State.Flashed:
-                _enemyVisual.HideStunIcon();
-                break;
-
-            case State.Distracted:
-                _enemyVisual.HideQuestionIcon();
-                break;
-        }
-    }
-
-
-    public void StartAction()
+		_currentState?.ExitState(this);
+		_currentState = newState;
+		_currentState?.EnterState(this);
+	}
+	public void StartAction()
     {
         StartCoroutine(ExecuteBehavior());
     }
@@ -167,16 +139,16 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     {
         if (!HasEndFlashed())
         {
-            ChangeState(State.Flashed);
+            ChangeState(new FlashedState());
         }
         else if (!_pathNavigator.HasReachedDestination)
         {
-            ChangeState(State.Distracted);
-        }
+			ChangeState(new DistractedState());
+		}
         else
         {
-            ChangeState(State.Normal);
-        }
+			ChangeState(new NormalState());
+		}
     }
 
 
@@ -237,8 +209,9 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         seq.Append(_enemyVisual.ShowQuestionIcon());
         seq.Append(_enemyMovement.Rotate(targetDirection, _actionDuration));
 
-        seq.OnComplete(() => { ChangeState(State.Distracted); });
-        return seq;
+		//seq.OnComplete(() => { ChangeState(State.Distracted); });
+		seq.OnComplete(() => { ChangeState(new DistractedState()); });
+		return seq;
     }
 
 
@@ -248,7 +221,8 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(() =>
             {
-                ChangeState(State.Flashed);
+                //ChangeState(State.Flashed);
+                ChangeState(new FlashedState());
                 _flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
                 _pathNavigator.ClearPath();
             }
@@ -268,6 +242,10 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     {
         return _flashTurnsRemaining <= 0;
     }
+
+    public void SetBehavior(BaseEnemyBehavior newBahav){
+        _currentBehavior = newBahav;
+        }
 
 
     public void SetFacingDirection(Direction newDirection)
@@ -299,7 +277,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public void SetOrMoveNode(Direction? dir = null)
     {
         NodeManager manager = NodeManager.Instance;
-        if (manager == null)
+        if (manager == null) 
             manager = FindObjectOfType<NodeManager>();
 
         if (manager == null)
