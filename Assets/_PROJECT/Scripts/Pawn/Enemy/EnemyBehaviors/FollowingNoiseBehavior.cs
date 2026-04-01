@@ -17,7 +17,7 @@ public class FollowingNoiseBehavior : BaseEnemyBehavior
         var upcoming = enemy.UpcomingNode;
         if (upcoming != null)
         {
-            Direction dir = enemy.GetDirectionFromTargetNode(nextNode, upcoming);
+            Direction dir = GridMathUtility.GetDirectionFromTargetNode(nextNode, upcoming);
             baseList.Add(new RotateAction(dir));
         }
     }

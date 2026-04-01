@@ -45,7 +45,7 @@ public class MovingBehavior : BaseEnemyBehavior
 
         if (targetNode == null || !targetNode.IsWalkable())
         {
-            moveDir = enemy.GetDirectionTurnAround();
+            moveDir =  GridMathUtility.TurnAround(enemy.CurrentFacingDirection);
             targetNode = enemy.GetNodeInBack();
             baseList.Add(new RotateAction(moveDir));
         }
@@ -54,11 +54,11 @@ public class MovingBehavior : BaseEnemyBehavior
         {
             baseList.Add(new MoveAction(targetNode));
 
-            Node nodeAfterNext = enemy.GetNodeInDirection(targetNode, moveDir);
+            Node nodeAfterNext = targetNode.GetNodeInDirection(moveDir);
 
             if (nodeAfterNext == null || !nodeAfterNext.IsWalkable())
             {
-                Direction reverseDir = (moveDir == currentDir) ? enemy.GetDirectionTurnAround() : currentDir;
+                Direction reverseDir = (moveDir == currentDir) ? GridMathUtility.TurnAround(enemy.CurrentFacingDirection) : currentDir;
                 baseList.Add(new RotateAction(reverseDir, 0.1f));
             }
         }

@@ -9,7 +9,9 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 {
     [Header("References")]
     private EnemyVisual _enemyVisual;
-    private UnitCombat _unitCombat;
+    public EnemyVisual EnemyVisual => _enemyVisual;
+    [SerializeField] private UnitCombat _unitCombat;
+    [SerializeField] private EnemyMovement _enemyMovement;
 
     private BaseEnemyBehavior _currentBehavior;
     [SerializeField] private BaseEnemyBehavior _defaultBehavior;
@@ -68,15 +70,13 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         }
 
         _enemyVisual = _visual as EnemyVisual;
-        _currentBehavior = _defaultBehavior;
-
-        _unitCombat = GetComponent<UnitCombat>();
     }
 
     void Start()
     {
         if (_currentNode != null)
             _currentNode.AddUnit(this);
+        ChangeState(State.Normal);
     }
 
     private void ChangeState(State newState)
@@ -210,7 +210,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
             }
 
             range--;
-            nodeToScan = GetNodeInDirection(nodeToScan, _facingDirection);
+            nodeToScan = nodeToScan.GetNodeInDirection(_facingDirection);
         }
 
         return false;
@@ -231,7 +231,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     {
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(() => { SetFacingDirection(newDirection); });
-        Quaternion targetRot = GetRotationForDirection(newDirection);
+        Quaternion targetRot = GridMathUtility.GetRotation(newDirection);
         seq.Append(_visual.RotateTo(targetRot, _actionDuration));
         return seq;
     }
@@ -282,7 +282,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         }
 
         // Runaway
-        Direction targetDir = GetDirectionFromTargetNode(_currentNode, targetNode);
+        Direction targetDir = GridMathUtility.GetDirectionFromTargetNode(_currentNode, targetNode);
 
         if (targetDir != _facingDirection)
             seq.Append(Rotate(targetDir));
@@ -295,8 +295,8 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     {
         for (int i = 0; i < 4; i++)
         {
-            Direction dir = GetDirectionByStep(i);
-            Node node = GetNodeInDirection(_currentNode, dir);
+            Direction dir = GridMathUtility.GetDirectionByStep(_facingDirection, i);
+            Node node = _currentNode.GetNodeInDirection(dir);
             if (node != null && node.IsWalkable())
                 return node;
         }
@@ -316,7 +316,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
             return null;
 
         Sequence seq = DOTween.Sequence();
-        Direction targetDirection = GetDirectionFromCurrentNode(NextNode);
+        Direction targetDirection = GridMathUtility.GetDirectionFromTargetNode(_currentNode, NextNode);
 
         seq.Append(_enemyVisual.ShowQuestionIcon());
         seq.Append(Rotate(targetDirection));
@@ -366,165 +366,27 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
     #endregion
 
-
     private void SnapPosition(Vector3 targetPos)
     {
         transform.position = new Vector3(targetPos.x, targetPos.y, targetPos.z);
         _visual.SetPosition(transform.position);
     }
 
-    #region Helper Methods
-
-    // 1. STATE MANAGEMENT (Setters & Core Getters)
-    // ==============================================================================================
-
-    /// <summary>
-    /// STATE CHANGE: Updates the internal facing direction state
-    /// Call this only after a rotation action is complete
-    /// </summary>
+   
     public void SetFacingDirection(Direction newDirection)
     {
         _facingDirection = newDirection;
     }
 
-    // 2. NODE QUERIES (Finding Neighbors)
-    // ==============================================================================================
-
-    /// <summary>
-    /// Returns the node directly in front of the enemy based on current facing direction
-    /// </summary>
     public Node GetNodeInFront()
     {
-        return GetNodeInDirection(_currentNode, _facingDirection);
+        return _currentNode.GetNodeInDirection(_facingDirection);
     }
 
     public Node GetNodeInBack()
     {
-        return GetNodeInDirection(_currentNode, GetDirectionTurnAround());
+        return _currentNode.GetNodeInDirection(GridMathUtility.TurnAround(_facingDirection));
     }
-
-    public Node GetNodeInBackByStep(int step = 1)
-    {
-        Node targetNode = _currentNode;
-        Direction backDirection = GetDirectionTurnAround();
-
-        for (int i = step; i > 0; i--)
-        {
-            targetNode = GetNodeInDirection(targetNode, backDirection);
-            if (targetNode == null) return null;
-        }
-
-        if (targetNode == _currentNode)
-            return null;
-
-        return targetNode;
-    }
-
-
-    /// <summary>
-    /// Returns the neighbor of a specific node in a specific direction
-    /// </summary>
-    public Node GetNodeInDirection(Node node, Direction dir)
-    {
-        switch (dir)
-        {
-            case Direction.North: return node.NorthNode;
-            case Direction.South: return node.SouthNode;
-            case Direction.East: return node.EastNode;
-            case Direction.West: return node.WestNode;
-            default: return null;
-        }
-    }
-
-    // 3. DIRECTION LOGIC (Calculating Directions)
-    // ==============================================================================================
-
-    /// <summary>
-    /// Calculates the direction from the current node to a target node
-    /// </summary>
-    public Direction GetDirectionFromCurrentNode(Node targetNode)
-    {
-        if (targetNode == null) return _facingDirection;
-        return GetDirectionFromTargetNode(_currentNode, targetNode);
-    }
-
-    /// <summary>
-    /// Calculates the direction between two adjacent nodes
-    /// </summary>
-    public Direction GetDirectionFromTargetNode(Node from, Node to)
-    {
-        if (to == null) return _facingDirection;
-
-        if (from.NorthNode == to) return Direction.North;
-        if (from.SouthNode == to) return Direction.South;
-        if (from.EastNode == to) return Direction.East;
-        if (from.WestNode == to) return Direction.West;
-
-        return _facingDirection; // Default if not adjacent
-    }
-
-    /// <summary>
-    /// Returns the Direction enum for a step (+1 for Clockwise)
-    /// Useful for passing data to RotateActions
-    /// </summary>
-    private Direction GetDirectionByStep(int step)
-    {
-        int index = Array.IndexOf(_dirs, _facingDirection);
-        int newIndex = (index + step + _dirs.Length) % _dirs.Length;
-        return _dirs[newIndex];
-    }
-
-    // 4. ROTATION LOGIC (Math & Quaternions)
-    // ==============================================================================================
-
-    /// <summary>
-    /// Calculates the rotation needed to face a specific direction
-    /// </summary>
-    private Quaternion GetRotationForDirection(Direction dir)
-    {
-        switch (dir)
-        {
-            case Direction.North: return Quaternion.Euler(0, 0, 0);
-            case Direction.South: return Quaternion.Euler(0, 180, 0);
-            case Direction.East: return Quaternion.Euler(0, 90, 0);
-            case Direction.West: return Quaternion.Euler(0, -90, 0);
-            default: return _visual.GetRotation();
-        }
-    }
-
-    /// <summary>
-    /// Calculates the rotation needed to face an adjacent target node
-    /// </summary>
-    public Quaternion GetRotationTowardsNode(Node targetNode)
-    {
-        Direction dirToNode = GetDirectionFromCurrentNode(targetNode);
-        return GetRotationForDirection(dirToNode);
-    }
-
-    /// <summary>
-    /// Helper to get a rotation based on steps (90 degree increments)
-    /// </summary>
-    private Quaternion GetRotationByStep(int step)
-    {
-        Direction futureDir = GetDirectionByStep(step);
-        return GetRotationForDirection(futureDir);
-    }
-
-
-    // Rotation Presets ==============================================================================================
-
-    public Quaternion GetRotationTurnAround() => GetRotationByStep(+2);
-    public Quaternion GetRotationClockwise() => GetRotationByStep(+1);
-    public Quaternion GetRotationCounterClockwise() => GetRotationByStep(-1);
-
-    // Direction Presets ==============================================================================================
-
-    public Direction GetDirectionTurnAround() => GetDirectionByStep(+2);
-    public Direction GetDirectionClockwise() => GetDirectionByStep(+1);
-    public Direction GetDirectionCounterClockwise() => GetDirectionByStep(-1);
-
-    #endregion  
-
 
     // Editor ====================================================================================
 
@@ -533,7 +395,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 #if UNITY_EDITOR
     public void SetDirection(Direction dir)
     {
-        _visual.SetRotation(GetRotationForDirection(dir));
+        _visual.SetRotation(GridMathUtility.GetRotation(dir));
         SetFacingDirection(dir);
     }
     public void SetOrMoveNode(Direction? dir = null)
@@ -553,7 +415,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
         if (dir.HasValue)
         {
-            newNode = GetNodeInDirection(_currentNode, dir.Value);
+            newNode = _currentNode.GetNodeInDirection(dir.Value);
         }
         else
         {
