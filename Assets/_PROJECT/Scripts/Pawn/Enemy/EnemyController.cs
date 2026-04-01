@@ -9,9 +9,10 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 {
     [Header("References")]
     private EnemyVisual _enemyVisual;
-    public EnemyVisual EnemyVisual => _enemyVisual;
     [SerializeField] private UnitCombat _unitCombat;
     [SerializeField] private EnemyMovement _enemyMovement;
+    public EnemyVisual EnemyVisual => _enemyVisual;
+    public EnemyMovement EnemyMovement => _enemyMovement;
 
     private BaseEnemyBehavior _currentBehavior;
     [SerializeField] private BaseEnemyBehavior _defaultBehavior;
@@ -20,26 +21,18 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
     [Header("Enemy State")]
     [SerializeField] private Direction _facingDirection = Direction.None;
-    private State _currentState;
-    public bool IsFlashed => _currentState == State.Flashed;
-
-    private readonly Direction[] _dirs =
-    {
-        Direction.North,
-        Direction.East,
-        Direction.South,
-        Direction.West
-    };
+    private State _currentState = State.Normal;
 
     public Direction CurrentFacingDirection => _facingDirection;
-    private List<Node> _astarPath = new();
 
+    private List<Node> _astarPath = new();
     public Node StartNode => 0 < _astarPath.Count ? _astarPath[0] : null;
     public Node NextNode => 1 < _astarPath.Count ? _astarPath[1] : null;
     public Node UpcomingNode => 2 < _astarPath.Count ? _astarPath[2] : null;
 
-
     public Action<EnemyController> OnDeath;
+
+    private bool IsFlashed => _currentState == State.Flashed;
 
     private int _flashTurnsRemaining;
 
@@ -76,7 +69,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     {
         if (_currentNode != null)
             _currentNode.AddUnit(this);
-        ChangeState(State.Normal);
+        _currentBehavior = _defaultBehavior;
     }
 
     private void ChangeState(State newState)
@@ -216,26 +209,6 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         return false;
     }
 
-
-    // Basic Movement
-    public Sequence Move(Node targetNode)
-    {
-        Sequence seq = DOTween.Sequence();
-        seq.AppendCallback(() => { ChangeNode(targetNode); });
-        seq.Append(_visual.MoveTo(targetNode.WorldPos, _actionDuration));
-
-        return seq;
-    }
-
-    public Sequence Rotate(Direction newDirection)
-    {
-        Sequence seq = DOTween.Sequence();
-        seq.AppendCallback(() => { SetFacingDirection(newDirection); });
-        Quaternion targetRot = GridMathUtility.GetRotation(newDirection);
-        seq.Append(_visual.RotateTo(targetRot, _actionDuration));
-        return seq;
-    }
-
     // Die
     public override Tween Die()
     {
@@ -285,9 +258,9 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         Direction targetDir = GridMathUtility.GetDirectionFromTargetNode(_currentNode, targetNode);
 
         if (targetDir != _facingDirection)
-            seq.Append(Rotate(targetDir));
+            seq.Append(_enemyMovement.Rotate(targetDir, _actionDuration));
 
-        seq.Append(Move(targetNode));
+        seq.Append(_enemyMovement.Move(targetNode, _actionDuration));
         return seq;
     }
 
@@ -319,7 +292,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         Direction targetDirection = GridMathUtility.GetDirectionFromTargetNode(_currentNode, NextNode);
 
         seq.Append(_enemyVisual.ShowQuestionIcon());
-        seq.Append(Rotate(targetDirection));
+        seq.Append(_enemyMovement.Rotate(targetDirection, _actionDuration));
 
         seq.OnComplete(() => { ChangeState(State.Distracted); });
         return seq;
@@ -372,7 +345,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         _visual.SetPosition(transform.position);
     }
 
-   
+
     public void SetFacingDirection(Direction newDirection)
     {
         _facingDirection = newDirection;
@@ -398,6 +371,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         _visual.SetRotation(GridMathUtility.GetRotation(dir));
         SetFacingDirection(dir);
     }
+
     public void SetOrMoveNode(Direction? dir = null)
     {
         NodeManager manager = NodeManager.Instance;

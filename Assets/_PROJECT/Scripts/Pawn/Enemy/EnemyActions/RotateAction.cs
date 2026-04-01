@@ -16,6 +16,11 @@ public class RotateAction : BaseEnemyAction
     public override IEnumerator Execute(EnemyController enemy)
     {
         yield return new WaitForSeconds(_delay);
-        yield return enemy.Rotate(_targetDir).WaitForCompletion();
+        //yield return enemy.Rotate(_targetDir).WaitForCompletion();
+        Tween moveTween = enemy.EnemyMovement.Rotate(_targetDir, enemy.ActionDuration);
+        if (moveTween != null)
+        {
+            yield return moveTween.WaitForCompletion();
+        }
     }
 }

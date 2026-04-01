@@ -10,7 +10,7 @@ public class EnemyMovement : MonoBehaviour
         _controller = GetComponent<EnemyController>();
     }
     
-    public Sequence Move(Node targetNode, float actionDuration)
+    public Tween Move(Node targetNode, float actionDuration)
     {
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(() => { _controller.ChangeNode(targetNode); });
@@ -19,7 +19,7 @@ public class EnemyMovement : MonoBehaviour
         return seq;
     }
 
-    public Sequence Rotate(Direction newDirection, float actionDuration)
+    public Tween Rotate(Direction newDirection, float actionDuration)
     {
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(() => { _controller.SetFacingDirection(newDirection); });

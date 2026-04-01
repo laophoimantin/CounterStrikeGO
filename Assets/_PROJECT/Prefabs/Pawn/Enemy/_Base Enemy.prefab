@@ -107,6 +107,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3094900948232333360}
   - component: {fileID: 4560780959758728256}
+  - component: {fileID: 3893376989302444110}
   - component: {fileID: 7006469518776763770}
   - component: {fileID: 6659546829708049627}
   m_Layer: 0
@@ -148,10 +149,24 @@ MonoBehaviour:
   _visual: {fileID: 6659546829708049627}
   _actionDuration: 0.3
   _team: 2
+  _unitCombat: {fileID: 7006469518776763770}
+  _enemyMovement: {fileID: 3893376989302444110}
   _defaultBehavior: {fileID: 11400000, guid: 4e7435721a113354e89501c3aff798df, type: 2}
   _noiseBehavior: {fileID: 11400000, guid: e6dbb9ed0df3035458886f567df99a9a, type: 2}
   _flashedBehavior: {fileID: 11400000, guid: 67f4cfff1bb5ab64ea781c6b441e2151, type: 2}
   _facingDirection: 3
+--- !u!114 &3893376989302444110
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278610169355275626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc8fa99b2087495c9512017185622f90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &7006469518776763770
 MonoBehaviour:
   m_ObjectHideFlags: 0
