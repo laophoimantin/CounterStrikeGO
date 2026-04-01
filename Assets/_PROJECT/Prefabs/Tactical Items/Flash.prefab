@@ -273,7 +273,7 @@ MonoBehaviour:
   _team: 1
   _throwRange: 10
   _endsTurn: 1
-  _flashAmount: 2
+  _flashAmount: 3
 --- !u!114 &4458046867740189460
 MonoBehaviour:
   m_ObjectHideFlags: 0

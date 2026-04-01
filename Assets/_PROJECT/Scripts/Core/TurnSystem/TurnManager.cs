@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TurnManager : Singleton<TurnManager>
@@ -53,17 +54,51 @@ public class TurnManager : Singleton<TurnManager>
         SetTurn(nextPlanningTurn);
     }
 
+    // private void SetTurn(TurnType next)
+    // {
+    //     if (_lock) return;
+    //
+    //     if (!IsValidTransition(_currentTurn, next)) return;
+    //
+    //     _currentTurn = next;
+    //     this.SendEvent(new OnTurnChangedEvent { NewTurn = _currentTurn });
+    //
+    // }
+    private bool _isTransitioning = false;
+    private Queue<TurnType> _pendingTurns = new Queue<TurnType>(); // Hàng đợi cho bọn nôn nóng
     private void SetTurn(TurnType next)
     {
         if (_lock) return;
+        _pendingTurns.Enqueue(next);
 
-        if (!IsValidTransition(_currentTurn, next)) return;
+        if (_isTransitioning) return; 
 
-        _currentTurn = next;
-        this.SendEvent(new OnTurnChangedEvent { NewTurn = _currentTurn });
+        _isTransitioning = true;
 
+        while (_pendingTurns.Count > 0)
+        {
+            TurnType queuedNext = _pendingTurns.Dequeue();
+
+            if (!IsValidTransition(_currentTurn, queuedNext)) 
+            {
+                continue;
+            }
+
+            _currentTurn = queuedNext;
+        
+            this.SendEvent(new OnTurnChangedEvent { NewTurn = _currentTurn });
+        }
+
+        _isTransitioning = false;
     }
-
+    
+    
+    
+    
+    
+    
+    
+    
 
     // Player Turn Events
     private void HandlePlayerStarted(OnPlayerActionStartedEvent eventData)

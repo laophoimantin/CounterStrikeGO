@@ -34,7 +34,7 @@ public class EnemyManager : Singleton<EnemyManager>
         }
     }
 
-    private void UnregisterEnemy(EnemyController enemy)
+    public void UnregisterEnemy(EnemyController enemy)
     {
         enemy.OnDeath -= UnregisterEnemy;
         

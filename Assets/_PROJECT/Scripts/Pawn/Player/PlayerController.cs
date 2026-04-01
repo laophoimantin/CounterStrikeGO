@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections;
 using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
@@ -30,12 +30,6 @@ public class PlayerController : PawnUnit
 
     void Awake()
     {
-        if (_currentNode == null)
-        {
-            Debug.LogWarning($"{gameObject.name} has no node assigned!");
-            return;
-        }
-
         _playerVisual = _visual as PlayerVisual;
     }
 
@@ -70,6 +64,7 @@ public class PlayerController : PawnUnit
         }
 
         _tempMoveDirection = Direction.None;
+        
         StartAction();
         PlayMoveSequence(target);
     }
@@ -136,15 +131,15 @@ public class PlayerController : PawnUnit
         _playerVisual.DropAnim();
     }
 
-    private void SnapToNode(Node node)
-    {
-        if (node == null) return;
-
-        transform.position = node.WorldPos;
-        _playerVisual.SetPosition(transform.position);
-
-        ChangeNode(node);
-    }
+    // private void SnapToNode(Node node)
+    // {
+    //     if (node == null) return;
+    //
+    //     transform.position = node.WorldPos;
+    //     _playerVisual.SetPosition(transform.position);
+    //
+    //     ChangeNode(node);
+    // }
 
     // Editor ====================================================================================
 

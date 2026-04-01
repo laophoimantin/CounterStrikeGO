@@ -13,4 +13,10 @@ public static class ScreenFader
 	{
 		group.DOFade(0f, duration).OnComplete(() => callback?.Invoke());
 	}
+	
+	public static Tween FadeIn(CanvasGroup group, float duration)
+		=> group.DOFade(1f, duration);
+
+	public static Tween FadeOut(CanvasGroup group, float duration)
+		=> group.DOFade(0f, duration);
 }

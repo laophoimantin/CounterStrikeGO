@@ -27,5 +27,18 @@ public class EnemyMovement : MonoBehaviour
         seq.Append(_controller.EnemyVisual.RotateTo(targetRot, actionDuration));
         return seq;
     }
+    
+    
+    public Tween GetBurnEscapeSeq(Node targetNode, Direction targetDir, float actionDuration)
+    {
+        Sequence seq = DOTween.Sequence();
 
+        if (_controller.CurrentFacingDirection != targetDir)
+        {
+            seq.Append(Rotate(targetDir, actionDuration));
+        }
+        seq.Append(Move(targetNode, actionDuration));
+
+        return seq;
+    }
 }

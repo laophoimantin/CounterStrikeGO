@@ -3,7 +3,6 @@ using UnityEngine;
 
 public abstract class BaseEnemyBehavior : ScriptableObject
 {
-    // Always make sure there is something on the list for the enemy to do!!!!
     [SerializeField] protected int _attackRange = 1;
     public virtual List<BaseEnemyAction> PlanActions(EnemyController enemy)
     {

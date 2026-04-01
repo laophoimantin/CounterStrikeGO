@@ -16,7 +16,6 @@ public class MoveAction : BaseEnemyAction
     public override IEnumerator Execute(EnemyController enemy)
     {
         yield return new WaitForSeconds(_delay);
-        //yield return enemy.Move(_targetNode).WaitForCompletion();
         Tween moveTween = enemy.EnemyMovement.Move(_targetNode, enemy.ActionDuration);
         if (moveTween != null)
         {

@@ -44,18 +44,6 @@ public class EnemyVisual : GridUnitVisual
         _questionIcon.gameObject.SetActive(false);
     }
 
-    // public Tween ShowStunIcon()
-    // {
-    // 	Sequence seq = DOTween.Sequence();
-    // 	seq.AppendCallback(() =>
-    // 	{
-    // 		SwitchModel(true);
-    // 		_flashedIcon.gameObject.SetActive(true);
-    // 	});
-    // 	//seq.Append(_flashedIcon.DOLocalMoveY(_flashedIcon.localPosition.y + _floatHeight, _floatDuration) .SetEase(Ease.InOutSine).SetLoops(-1, LoopType.Yoyo));
-    // 	
-    // 	return seq;
-    // }
     public void ShowStunIcon()
     {
         SwitchModel(true);

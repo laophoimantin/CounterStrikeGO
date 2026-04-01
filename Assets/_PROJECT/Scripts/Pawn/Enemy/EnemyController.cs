@@ -19,6 +19,19 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public PathNavigator PathNavigator => _pathNavigator;
     public GridSensor GridSensor => _gridSensor;
 
+    [Header("Facing Direction")]
+    [SerializeField] private Direction _facingDirection = Direction.None;
+    public Direction CurrentFacingDirection => _facingDirection;
+
+
+    [Header("Enemy State")]
+    private IEnemyState _currentState;
+
+    [Header("State Instances")]
+    public readonly NormalState StateNormal = new NormalState();
+    public readonly FlashedState StateFlashed = new FlashedState();
+    public readonly DistractedState StateDistracted = new DistractedState();
+
     [Header("Behavior")]
     private BaseEnemyBehavior _currentBehavior;
     [SerializeField] private BaseEnemyBehavior _defaultBehavior;
@@ -28,19 +41,8 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public BaseEnemyBehavior DefaultBehavior => _defaultBehavior;
     public FollowingNoiseBehavior FollowingNoiseBehavior => _noiseBehavior;
     public FlashedBehavior FlashedBehavior => _flashedBehavior;
+    private bool IsFlashed => _currentState == StateFlashed;
 
-
-    [Header("Enemy State")]
-    [SerializeField] private Direction _facingDirection = Direction.None;
-	private IEnemyState _currentState;
-
-	private State _currentStateOld = State.Normal;
-
-    public Direction CurrentFacingDirection => _facingDirection;
-
-    private bool IsFlashed => _currentStateOld == State.Flashed;
-
-    private int _flashTurnsRemaining;
     public Action<EnemyController> OnDeath;
 
 
@@ -49,48 +51,37 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         EnemyManager.Instance.RegisterEnemy(this);
     }
 
+
     void Awake()
     {
-        if (_currentNode == null)
-        {
-            Debug.LogWarning($"{gameObject.name} has no node assigned!!!");
-            return;
-        }
-
-        if (_defaultBehavior == null || _noiseBehavior == null)
-        {
-            Debug.LogWarning($"{gameObject.name} has no behavior assigned!!!");
-            return;
-        }
-
-        if (_facingDirection == Direction.None)
-        {
-            Debug.LogWarning($"{gameObject.name} has no facing direction assigned!!!");
-            return;
-        }
-
         _enemyVisual = _visual as EnemyVisual;
     }
 
     void Start()
     {
         if (_currentNode != null)
-            _currentNode.AddUnit(this);
-        _currentBehavior = _defaultBehavior;
+        {
+            SnapToNode(_currentNode);
+        }
+        
+        ChangeState(StateNormal);
     }
 
-	public void ChangeState(IEnemyState newState)
-	{
-		if (_currentState != null && _currentState.GetType() == newState.GetType())
-		{
-			return;
-		}
+    public void ChangeState(IEnemyState newState)
+    {
+        if (_currentState == newState) return;
 
-		_currentState?.ExitState(this);
-		_currentState = newState;
-		_currentState?.EnterState(this);
-	}
-	public void StartAction()
+        _currentState?.ExitState(this);
+        _currentState = newState;
+        _currentState?.EnterState(this);
+    }
+
+    public void SetBehavior(BaseEnemyBehavior newBehav)
+    {
+        _currentBehavior = newBehav;
+    }
+
+    public void StartAction()
     {
         StartCoroutine(ExecuteBehavior());
     }
@@ -130,27 +121,9 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     private void FinishTurn()
     {
         _pathNavigator.AdvancePath();
-        AdvanceFlashed();
-        EvaluateState();
+        _currentState.ExecuteTurn(this);
         EnemyManager.Instance.OnEnemyFinished(this);
     }
-
-    private void EvaluateState()
-    {
-        if (!HasEndFlashed())
-        {
-            ChangeState(new FlashedState());
-        }
-        else if (!_pathNavigator.HasReachedDestination)
-        {
-			ChangeState(new DistractedState());
-		}
-        else
-        {
-			ChangeState(new NormalState());
-		}
-    }
-
 
     // Die
     public override Tween Die()
@@ -158,40 +131,39 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         if (_isDead) return null;
         _isDead = true;
 
-        Sequence seq = DOTween.Sequence();
-        seq.Append(_enemyVisual.Wobble());
-        seq.Append(_visual.FlyUp());
-        seq.AppendCallback(() =>
+        Tween dieTween = _enemyVisual.GetDeathAnimation();
+        
+        if (dieTween != null)
+        {
+            dieTween.OnComplete(() =>
+            {
+                UnAssignCurrentNode();
+                OnDeath?.Invoke(this);
+            });
+        }
+        else
         {
             UnAssignCurrentNode();
             OnDeath?.Invoke(this);
-        });
-        return seq;
+        }
+        return dieTween;
     }
 
 
     // Molotov-ed
     public Tween Burn()
     {
-        Sequence seq = DOTween.Sequence();
-
         Node targetNode = _gridSensor.FindEscapeNode(_facingDirection);
 
         // Cannot find any walkable node, so die
         if (targetNode == null)
         {
-            seq.Append(Die());
-            return seq;
+            return Die();
         }
 
         // Runaway
         Direction targetDir = GridMathUtility.GetDirectionFromTargetNode(_currentNode, targetNode);
-
-        if (targetDir != _facingDirection)
-            seq.Append(_enemyMovement.Rotate(targetDir, _actionDuration));
-
-        seq.Append(_enemyMovement.Move(targetNode, _actionDuration));
-        return seq;
+        return _enemyMovement.GetBurnEscapeSeq(targetNode, targetDir, _actionDuration);
     }
 
     // Decoy-ed
@@ -203,49 +175,33 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         _pathNavigator.SetDestination(_currentNode, noiseOrigin);
         if (_pathNavigator.HasReachedDestination) return null;
 
-        Sequence seq = DOTween.Sequence();
         Direction targetDirection = GridMathUtility.GetDirectionFromTargetNode(_currentNode, _pathNavigator.NextNode);
 
+        Sequence seq = DOTween.Sequence();
         seq.Append(_enemyVisual.ShowQuestionIcon());
         seq.Append(_enemyMovement.Rotate(targetDirection, _actionDuration));
 
-		//seq.OnComplete(() => { ChangeState(State.Distracted); });
-		seq.OnComplete(() => { ChangeState(new DistractedState()); });
-		return seq;
+        seq.OnComplete(() => { ChangeState(StateDistracted); });
+        return seq;
     }
-
 
     // Flash-ed
     public Tween GetFlashed(int duration)
     {
+        if (_isDead)
+            return null;
+
         Sequence seq = DOTween.Sequence();
         seq.AppendCallback(() =>
             {
-                //ChangeState(State.Flashed);
-                ChangeState(new FlashedState());
-                _flashTurnsRemaining = Mathf.Max(_flashTurnsRemaining, duration);
-                _pathNavigator.ClearPath();
+                StateFlashed.AddFlashDuration(duration);
+                ChangeState(StateFlashed);
             }
         );
+
         seq.Append(_enemyVisual.Wobble());
-        seq.JoinCallback(() => { _enemyVisual.ShowStunIcon(); });
         return seq;
     }
-
-    private void AdvanceFlashed()
-    {
-        if (_flashTurnsRemaining > 0)
-            _flashTurnsRemaining--;
-    }
-
-    public bool HasEndFlashed()
-    {
-        return _flashTurnsRemaining <= 0;
-    }
-
-    public void SetBehavior(BaseEnemyBehavior newBahav){
-        _currentBehavior = newBahav;
-        }
 
 
     public void SetFacingDirection(Direction newDirection)
@@ -277,7 +233,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public void SetOrMoveNode(Direction? dir = null)
     {
         NodeManager manager = NodeManager.Instance;
-        if (manager == null) 
+        if (manager == null)
             manager = FindObjectOfType<NodeManager>();
 
         if (manager == null)
@@ -319,11 +275,4 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 #endif
 
     #endregion
-}
-
-public enum State
-{
-    Normal,
-    Flashed,
-    Distracted
 }

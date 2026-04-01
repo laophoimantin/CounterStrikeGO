@@ -78,6 +78,16 @@ public class GridUnitVisual : MonoBehaviour
         return seq;
     }
 
+
+    public Tween GetDeathAnimation()
+    {
+        Sequence seq = DOTween.Sequence();
+        seq.Append(Wobble());
+        seq.Append(FlyUp());
+        
+        return seq;
+    }
+    
     // Direct Transform ===================================
     public Quaternion GetRotation() => _baseModel.rotation;
 

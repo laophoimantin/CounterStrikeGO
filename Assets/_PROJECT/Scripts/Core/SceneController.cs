@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -41,8 +42,6 @@ public class SceneController : MonoBehaviour
             _loadingScreen.SetActive(false);
     }
 
-    // lmao
-
     #region Public API
 
     /// Standard Level Transition: Fades out, loads a new scene, fades in.
@@ -79,7 +78,6 @@ public class SceneController : MonoBehaviour
 
     #endregion
 
-    // lmao
 
     #region Internal Logic
 
@@ -97,13 +95,10 @@ public class SceneController : MonoBehaviour
 
         // PHASE 1: TRANSITION TO LOADING SCREEN
         // =============================================================================
+        yield return ScreenFader.FadeIn(_canvasGroup, _fadeDuration).WaitForCompletion();
+        if (_loadingScreen != null) _loadingScreen.SetActive(true);
+        yield return ScreenFader.FadeOut(_canvasGroup, _fadeDuration).WaitForCompletion();
 
-        yield return Fade(0f, 1f);
-
-        if (_loadingScreen != null)
-            _loadingScreen.SetActive(true);
-
-        yield return Fade(1f, 0f);
 
         // PHASE 2: LOADING
         // =============================================================================
@@ -129,39 +124,19 @@ public class SceneController : MonoBehaviour
         // PHASE 3: TRANSITION TO NEW SCENE
         // =============================================================================
 
-        yield return Fade(0f, 1f);
-        _eventDispatcher.ClearAll();
-        operation.allowSceneActivation = true;
+        yield return ScreenFader.FadeIn(_canvasGroup, _fadeDuration).WaitForCompletion();
 
+        operation.allowSceneActivation = true;
         while (!operation.isDone)
             yield return null;
 
         if (_loadingScreen != null)
             _loadingScreen.SetActive(false);
 
-        //yield return Fade(1f, 0f);
+        yield return ScreenFader.FadeOut(_canvasGroup, _fadeDuration).WaitForCompletion();
 
-        ScreenFader.OnFadeOut(_canvasGroup, _fadeDuration, () =>
-        {
-			_canvasGroup.blocksRaycasts = false;
-			_isLoading = false;
-		});
-    }
-
-    private IEnumerator Fade(float startAlpha, float endAlpha)
-    {
-        float elapsed = 0f;
-        _canvasGroup.alpha = startAlpha;
-
-        while (elapsed < _fadeDuration)
-        {
-            // Use unscaled time so the fade works even if the game is paused
-            elapsed += Time.unscaledDeltaTime;
-            _canvasGroup.alpha = Mathf.Lerp(startAlpha, endAlpha, elapsed / _fadeDuration);
-            yield return null;
-        }
-
-        _canvasGroup.alpha = endAlpha;
+        _canvasGroup.blocksRaycasts = false;
+        _isLoading = false;
     }
 
     #endregion

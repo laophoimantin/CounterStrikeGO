@@ -40,4 +40,14 @@ public abstract class GridOccupant : MonoBehaviour
         _currentNode = null;
     }
     
+    protected void SnapToNode(Node node)
+    {
+        if (node == null) return;
+
+        transform.position = node.WorldPos;
+        _visual.SetPosition(transform.position);
+
+        ChangeNode(node);
+    }
+
 }

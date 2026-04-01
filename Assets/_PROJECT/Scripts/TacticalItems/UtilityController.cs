@@ -20,22 +20,15 @@ public abstract class UtilityController : GridOccupant, IPickupable
     void Awake()
     {
         _utilityVisual = _visual as UtilityVisual;
-
-        if (_utilityVisual == null)
-            Debug.LogError($"{name} requires UtilityVisual.");
     }
 
     void Start()
     {
-        RegisterToNode();
-    }
-
-    private void RegisterToNode()
-    {
-        if (_currentNode == null) return;
-
-        _currentNode.AddUnit(this);
-        _currentNode.AddItem(this);
+        if (_currentNode != null)
+        {
+            SnapToNode(_currentNode);
+            _currentNode.AddItem(this);
+        }
     }
 
     private void UnregisterFromNode()
@@ -103,7 +96,7 @@ public abstract class UtilityController : GridOccupant, IPickupable
 
         if (dir.HasValue)
         {
-            newNode = GetNodeInDirection(_currentNode, dir.Value);
+            newNode = _currentNode.GetNodeInDirection(dir.Value);
         }
         else
         {
@@ -126,25 +119,13 @@ public abstract class UtilityController : GridOccupant, IPickupable
         }
 
         _currentNode = newNode;
-        RegisterToNode();
+        _currentNode.AddUnit(this);
+        _currentNode.AddItem(this);
 
         // Visual Snap
         transform.position = _currentNode.transform.position;
 
         EditorUtility.SetDirty(this);
-    }
-
-    private Node GetNodeInDirection(Node node, Direction dir)
-    {
-        if (node == null) return null;
-        return dir switch
-        {
-            Direction.North => node.NorthNode,
-            Direction.South => node.SouthNode,
-            Direction.East => node.EastNode,
-            Direction.West => node.WestNode,
-            _ => null
-        };
     }
 #endif
 

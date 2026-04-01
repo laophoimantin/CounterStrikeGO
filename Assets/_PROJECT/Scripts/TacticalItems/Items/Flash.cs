@@ -29,43 +29,8 @@ public class Flash : UtilityController
                     }
                 }
             }
-            
-            // foreach (var enemy in node.GetUnitsByType<EnemyController>())
-            // {
-            //     if (!enemy.OccupiesSpace) continue;
-            //
-            //     var reaction = enemy.GetFlashed(_flashAmount);
-            //
-            //     if (reaction == null) continue;
-            //
-            //     seq.Insert(0, reaction);
-            //     hasReaction = true;
-            // }
         }
 
         return hasReaction ? seq : null;
-
-        //
-        // var surroundingNodes = NodeManager.Instance.GetNodesInRange(targetNode, 1, true);
-        // List<EnemyController> affectedEnemies = new();
-        // foreach (var node in surroundingNodes)
-        // {
-        //     affectedEnemies.AddRange(node.GetUnitsByType<EnemyController>());
-        // }
-        //
-        // if (affectedEnemies.Count == 0) return null;
-        //
-        // Sequence reactionSequence = DOTween.Sequence();
-        //
-        // foreach (var enemy in affectedEnemies)
-        // {
-        //     Sequence enemyReaction = enemy.GetFlashed(_flashAmount);
-        //     if (enemyReaction != null)
-        //     {
-        //         reactionSequence.Insert(0, enemyReaction); 
-        //     }
-        // }
-        //
-        // return reactionSequence;
     }
 }
