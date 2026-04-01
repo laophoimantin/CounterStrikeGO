@@ -58,7 +58,7 @@ public class GridUnitVisual : MonoBehaviour
 
     public void TryAddWobble(Sequence seq)
     {
-        if (Random.value < 0.5f)
+        if (Random.value < 0.8f)
             seq.Join(Wobble());
     }
 

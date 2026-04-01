@@ -6,7 +6,7 @@ public class TurningBehavior : BaseEnemyBehavior
 {
     protected override void CustomActions(List<BaseEnemyAction> baseList, EnemyController enemy)
     {
-        Direction targetDirection = GridMathUtility.TurnAround(enemy.CurrentFacingDirection) ;
+        Direction targetDirection = GridMathUtility.TurnAround(enemy.CurrentFacingDirection);
         baseList.Add(new RotateAction(targetDirection));
     }
 }

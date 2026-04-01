@@ -117,9 +117,6 @@ public class PlayerController : PawnUnit
 
     public void Input_TryUseUtility(Node targetNode)
     {
-        Debug.Log("Use Utility");
-        Debug.Log($"Can Act: {_canAct}, Has Utility: {_utilityHandler.HasItem}");
-        
         if (!_canAct || !_utilityHandler.HasItem) return;
         bool isSuccess = _utilityHandler.TryUseUtility(targetNode, (endsTurn) => FinishAction(endsTurn));
         if (isSuccess)

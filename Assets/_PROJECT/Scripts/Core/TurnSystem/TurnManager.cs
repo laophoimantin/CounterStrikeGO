@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TurnManager : Singleton<TurnManager>
 {
-    private TurnType _currentTurn =  TurnType.PlayerPlanning;
+    private TurnType _currentTurn = TurnType.None;
     private bool _lock = false;
 
     public int StepCount { get; private set; }
@@ -56,11 +56,12 @@ public class TurnManager : Singleton<TurnManager>
     private void SetTurn(TurnType next)
     {
         if (_lock) return;
-        
+
         if (!IsValidTransition(_currentTurn, next)) return;
 
         _currentTurn = next;
         this.SendEvent(new OnTurnChangedEvent { NewTurn = _currentTurn });
+
     }
 
 
@@ -104,20 +105,23 @@ public class TurnManager : Singleton<TurnManager>
         {
             case TurnType.PlayerPlanning:
                 return to == TurnType.PlayerAction;
-        
+
             case TurnType.PlayerAction:
                 return to == TurnType.PlayerPlanning || to == TurnType.EnemyPlanning;
-        
+
             case TurnType.EnemyPlanning:
                 return to == TurnType.EnemyAction;
-        
+
             case TurnType.EnemyAction:
                 return to == TurnType.PlayerPlanning;
-        
+            
+            case TurnType.None:
+                return to == TurnType.PlayerPlanning;
+
             default:
                 return false;
         }
-        
+
         /*
         // *** Pattern Matching ***
         return (from, to) switch
@@ -125,12 +129,12 @@ public class TurnManager : Singleton<TurnManager>
             (TurnType.PlayerPlanning, TurnType.PlayerAction) => true,
             (TurnType.PlayerAction, TurnType.PlayerPlanning) => true,
             (TurnType.PlayerAction, TurnType.EnemyPlanning) => true,
-            
+
             (TurnType.EnemyPlanning, TurnType.EnemyAction) => true,
             (TurnType.EnemyAction, TurnType.PlayerPlanning) => true,
-            
-            (_, TurnType.PlayerPlanning) when from == default => true, 
-            
+
+            (_, TurnType.PlayerPlanning) when from == default => true,
+
             _ => false
         };
         */

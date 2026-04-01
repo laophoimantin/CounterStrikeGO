@@ -19,7 +19,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public PathNavigator PathNavigator => _pathNavigator;
     public GridSensor GridSensor => _gridSensor;
 
-    [Space(10)]
+    [Header("Behavior")]
     private BaseEnemyBehavior _currentBehavior;
     [SerializeField] private BaseEnemyBehavior _defaultBehavior;
     [SerializeField] private FollowingNoiseBehavior _noiseBehavior;
