@@ -76,8 +76,6 @@ public class PlayerController : PawnUnit
 
     private void PlayMoveSequence(Node targetNode)
     {
-        _canAct = false;
-
         ChangeNode(targetNode);
 
         Sequence seq = DOTween.Sequence();
@@ -119,9 +117,15 @@ public class PlayerController : PawnUnit
 
     public void Input_TryUseUtility(Node targetNode)
     {
+        Debug.Log("Use Utility");
+        Debug.Log($"Can Act: {_canAct}, Has Utility: {_utilityHandler.HasItem}");
+        
         if (!_canAct || !_utilityHandler.HasItem) return;
-        StartAction();
-        _utilityHandler.TryUseUtility(targetNode, (endsTurn) => FinishAction(endsTurn));
+        bool isSuccess = _utilityHandler.TryUseUtility(targetNode, (endsTurn) => FinishAction(endsTurn));
+        if (isSuccess)
+        {
+            StartAction(); 
+        }
     }
 
     // On Click ====================================================================================

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class EnemyGraveyardManager : Singleton<EnemyGraveyardManager>
@@ -14,7 +15,7 @@ public class EnemyGraveyardManager : Singleton<EnemyGraveyardManager>
 
     private int _deadCount = 0;
 
-    public Vector3 GetNextSlotPosition()
+    private Vector3 GetNextSlotPosition()
     {
         // Calculate Row and Column based on how many have died
         int row = _deadCount % _maxPerCol;
@@ -27,5 +28,21 @@ public class EnemyGraveyardManager : Singleton<EnemyGraveyardManager>
         _deadCount++; // Increment for the next guy
 
         return finalPos;
+    }
+
+    public void CollectCorpse(EnemyController deadEnemy)
+    {
+        Vector3 finalRestingPlace = GetNextSlotPosition();
+
+        Sequence seq = DOTween.Sequence();
+
+        seq.AppendCallback(() =>
+        {
+            deadEnemy.transform.position = finalRestingPlace;
+            deadEnemy.EnemyVisual.SetPosition(finalRestingPlace);
+        });
+
+        seq.Append(deadEnemy.EnemyVisual.DropDown());
+        seq.Append(deadEnemy.EnemyVisual.Bounce());
     }
 }

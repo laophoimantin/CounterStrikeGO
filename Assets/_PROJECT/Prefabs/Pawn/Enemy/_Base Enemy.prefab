@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 3893376989302444110}
   - component: {fileID: 7006469518776763770}
   - component: {fileID: 6659546829708049627}
+  - component: {fileID: 2301996431826037079}
   m_Layer: 0
   m_Name: _Base Enemy
   m_TagString: Untagged
@@ -153,6 +154,7 @@ MonoBehaviour:
   _unitCombat: {fileID: 7006469518776763770}
   _enemyMovement: {fileID: 3893376989302444110}
   _pathNavigator: {fileID: 6939107478928639788}
+  _gridSensor: {fileID: 2301996431826037079}
   _defaultBehavior: {fileID: 11400000, guid: 4e7435721a113354e89501c3aff798df, type: 2}
   _noiseBehavior: {fileID: 11400000, guid: e6dbb9ed0df3035458886f567df99a9a, type: 2}
   _flashedBehavior: {fileID: 11400000, guid: 67f4cfff1bb5ab64ea781c6b441e2151, type: 2}
@@ -222,6 +224,18 @@ MonoBehaviour:
   _flashedIcon: {fileID: 737867152116949202}
   _floatHeight: 0.2
   _floatDuration: 0.5
+--- !u!114 &2301996431826037079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278610169355275626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ffe674753f4420581b117df86475d71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &933477826916559744
 GameObject:
   m_ObjectHideFlags: 0

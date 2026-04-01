@@ -15,9 +15,6 @@ public abstract class UtilityController : GridOccupant, IPickupable
     public int ThrowRange => _throwRange;
     public bool EndsTurn => _endsTurn;
 
-    [Header("References")]
-    [SerializeField] private Collider _collider;
-
     private UtilityVisual _utilityVisual;
 
     void Awake()

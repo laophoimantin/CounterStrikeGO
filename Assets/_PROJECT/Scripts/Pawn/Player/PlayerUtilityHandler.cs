@@ -20,19 +20,23 @@ public class PlayerUtilityHandler : MonoBehaviour, IUtilityEquipper
         UpdateVisualState();
     }
 
-    public void TryUseUtility(Node targetNode, Action<bool> onActionFinished)
+    public bool TryUseUtility(Node targetNode, Action<bool> onActionFinished)
     {
-        if (!HasItem) return;
+        if (!HasItem) return false;
 
         List<Node> validNodes = NodeManager.Instance.GetNodesInRange(_controller.CurrentNode, _currentItem.ThrowRange);
 
-        if (validNodes.Contains(targetNode))
+        if (!validNodes.Contains(targetNode))
         {
-            bool endsTurn = _currentItem.EndsTurn;
-            _controller.PlayerVisual.Wobble();
-            _currentItem.Throw(targetNode, () => { onActionFinished?.Invoke(endsTurn); });
-            UnequipItem();
+            return false; 
         }
+
+        bool endsTurn = _currentItem.EndsTurn;
+        _controller.PlayerVisual.Wobble();
+        _currentItem.Throw(targetNode, () => { onActionFinished?.Invoke(endsTurn); });
+        UnequipItem();
+    
+        return true;
     }
 
     private void UnequipItem()

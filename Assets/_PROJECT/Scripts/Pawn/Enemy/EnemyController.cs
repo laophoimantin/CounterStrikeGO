@@ -12,10 +12,14 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     [SerializeField] private UnitCombat _unitCombat;
     [SerializeField] private EnemyMovement _enemyMovement;
     [SerializeField] private PathNavigator _pathNavigator;
+    [SerializeField] private GridSensor _gridSensor;
+
     public EnemyVisual EnemyVisual => _enemyVisual;
     public EnemyMovement EnemyMovement => _enemyMovement;
     public PathNavigator PathNavigator => _pathNavigator;
+    public GridSensor GridSensor => _gridSensor;
 
+    [Space(10)]
     private BaseEnemyBehavior _currentBehavior;
     [SerializeField] private BaseEnemyBehavior _defaultBehavior;
     [SerializeField] private FollowingNoiseBehavior _noiseBehavior;
@@ -27,15 +31,11 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
     public Direction CurrentFacingDirection => _facingDirection;
 
-
     private bool IsFlashed => _currentState == State.Flashed;
 
     private int _flashTurnsRemaining;
     public Action<EnemyController> OnDeath;
-    
-    
-    
-    
+
 
     void OnEnable()
     {
@@ -179,35 +179,6 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         }
     }
 
-    // --- AI Action & Utility Methods ---
-    // Actions ==============================================================================================
-
-    #region Actions Methods
-
-    public bool ScanForTargetInFront(int range)
-    {
-        Node nodeToScan = GetNodeInFront();
-
-        while (nodeToScan != null && range > 0)
-        {
-            if (!nodeToScan.IsWalkable()) return false;
-
-            if (nodeToScan.IsHideable()) return false;
-
-            foreach (GridOccupant occupant in nodeToScan.GetAllOccupants())
-            {
-                if (occupant is PawnUnit victim && IsEnemyOf(victim))
-                {
-                    return true;
-                }
-            }
-
-            range--;
-            nodeToScan = nodeToScan.GetNodeInDirection(_facingDirection);
-        }
-
-        return false;
-    }
 
     // Die
     public override Tween Die()
@@ -223,20 +194,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
             UnAssignCurrentNode();
             OnDeath?.Invoke(this);
         });
-        seq.OnComplete(() => { FinishDeath(); });
         return seq;
-    }
-
-    private void FinishDeath()
-    {
-        Sequence seq = DOTween.Sequence();
-
-        Vector3 finalRestingPlace = EnemyGraveyardManager.Instance.GetNextSlotPosition();
-
-        seq.AppendCallback(() => { SnapPosition(finalRestingPlace); });
-
-        seq.Append(_enemyVisual.DropDown());
-        seq.Append(_enemyVisual.Bounce());
     }
 
 
@@ -245,9 +203,9 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     {
         Sequence seq = DOTween.Sequence();
 
-        Node targetNode = FindWalkableNodeFromFacing();
+        Node targetNode = _gridSensor.FindEscapeNode(_facingDirection);
 
-        // Cannot find a walkable node, so die
+        // Cannot find any walkable node, so die
         if (targetNode == null)
         {
             seq.Append(Die());
@@ -264,19 +222,6 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         return seq;
     }
 
-    private Node FindWalkableNodeFromFacing()
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            Direction dir = GridMathUtility.GetDirectionByStep(_facingDirection, i);
-            Node node = _currentNode.GetNodeInDirection(dir);
-            if (node != null && node.IsWalkable())
-                return node;
-        }
-
-        return null;
-    }
-
     // Decoy-ed
     public Tween HearNoise(Node noiseOrigin)
     {
@@ -285,7 +230,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 
         _pathNavigator.SetDestination(_currentNode, noiseOrigin);
         if (_pathNavigator.HasReachedDestination) return null;
-        
+
         Sequence seq = DOTween.Sequence();
         Direction targetDirection = GridMathUtility.GetDirectionFromTargetNode(_currentNode, _pathNavigator.NextNode);
 
@@ -296,8 +241,8 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         return seq;
     }
 
-    
-   // Flash-ed
+
+    // Flash-ed
     public Tween GetFlashed(int duration)
     {
         Sequence seq = DOTween.Sequence();
@@ -309,8 +254,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
             }
         );
         seq.Append(_enemyVisual.Wobble());
-        seq.JoinCallback(() => { _enemyVisual.ShowStunIcon(); }
-        );
+        seq.JoinCallback(() => { _enemyVisual.ShowStunIcon(); });
         return seq;
     }
 
@@ -323,14 +267,6 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public bool HasEndFlashed()
     {
         return _flashTurnsRemaining <= 0;
-    }
-
-    #endregion
-
-    private void SnapPosition(Vector3 targetPos)
-    {
-        transform.position = new Vector3(targetPos.x, targetPos.y, targetPos.z);
-        _visual.SetPosition(transform.position);
     }
 
 

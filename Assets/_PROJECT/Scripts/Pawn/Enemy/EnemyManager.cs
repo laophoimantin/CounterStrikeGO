@@ -36,15 +36,22 @@ public class EnemyManager : Singleton<EnemyManager>
 
     private void UnregisterEnemy(EnemyController enemy)
     {
+        enemy.OnDeath -= UnregisterEnemy;
+        
         _activeEnemiesList.Remove(enemy);
         if (!_hasKilledEnemy)
             _hasKilledEnemy = true;
 
+        if (EnemyGraveyardManager.Instance != null)
+        {
+            EnemyGraveyardManager.Instance.CollectCorpse(enemy);
+        }
+        
         if (_pendingCount > 0)
         {
             _pendingCount--;
             if (_finishedCount >= _pendingCount)
-                EndEnemyActionPhase();
+                StartCoroutine(EndEnemyActionPhase());
         }
     }
 

@@ -9,7 +9,7 @@ public abstract class BaseEnemyBehavior : ScriptableObject
     {
         var plan = new List<BaseEnemyAction>();
 
-        if (enemy.ScanForTargetInFront(_attackRange))
+        if (enemy.GridSensor.ScanForEnemy(enemy.CurrentFacingDirection, _attackRange))
         {
             Node targetNode = enemy.GetNodeInFront();
             plan.Add(new MoveAction(targetNode));
