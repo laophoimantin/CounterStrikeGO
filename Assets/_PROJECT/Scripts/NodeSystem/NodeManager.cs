@@ -80,6 +80,8 @@ public class NodeManager : Singleton<NodeManager>
     }
 
 
+
+
     private void SpawnNode(int x, int y, float cellSize)
     {
         Vector3 localPos = new Vector3(x, 0, y) * cellSize;
@@ -115,13 +117,13 @@ public class NodeManager : Singleton<NodeManager>
             if (_nodeGrid.TryGetValue(coord + Vector2Int.up, out Node northNode))
             {
                 node.AssignNeighbour(northNode, Direction.North);
-                northNode.AssignNeighbour(node, Direction.South);
+                //northNode.AssignNeighbour(node, Direction.South);
             }
 
             if (_nodeGrid.TryGetValue(coord + Vector2Int.right, out Node eastNode))
             {
                 node.AssignNeighbour(eastNode, Direction.East);
-                eastNode.AssignNeighbour(node, Direction.West);
+                //eastNode.AssignNeighbour(node, Direction.West);
             }
         }
 

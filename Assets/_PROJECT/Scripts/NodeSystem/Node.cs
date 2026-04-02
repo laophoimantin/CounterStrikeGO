@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -226,6 +225,11 @@ public class Node : MonoBehaviour
     public void RemoveZone()
     {
         _activeBaseZone = null;
+    }
+
+    public bool IsObstacle()
+    {
+        return _isObstacle;
     }
 
     public bool IsWalkable()
