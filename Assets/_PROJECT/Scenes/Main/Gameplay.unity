@@ -122,6 +122,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &1260702854 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3745066060312867679, guid: 1037d30dd9a5b5645b72f50f79a21217, type: 3}
+  m_PrefabInstance: {fileID: 1495089706}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1a7d4a4f01447d6be693bd67720c860, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1495089706
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -169,6 +180,10 @@ PrefabInstance:
     - target: {fileID: 3745066060312867679, guid: 1037d30dd9a5b5645b72f50f79a21217, type: 3}
       propertyPath: _distance
       value: 37
+      objectReference: {fileID: 0}
+    - target: {fileID: 3745066060312867679, guid: 1037d30dd9a5b5645b72f50f79a21217, type: 3}
+      propertyPath: _orbitSpeed
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 3745066060312867679, guid: 1037d30dd9a5b5645b72f50f79a21217, type: 3}
       propertyPath: _defaultPitch
@@ -318,6 +333,10 @@ PrefabInstance:
       propertyPath: _testData
       value: 
       objectReference: {fileID: 11400000, guid: 2e6a523a06df2c348a51dc5e41ecdee9, type: 2}
+    - target: {fileID: 8359280348877148428, guid: 1037d30dd9a5b5645b72f50f79a21217, type: 3}
+      propertyPath: _camScript
+      value: 
+      objectReference: {fileID: 1260702854}
     - target: {fileID: 8488879554048618309, guid: 1037d30dd9a5b5645b72f50f79a21217, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.2436152

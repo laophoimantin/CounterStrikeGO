@@ -47,5 +47,15 @@ public static class GridMathUtility
     public static Direction TurnClockwise(Direction current) => GetDirectionByStep(current, 1);
     public static Direction TurnCounterClockwise(Direction current) => GetDirectionByStep(current, -1);
     
-    
+    public static Vector2Int DirectionToVector(Direction dir)
+    {
+        switch (dir)
+        {
+            case Direction.North: return new Vector2Int(0, 1);
+            case Direction.South: return new Vector2Int(0, -1);
+            case Direction.East:  return new Vector2Int(1, 0);
+            case Direction.West:  return new Vector2Int(-1, 0);
+            default:              return Vector2Int.zero; 
+        }
+    }
 }

@@ -988,6 +988,10 @@ PrefabInstance:
       propertyPath: _currentNode
       value: 
       objectReference: {fileID: 6728158281287084299}
+    - target: {fileID: 5814839855280913278, guid: 2456685050119ca4891f63c62fbb8e5e, type: 3}
+      propertyPath: _width
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 6243185814084811967, guid: 2456685050119ca4891f63c62fbb8e5e, type: 3}
       propertyPath: m_Name
       value: Level 1

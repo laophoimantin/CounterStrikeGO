@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BoardInspectCamera : MonoBehaviour
@@ -6,11 +7,10 @@ public class BoardInspectCamera : MonoBehaviour
     [SerializeField] private Transform _cam;
     private Transform _target;
 
-    [Header("Default Camera Settings")]
-    [SerializeField] private float _distance = 10f;
-    [SerializeField] private float _defaultPitch = 45f;
-    [SerializeField] private float _defaultYaw = 0f;
-
+    private float _distance;
+    private float _pitch;
+    private float _yaw;
+    
     [Header("Camera Settings")]
     [SerializeField] private float _orbitSpeed = 5f;
     [SerializeField] private float _snapBackSpeed = 5f;
@@ -19,12 +19,16 @@ public class BoardInspectCamera : MonoBehaviour
     private float _currentPitch;
     private float _currentYaw;
 
-    private void Start()
+    public void ApplySettings(CameraSetupData data)
     {
-        _currentPitch = _defaultPitch;
-        _currentYaw = _defaultYaw;
-    }
+        _distance = data.Distance;
+        _pitch = data.Pitch;
+        _yaw = data.Yaw;
 
+        _currentPitch = _pitch;
+        _currentYaw = _yaw;
+    }
+    
     private void LateUpdate()
     {
         HandleCameraOrbit();
@@ -43,8 +47,8 @@ public class BoardInspectCamera : MonoBehaviour
         }
         else
         {
-            _currentYaw = Mathf.Lerp(_currentYaw, _defaultYaw, Time.deltaTime * _snapBackSpeed);
-            _currentPitch = Mathf.Lerp(_currentPitch, _defaultPitch, Time.deltaTime * _snapBackSpeed);
+            _currentYaw = Mathf.Lerp(_currentYaw, _yaw, Time.deltaTime * _snapBackSpeed);
+            _currentPitch = Mathf.Lerp(_currentPitch, _pitch, Time.deltaTime * _snapBackSpeed);
         }
 
         Quaternion rotation = Quaternion.Euler(_currentPitch, _currentYaw, 0);
@@ -58,4 +62,12 @@ public class BoardInspectCamera : MonoBehaviour
     {
         _target = target;
     }
+}
+
+[Serializable]
+public struct CameraSetupData
+{
+    public float Distance;
+    public float Pitch;
+    public float Yaw;
 }

@@ -12,12 +12,73 @@ public class GridSensor : MonoBehaviour
 
     public bool ScanForEnemy(Direction facingDir, int range)
     {
-        Node nodeToScan = _controller.CurrentNode.GetNodeInDirection(facingDir);
+        Node currentNode = _controller.CurrentNode;
 
-        while (nodeToScan != null && range > 0)
+        for (int i = 0; i < range; i++)
         {
-            if (!nodeToScan.IsWalkable()) return false;
-            if (nodeToScan.IsHideable()) return false;
+            Node nodeToScan = currentNode.GetNodeInDirection(facingDir);
+
+            if (nodeToScan == null)
+            {
+                return false;
+            }
+            
+            if (!nodeToScan.IsWalkable() || nodeToScan.IsHideable())
+                return false;
+            
+            foreach (GridOccupant occupant in nodeToScan.GetAllOccupants())
+            {
+                if (occupant is PawnUnit victim && _controller.IsEnemyOf(victim))
+                {
+                    return true;
+                }
+            }
+            currentNode = nodeToScan;
+        }
+
+        return false;
+        
+        // Node nodeToScan = _controller.CurrentNode.GetNodeInDirection(facingDir);
+        //
+        // while (nodeToScan != null && range > 0)
+        // {
+        //     if (!nodeToScan.IsWalkable()) return false;
+        //     if (nodeToScan.IsHideable()) return false;
+        //
+        //     foreach (GridOccupant occupant in nodeToScan.GetAllOccupants())
+        //     {
+        //         if (occupant is PawnUnit victim && _controller.IsEnemyOf(victim))
+        //         {
+        //             return true;
+        //         }
+        //     }
+        //
+        //     range--;
+        //     nodeToScan = nodeToScan.GetNodeInDirection(facingDir);
+        // }
+        //
+        // return false;
+    }
+
+    public bool ScanForEnemy2(Direction facingDir, int range)
+    {
+        int checkX = _controller.CurrentNode.XValue;
+        int checkY = _controller.CurrentNode.YValue;
+
+        
+        Vector2Int step = GridMathUtility.DirectionToVector(facingDir);
+        for (int i = 0; i < range; i++)
+        {
+            checkX += step.x;
+            checkY += step.y;
+
+            if (!NodeManager.Instance.TryGetNode(checkX, checkY, out Node nodeToScan))
+            {
+                return false;
+            }
+
+            if (!nodeToScan.IsWalkable() || nodeToScan.IsHideable())
+                return false;
 
             foreach (GridOccupant occupant in nodeToScan.GetAllOccupants())
             {
@@ -26,10 +87,8 @@ public class GridSensor : MonoBehaviour
                     return true;
                 }
             }
-
-            range--;
-            nodeToScan = nodeToScan.GetNodeInDirection(facingDir);
         }
+
         return false;
     }
 
@@ -45,4 +104,6 @@ public class GridSensor : MonoBehaviour
         }
         return null;
     }
+    
+
 }

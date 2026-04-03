@@ -12,6 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
   m_Name: Testing Level
   m_EditorClassIdentifier: 
+  _cameraSetup:
+    Distance: 40
+    Pitch: 55.1
+    Yaw: 45.6
   _mapPrefab: {fileID: 6156387344984849727, guid: dec2a5d0c0548dd468efcadee76aee5d, type: 3}
   _nextLevel: {fileID: 0}
   _isUnlockedByDefault: 0

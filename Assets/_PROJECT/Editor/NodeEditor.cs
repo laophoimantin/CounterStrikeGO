@@ -16,7 +16,7 @@ public class NodeEditor : Editor
         // Top Row (North)
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("X North", GUILayout.Width(80))) 
+        if (GUILayout.Button("X North", GUILayout.Width(80)))
             ApplyDisconnect(node, Direction.North);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
@@ -24,10 +24,10 @@ public class NodeEditor : Editor
         // Middle Row (West / East)
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("X West", GUILayout.Width(80))) 
+        if (GUILayout.Button("X West", GUILayout.Width(80)))
             ApplyDisconnect(node, Direction.West);
         GUILayout.Space(20);
-        if (GUILayout.Button("X East", GUILayout.Width(80))) 
+        if (GUILayout.Button("X East", GUILayout.Width(80)))
             ApplyDisconnect(node, Direction.East);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
@@ -35,26 +35,33 @@ public class NodeEditor : Editor
         // Bottom Row (South)
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("X South", GUILayout.Width(80))) 
+        if (GUILayout.Button("X South", GUILayout.Width(80)))
             ApplyDisconnect(node, Direction.South);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
-        
-        
+
         EditorGUILayout.Space();
-        if (GUILayout.Button("Delete Self", GUILayout.Width(80)))
-            node.DeleteSelf();
+        EditorGUILayout.BeginHorizontal();
+        GUI.backgroundColor = Color.red;
+        if (GUILayout.Button("Isolate the node", GUILayout.Height(50)))
+        {
+            node.IsolateNode();
+            EditorUtility.SetDirty(node);
+        }
+
+        EditorGUILayout.EndHorizontal();
     }
 
     private void ApplyDisconnect(Node node, Direction dir)
     {
         Undo.RecordObject(node, "Disconnect Node");
         Node neighbor = node.GetNodeInDirection(dir);
-        if (neighbor != null) 
+        if (neighbor != null)
         {
             Undo.RecordObject(neighbor, "Disconnect Node");
-            EditorUtility.SetDirty(neighbor); // Save the neighbor too!
+            EditorUtility.SetDirty(neighbor);
         }
+
         node.RemoveNeighbour(dir);
         EditorUtility.SetDirty(node);
     }

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Noise", menuName = "Behav/Noise", order = 10)]
-public class FollowingNoiseBehavior : BaseEnemyBehavior
+public class FollowingNoiseBehavior : StandardEnemyBehavior
 {
     protected override void CustomActions(List<BaseEnemyAction> baseList, EnemyController enemy)
     {

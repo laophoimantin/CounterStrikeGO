@@ -79,13 +79,11 @@ public class PlayerInteractionHandler : MonoBehaviour
 
         _player.OnPickedUp();
     }
-
-    private void TryEndDrag()
+private void TryEndDrag()
     {
         if (!_dragging) return;
 
         _dragging = false;
-
         _player.OnDropped();
 
         Vector2 endPos = Input.mousePosition;
@@ -95,19 +93,61 @@ public class PlayerInteractionHandler : MonoBehaviour
 
         if (delta.magnitude < threshold) return;
 
-        Vector2 dir = delta.normalized;
+        Vector2 dragDir = delta.normalized;
 
-        if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
-        {
-            if (dir.x > 0) _player.TryMoveTo(Direction.East);
-            else _player.TryMoveTo(Direction.West);
-        }
-        else
-        {
-            if (dir.y > 0) _player.TryMoveTo(Direction.North);
-            else _player.TryMoveTo(Direction.South);
-        }
+        
+        Vector3 playerWorldPos = _player.transform.position;
+        Vector2 playerScreenPos = _cam.WorldToScreenPoint(playerWorldPos);
+
+        Vector2 screenNorth = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.forward) - playerScreenPos).normalized;
+        Vector2 screenSouth = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.back) - playerScreenPos).normalized;
+        Vector2 screenEast  = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.right) - playerScreenPos).normalized;
+        Vector2 screenWest  = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.left) - playerScreenPos).normalized;
+
+        float dotNorth = Vector2.Dot(dragDir, screenNorth);
+        float dotSouth = Vector2.Dot(dragDir, screenSouth);
+        float dotEast  = Vector2.Dot(dragDir, screenEast);
+        float dotWest  = Vector2.Dot(dragDir, screenWest);
+
+        float maxDot = Mathf.Max(dotNorth, Mathf.Max(dotSouth, Mathf.Max(dotEast, dotWest)));
+
+        if (maxDot == dotNorth) 
+            _player.TryMoveTo(Direction.North);
+        else if (maxDot == dotSouth) 
+            _player.TryMoveTo(Direction.South);
+        else if (maxDot == dotEast) 
+            _player.TryMoveTo(Direction.East);
+        else if (maxDot == dotWest) 
+            _player.TryMoveTo(Direction.West);
     }
+    // private void TryEndDrag()
+    // {
+    //     if (!_dragging) return;
+    //
+    //     _dragging = false;
+    //
+    //     _player.OnDropped();
+    //
+    //     Vector2 endPos = Input.mousePosition;
+    //     Vector2 delta = endPos - _startPos;
+    //
+    //     float threshold = Screen.height * _dragThresholdPercent;
+    //
+    //     if (delta.magnitude < threshold) return;
+    //
+    //     Vector2 dir = delta.normalized;
+    //
+    //     if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+    //     {
+    //         if (dir.x > 0) _player.TryMoveTo(Direction.East);
+    //         else _player.TryMoveTo(Direction.West);
+    //     }
+    //     else
+    //     {
+    //         if (dir.y > 0) _player.TryMoveTo(Direction.North);
+    //         else _player.TryMoveTo(Direction.South);
+    //     }
+    // }
 
     private bool RaycastPlayer()
     {

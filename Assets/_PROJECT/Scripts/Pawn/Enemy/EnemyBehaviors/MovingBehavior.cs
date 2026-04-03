@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Moving", menuName = "Behav/Moving", order = 3)]
-public class MovingBehavior : BaseEnemyBehavior
+public class MovingBehavior : StandardEnemyBehavior
 {
     protected override void CustomActions(List<BaseEnemyAction> baseList, EnemyController enemy)
     {

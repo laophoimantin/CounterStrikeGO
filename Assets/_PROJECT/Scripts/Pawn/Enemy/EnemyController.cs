@@ -15,6 +15,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     [SerializeField] private GridSensor _gridSensor;
 
     public EnemyVisual EnemyVisual => _enemyVisual;
+    public UnitCombat UnitCombat => _unitCombat;
     public EnemyMovement EnemyMovement => _enemyMovement;
     public PathNavigator PathNavigator => _pathNavigator;
     public GridSensor GridSensor => _gridSensor;

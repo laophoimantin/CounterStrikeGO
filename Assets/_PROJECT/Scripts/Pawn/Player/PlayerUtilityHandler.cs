@@ -6,7 +6,9 @@ public class PlayerUtilityHandler : MonoBehaviour, IUtilityEquipper
 {
     private PlayerController _controller;
     private UtilityController _currentItem;
-
+    
+    private List<Node> _highlightedNodes = new();
+    
     public bool HasItem => _currentItem != null;
 
     private void Awake()
@@ -14,6 +16,32 @@ public class PlayerUtilityHandler : MonoBehaviour, IUtilityEquipper
         _controller = GetComponent<PlayerController>();
     }
 
+    private void OnEnable()
+    {
+        this.Subscribe<OnTurnChangedEvent>(HandleTurnChanged);
+    }
+
+    private void OnDisable()
+    {
+        this.Unsubscribe<OnTurnChangedEvent>(HandleTurnChanged);
+        ClearRangeHighlight(); 
+    }
+    
+    private void HandleTurnChanged(OnTurnChangedEvent eventData)
+    {
+        if (eventData.NewTurn == TurnType.PlayerPlanning)
+        {
+            if (HasItem)
+            {
+                ShowRangeHighlight();
+            }
+        }
+        else
+        {
+            ClearRangeHighlight();
+        }
+    }
+    
     public void EquipUtility(UtilityController newItem)
     {
         _currentItem = newItem;
@@ -32,6 +60,7 @@ public class PlayerUtilityHandler : MonoBehaviour, IUtilityEquipper
         }
 
         bool endsTurn = _currentItem.EndsTurn;
+        ClearRangeHighlight();
         _controller.PlayerVisual.Wobble();
         _currentItem.Throw(targetNode, () => { onActionFinished?.Invoke(endsTurn); });
         UnequipItem();
@@ -43,8 +72,35 @@ public class PlayerUtilityHandler : MonoBehaviour, IUtilityEquipper
     {
         _currentItem = null;
         UpdateVisualState();
+        ClearRangeHighlight();
     }
 
+    private void ShowRangeHighlight()
+    {
+        ClearRangeHighlight();
+
+        if (!HasItem) return;
+
+        _highlightedNodes = NodeManager.Instance.GetNodesInRange(_controller.CurrentNode, _currentItem.ThrowRange);
+
+        foreach (Node node in _highlightedNodes)
+        {
+            node.ToggleHighlight(true); 
+        }
+    }
+
+    private void ClearRangeHighlight()
+    {
+        if (_highlightedNodes == null || _highlightedNodes.Count == 0) return;
+
+        foreach (Node node in _highlightedNodes)
+        {
+            node.ToggleHighlight(false);
+        }
+
+        _highlightedNodes.Clear();
+    }
+    
     private void UpdateVisualState()
     {
         _controller.PlayerVisual.SetHoldingItemState(HasItem);

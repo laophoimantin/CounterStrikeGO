@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Flashed", menuName = "Behav/Flashed", order = 11)]
-public class FlashedBehavior : BaseEnemyBehavior
+public class FlashedBehavior : StandardEnemyBehavior
 {
 	public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
 	{

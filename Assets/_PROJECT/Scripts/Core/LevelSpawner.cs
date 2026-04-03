@@ -1,4 +1,4 @@
- using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,19 +10,12 @@ public class LevelSpawner : MonoBehaviour
     {
         GameObject currentMap = Instantiate(data.MapPrefab);
 
-        void AssignCameraFocusPoint(GameObject o)
-        {
-            Transform focusPoint = o.transform.Find("FocusPoint");
-            if (focusPoint != null && _camScript != null)
-            {
-                _camScript.AssignFocusPoint(focusPoint);
-            }
-            else
-            {
-                Debug.LogError("Where?");
-            }
-        }
+        MapController mapCtrl = currentMap.GetComponent<MapController>();
 
-        AssignCameraFocusPoint(currentMap);
+        if (mapCtrl != null && mapCtrl.DefaultFocusPoint != null && _camScript != null)
+        {
+            
+            _camScript.AssignFocusPoint(mapCtrl.DefaultFocusPoint);
+        }
     }
 }

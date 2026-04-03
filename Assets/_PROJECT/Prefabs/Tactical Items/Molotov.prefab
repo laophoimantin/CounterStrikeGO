@@ -238,7 +238,7 @@ MonoBehaviour:
   _currentNode: {fileID: 0}
   _visual: {fileID: 7426559291729761496}
   _team: 1
-  _throwRange: 3
+  _throwRange: 2
   _endsTurn: 0
   _baseZonePrefab: {fileID: 4947160239019077367, guid: 9f5128931f013fd489c7f75157829b62, type: 3}
   _duration: 3

@@ -6,6 +6,7 @@ public class GameManager : Singleton<GameManager>
     private LevelData _nextLevelData;
 
     [Header("References")]
+    [SerializeField] private BoardInspectCamera _camScript;
     [SerializeField] private LevelSpawner _levelSpawner;
     [SerializeField] private ObjectivesController _objectivesController;
 
@@ -33,6 +34,7 @@ public class GameManager : Singleton<GameManager>
         _currentLevelData = SessionData.CurrentLevelData;
         _nextLevelData = SessionData.NextLevelDataToLoad;
         _levelSpawner.GenerateMap(_currentLevelData);
+        _camScript.ApplySettings(_currentLevelData.CameraSetup);
         _objectivesController.Initialize(_currentLevelData);
     }
 

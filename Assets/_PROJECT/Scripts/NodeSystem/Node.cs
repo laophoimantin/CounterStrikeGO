@@ -5,20 +5,26 @@ using UnityEngine;
 
 public class Node : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private NodeVisual _nodeVisual;
+
     [Header("Node Features")]
     [SerializeField] private BaseNodeFeature _feature;
 
     public Action OnOccupancyChanged;
-    
+
     // ------------------------------------------------------------
     [Header("Core")]
     [SerializeField] private int _xValue;
     [SerializeField] private int _yValue;
     [SerializeField] private float _size;
+    public int XValue => _xValue;
+    public int YValue => _yValue;
 
     public Vector3 WorldPos => transform.position;
     // ------------------------------------------------------------
     [SerializeField] private bool _isObstacle;
+    public bool IsObstacle => _isObstacle;
     // ------------------------------------------------------------
     [Header("Neighbours")]
     [SerializeField] private Node _north;
@@ -52,6 +58,8 @@ public class Node : MonoBehaviour
         {
             _feature.Initialize(this);
         }
+
+        _nodeVisual.SetupVisual(_feature, _isObstacle);
     }
 
     public void Initialize(int x, int y, float size)
@@ -227,11 +235,6 @@ public class Node : MonoBehaviour
         _activeBaseZone = null;
     }
 
-    public bool IsObstacle()
-    {
-        return _isObstacle;
-    }
-
     public bool IsWalkable()
     {
         if (_isObstacle) return false;
@@ -250,23 +253,25 @@ public class Node : MonoBehaviour
         return false;
     }
 
-#if UNITY_EDITOR
-    public void DeleteSelf()
+    public void ToggleHighlight(bool isOn)
     {
-        DetachLink(_north, n => n._south = null);
-        DetachLink(_south, n => n._north = null);
-        DetachLink(_east, n => n._west = null);
-        DetachLink(_west, n => n._east = null);
-
-        void DetachLink(Node neighbour, Action<Node> unlink)
+        if (_nodeVisual != null && !_isObstacle)
         {
-            if (neighbour != null)
-                unlink(neighbour);
+            _nodeVisual.ToggleAttackRangeHighlight(isOn);
         }
-
-        DestroyImmediate(gameObject);
     }
-    
+
+
+#if UNITY_EDITOR
+    public void IsolateNode()
+    {
+        if (_north != null) { _north._south = null; _north = null; }
+        if (_south != null) { _south._north = null; _south = null; }
+        if (_east  != null) { _east._west   = null; _east  = null; }
+        if (_west  != null) { _west._east   = null; _west  = null; }
+
+        _isObstacle = true;
+    }
     // Gizmos
     private void OnDrawGizmos()
     {

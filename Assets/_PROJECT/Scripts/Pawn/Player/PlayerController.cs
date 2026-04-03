@@ -148,13 +148,18 @@ public class PlayerController : PawnUnit
 #if UNITY_EDITOR
     public void SetOrMoveNode(Direction? dir = null)
     {
-        if (NodeManager.Instance == null)
+        NodeManager manager = NodeManager.Instance;
+        if (manager == null)
+            manager = FindObjectOfType<NodeManager>();
+        
+        if (manager == null)
         {
-            var found = FindObjectOfType<NodeManager>();
-            if (found == null) return;
+            Debug.LogError("No NodeManager found in scene. Cannot move.", this);
+            return;
         }
 
         Node newNode;
+        string warningLog = dir.HasValue ? " No valid node to move to!" : " Invalid spot, couldn't find a node!";
 
         if (dir.HasValue)
         {
@@ -162,16 +167,15 @@ public class PlayerController : PawnUnit
         }
         else
         {
-            newNode = FindObjectOfType<NodeManager>().GetNodeFromWorldPosition(transform.localPosition);
+            newNode = manager.GetNodeFromWorldPosition(transform.localPosition);
         }
 
         if (newNode == null)
         {
-            Debug.LogWarning("No valid node found!");
+            Debug.LogWarning(name + " has no valid node!" + warningLog, this);
             return;
         }
 
-        // Logic
         if (_currentNode != null)
         {
             _currentNode.RemoveUnit(this);
@@ -179,10 +183,8 @@ public class PlayerController : PawnUnit
         }
 
         ChangeNode(newNode);
-
         transform.position = newNode.WorldPos;
         _visual.SetPosition(transform.position);
-
 
         EditorUtility.SetDirty(this);
     }

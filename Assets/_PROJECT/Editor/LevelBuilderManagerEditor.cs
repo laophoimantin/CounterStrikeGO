@@ -21,7 +21,6 @@ public class LevelBuilderManagerEditor : Editor
                 "This will delete the existing map. Are you sure?", "Yes", "Cancel"))
             {
                 builder.GenerateNodeMap();
-                builder.RebuildNodeGrid(); 
                 builder.AssignNodeNeighbors();
                 
                 EditorUtility.SetDirty(nodeManager);
@@ -33,15 +32,8 @@ public class LevelBuilderManagerEditor : Editor
         
         if (GUILayout.Button("Re-Link Neighbors"))
         {
-            builder.RebuildNodeGrid();
             builder.AssignNodeNeighbors();
             Debug.Log("Neighbors Relinked!");
-        }
-
-        if (GUILayout.Button("Rebuild Dictionary"))
-        {
-            builder.RebuildNodeGrid();
-            Debug.Log("Node Grid Dictionary Rebuilt!");
         }
         
         EditorGUILayout.EndHorizontal();
