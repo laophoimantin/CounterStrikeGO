@@ -75,4 +75,8 @@ public static class NewEventDispatcherExtensions
     {
         EventDispatcher.Instance.SendEvent(eventData);
     }
+    public static void SendEvent<T>(this ScriptableObject instance, T eventData) where T : struct
+    {
+        EventDispatcher.Instance.SendEvent(eventData);
+    }
 }

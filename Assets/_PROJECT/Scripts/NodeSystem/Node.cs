@@ -222,17 +222,15 @@ public class Node : MonoBehaviour
     // Zone ============================================================================================================
     public void AddZone(BaseZone newBaseZone)
     {
-        if (_activeBaseZone != null)
-        {
-            _activeBaseZone.Expire();
-        }
-
-        _activeBaseZone = newBaseZone;
+        var oldZone = _activeBaseZone;
+        _activeBaseZone = newBaseZone; 
+        oldZone?.Expire();
     }
 
-    public void RemoveZone()
+    public void RemoveZone(BaseZone oldZone)
     {
-        _activeBaseZone = null;
+        if (_activeBaseZone == oldZone)
+            _activeBaseZone = null;
     }
 
     public bool IsWalkable()

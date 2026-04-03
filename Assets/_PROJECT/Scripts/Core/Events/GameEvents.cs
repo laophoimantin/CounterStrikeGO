@@ -47,6 +47,11 @@ public struct OnEnemyKilledEvent
 public struct OnGameEndedEvent
 {
 }
+public struct OnSniperTargetDetectedEvent
+{
+    public EnemyController Sniper; 
+    public Node TargetNode;       
+}
 
 
 // Test

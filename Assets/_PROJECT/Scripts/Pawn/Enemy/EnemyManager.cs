@@ -50,8 +50,8 @@ public class EnemyManager : Singleton<EnemyManager>
         if (_pendingCount > 0)
         {
             _pendingCount--;
-            if (_finishedCount >= _pendingCount)
-                StartCoroutine(EndEnemyActionPhase());
+            // if (_finishedCount >= _pendingCount)
+            //     StartCoroutine(EndEnemyActionPhase());
         }
     }
 
@@ -66,11 +66,9 @@ public class EnemyManager : Singleton<EnemyManager>
         StartCoroutine(BeginEnemyAction(snapshot));
     }
 
-
-    // Keep IENumerator, do not change
     private IEnumerator BeginEnemyAction(List<EnemyController> snapshot)
     {
-        yield return new WaitForSeconds(0.1f); // Do not delete
+        yield return new WaitForSeconds(0.1f);
         this.SendEvent(new OnEnemyActionStartedEvent());
 
         if (snapshot.Count == 0)
@@ -79,27 +77,34 @@ public class EnemyManager : Singleton<EnemyManager>
             yield break;
         }
 
-        _finishedCount = 0;
-        _pendingCount = snapshot.Count;
+        var enemyGroups = snapshot
+            .GroupBy(e => e.ExecutionPriority)
+            .OrderBy(group => group.Key);
 
-        foreach (var enemy in snapshot)
+        foreach (var group in enemyGroups)
         {
-            enemy.StartAction();
+            _pendingCount = group.Count();
+            _finishedCount = 0;
+            
+            foreach (var enemy in group)
+            {
+                enemy.StartAction(); 
+            }
+
+            yield return new WaitUntil(() => _finishedCount >= _pendingCount || _pendingCount == 0);
         }
+
+        yield return StartCoroutine(EndEnemyActionPhase());
     }
 
     public void OnEnemyFinished(EnemyController enemy)
     {
         _finishedCount++;
-        if (_finishedCount >= _pendingCount)
-        {
-            StartCoroutine(EndEnemyActionPhase());
-        }
     }
 
     private IEnumerator EndEnemyActionPhase()
     {
-        yield return new WaitForSeconds(0.1f); // Do not delete
+        yield return new WaitForSeconds(0.1f);
         this.SendEvent(new OnEnemyActionFinishedEvent());
     }
 }

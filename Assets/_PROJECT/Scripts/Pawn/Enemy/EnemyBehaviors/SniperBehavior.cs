@@ -1,8 +1,13 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
+[CreateAssetMenu(fileName = "Sniper", menuName = "Behav/Sniper", order = 2)]
 public class SniperBehavior : BaseEnemyBehavior
 {
+    public override int ExecutionPriority => 1;
+
     public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
     {
         var plan = new List<BaseEnemyAction>();
@@ -15,6 +20,7 @@ public class SniperBehavior : BaseEnemyBehavior
     {
         int checkX = sniper.CurrentNode.XValue;
         int checkY = sniper.CurrentNode.YValue;
+        Node lastNode = sniper.CurrentNode;
 
         Vector2Int step = GridMathUtility.DirectionToVector(sniper.CurrentFacingDirection);
         while (true)
@@ -22,10 +28,13 @@ public class SniperBehavior : BaseEnemyBehavior
             checkX += step.x;
             checkY += step.y;
 
+
             if (!NodeManager.Instance.TryGetNode(checkX, checkY, out Node nextNode))
             {
                 break;
             }
+
+            lastNode = nextNode;
 
             if (nextNode.IsObstacle || nextNode.IsHideable())
             {
@@ -44,7 +53,14 @@ public class SniperBehavior : BaseEnemyBehavior
                 plan.Add(new AttackAction(nextNode));
                 break;
             }
+
         }
+
+        this.SendEvent(new OnSniperTargetDetectedEvent
+        {
+            Sniper = sniper,
+            TargetNode = lastNode
+        });
     }
 
     private bool HasOccupantOfRelation(Node node, EnemyController self, bool isEnemy)
@@ -54,6 +70,7 @@ public class SniperBehavior : BaseEnemyBehavior
             if (occupant is PawnUnit unit && self.IsEnemyOf(unit) == isEnemy)
                 return true;
         }
+
         return false;
     }
 }

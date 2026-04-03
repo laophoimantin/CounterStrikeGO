@@ -51,7 +51,7 @@ public abstract class BaseZone : MonoBehaviour
     {
         _isExpired = true;
         Sequence seq = DOTween.Sequence();
-        seq.AppendCallback(() => { _currentNode.RemoveZone(); });
+        seq.AppendCallback(() => { _currentNode.RemoveZone(this); });
         seq.Append(_baseZoneVisual.FlyUp());
         seq.AppendCallback(() => { Destroy(gameObject); });
     }

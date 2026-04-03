@@ -13,6 +13,7 @@ public abstract class StandardEnemyBehavior : BaseEnemyBehavior
         {
             Node targetNode = enemy.GetNodeInFront();
             plan.Add(new MoveAction(targetNode));
+            plan.Add(new AttackAction(targetNode));
             return plan;
         }
 

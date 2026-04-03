@@ -24,7 +24,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     [SerializeField] private Direction _facingDirection = Direction.None;
     public Direction CurrentFacingDirection => _facingDirection;
 
-
+    public int ExecutionPriority => _currentBehavior.ExecutionPriority;
     [Header("Enemy State")]
     private IEnemyState _currentState;
 
@@ -106,14 +106,6 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         foreach (BaseEnemyAction action in plan)
         {
             yield return action.Execute(this);
-
-            Tween attackTween = _unitCombat.GetAttackTween(_currentNode);
-
-            if (attackTween != null)
-            {
-                yield return attackTween.WaitForCompletion();
-                break;
-            }
         }
 
         FinishTurn();
