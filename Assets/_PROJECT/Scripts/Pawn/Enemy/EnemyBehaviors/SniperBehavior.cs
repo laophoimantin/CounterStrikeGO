@@ -8,59 +8,83 @@ public class SniperBehavior : BaseEnemyBehavior
 {
     public override int ExecutionPriority => 1;
 
+    public override void OnStart(EnemyController enemy)
+    {
+        Node laserEndNode = GetLaserTargetNode(enemy);
+
+        this.SendEvent(new OnSniperTargetDetectedEvent
+        {
+            Sniper = enemy,
+            TargetNode = laserEndNode
+        });
+    }
+
+    public override void OnEnter(EnemyController enemy)
+    {
+        Node laserEndNode = GetLaserTargetNode(enemy);
+
+        this.SendEvent(new OnSniperTargetDetectedEvent
+        {
+            Sniper = enemy,
+            TargetNode = laserEndNode
+        });
+    }
+
+    public override void OnExit(EnemyController enemy)
+    {
+        this.SendEvent(new OnSniperTargetDetectedEvent
+        {
+            Sniper = enemy,
+            TargetNode = null 
+        });
+    }
+
     public override List<BaseEnemyAction> PlanActions(EnemyController enemy)
     {
         var plan = new List<BaseEnemyAction>();
-        ScanForPlayerIgnoreLink(enemy, plan);
+
+        Node targetNode = GetLaserTargetNode(enemy);
+
+        this.SendEvent(new OnSniperTargetDetectedEvent
+        {
+            Sniper = enemy,
+            TargetNode = targetNode
+        });
+
+        if (HasOccupantOfRelation(targetNode, enemy, isEnemy: true))
+        {
+            plan.Add(new AttackAction(targetNode));
+        }
 
         return plan;
     }
 
-    private void ScanForPlayerIgnoreLink(EnemyController sniper, List<BaseEnemyAction> plan)
+    private Node GetLaserTargetNode(EnemyController sniper)
     {
         int checkX = sniper.CurrentNode.XValue;
         int checkY = sniper.CurrentNode.YValue;
         Node lastNode = sniper.CurrentNode;
-
         Vector2Int step = GridMathUtility.DirectionToVector(sniper.CurrentFacingDirection);
+
         while (true)
         {
             checkX += step.x;
             checkY += step.y;
 
-
             if (!NodeManager.Instance.TryGetNode(checkX, checkY, out Node nextNode))
-            {
                 break;
-            }
 
             lastNode = nextNode;
 
-            if (nextNode.IsObstacle || nextNode.IsHideable())
-            {
+            if (nextNode.IsObstacle || nextNode.IsHideable()) 
                 break;
-            }
-
-            // teammates block vison
-            if (HasOccupantOfRelation(nextNode, sniper, isEnemy: false))
-            {
+            if (HasOccupantOfRelation(nextNode, sniper, isEnemy: false)) 
                 break;
-            }
-
-            // player found
-            if (HasOccupantOfRelation(nextNode, sniper, isEnemy: true))
-            {
-                plan.Add(new AttackAction(nextNode));
+            if (HasOccupantOfRelation(nextNode, sniper, isEnemy: true)) 
                 break;
-            }
-
         }
 
-        this.SendEvent(new OnSniperTargetDetectedEvent
-        {
-            Sniper = sniper,
-            TargetNode = lastNode
-        });
+        return lastNode;
     }
 
     private bool HasOccupantOfRelation(Node node, EnemyController self, bool isEnemy)

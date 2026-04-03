@@ -27,7 +27,6 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     public int ExecutionPriority => _currentBehavior.ExecutionPriority;
     [Header("Enemy State")]
     private IEnemyState _currentState;
-
     [Header("State Instances")]
     public readonly NormalState StateNormal = new NormalState();
     public readonly FlashedState StateFlashed = new FlashedState();
@@ -39,6 +38,7 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     [SerializeField] private FollowingNoiseBehavior _noiseBehavior;
     [SerializeField] private FlashedBehavior _flashedBehavior;
 
+    public BaseEnemyBehavior CurrentBehavior => _currentBehavior;
     public BaseEnemyBehavior DefaultBehavior => _defaultBehavior;
     public FollowingNoiseBehavior FollowingNoiseBehavior => _noiseBehavior;
     public FlashedBehavior FlashedBehavior => _flashedBehavior;
@@ -66,6 +66,10 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         }
         
         ChangeState(StateNormal);
+        if (_currentBehavior != null)
+        {
+            _currentBehavior.OnStart(this);
+        }
     }
 
     public void ChangeState(IEnemyState newState)

@@ -8,7 +8,6 @@ public abstract class GridOccupant : MonoBehaviour
 
     [Header("Visual References")]
     [SerializeField] protected GridUnitVisual _visual;
-
     public Node CurrentNode => _currentNode;
 
     public virtual bool OccupiesSpace => true;

@@ -120,7 +120,6 @@ public abstract class UtilityController : GridOccupant, IPickupable
 
         _currentNode = newNode;
         _currentNode.AddUnit(this);
-        _currentNode.AddItem(this);
 
         // Visual Snap
         transform.position = _currentNode.transform.position;

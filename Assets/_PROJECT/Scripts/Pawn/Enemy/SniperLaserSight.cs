@@ -20,7 +20,7 @@ public class SniperLaserSight : MonoBehaviour
     {
         if (evt.Sniper != _sniper) return;
 
-        if (_sniper.IsDead)
+        if (_sniper.IsDead || evt.TargetNode == null)
         {
             _laserPivot.gameObject.SetActive(false);
             return;
