@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/_PROJECT/Scenes/Main/Gameplay.unity
     guid: 264a2e3659249724c9bf6d00701e34b7
   - enabled: 1
-    path: Assets/_PROJECT/Scenes/Level Bulder/Level Editting Scene.unity
+    path: Assets/_PROJECT/Scenes/Level Bulder/Level Edit Scene.unity
     guid: 4bb2f72d2072fbb49940f473172ae964
   - enabled: 0
     path: Assets/_PROJECT/Scenes/Level Bulder/Level 2.unity

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 5 (Introduce_Objective)
+  m_Name: Level 5 (Tutorial_PatrolEnemy)
   m_EditorClassIdentifier: 
   _cameraSetup:
-    Distance: 21.3
-    Pitch: 56.1
-    Yaw: 18
-    CameraFocusPosition: {x: 6.6, y: 0, z: 6.02}
-  _mapPrefab: {fileID: 5453904286925218752, guid: 10ab4f3444a9d7b4cb8a3a0d224a89d0, type: 3}
+    Distance: 32
+    Pitch: 65.3
+    Yaw: -27.5
+    CameraFocusPosition: {x: 19.4, y: 0.27, z: 10.12}
+  _mapPrefab: {fileID: 7389048512137158630, guid: 325ae0a6e7d59bf479f18492f1865745, type: 3}
   _nextLevel: {fileID: 11400000, guid: 7049b85fe933aa64aa7b0881c1cf23d4, type: 2}
   _isUnlockedByDefault: 0
-  _levelDisplayNumber: 4
+  _levelDisplayNumber: 5
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
   - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}

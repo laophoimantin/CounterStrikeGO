@@ -20,7 +20,7 @@ MonoBehaviour:
   _mapPrefab: {fileID: 7389048512137158630, guid: 325ae0a6e7d59bf479f18492f1865745, type: 3}
   _nextLevel: {fileID: 11400000, guid: e2ece0006e7807942b0c3219bdb97071, type: 2}
   _isUnlockedByDefault: 0
-  _levelDisplayNumber: 4
+  _levelDisplayNumber: 6
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
   - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}

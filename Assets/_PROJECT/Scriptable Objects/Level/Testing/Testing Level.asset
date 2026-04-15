@@ -15,7 +15,8 @@ MonoBehaviour:
   _cameraSetup:
     Distance: 40
     Pitch: 55.1
-    Yaw: 45.6
+    Yaw: 13.2
+    CameraFocusPosition: {x: 15.1, y: -3.12, z: 13.89}
   _mapPrefab: {fileID: 6156387344984849727, guid: dec2a5d0c0548dd468efcadee76aee5d, type: 3}
   _nextLevel: {fileID: 0}
   _isUnlockedByDefault: 0
