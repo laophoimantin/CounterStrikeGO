@@ -23,6 +23,9 @@ public class SceneController : MonoBehaviour
     [SerializeField] private GameObject _loadingScreen;
     [SerializeField] private CanvasGroup _canvasGroup;
     [SerializeField] private Slider _progressBar;
+    
+    [Header("Whole canvas")]
+    [SerializeField] private GameObject _canvas;
 
 
     private void Awake()
@@ -38,8 +41,9 @@ public class SceneController : MonoBehaviour
             return;
         }
 
-        if (_loadingScreen != null)
-            _loadingScreen.SetActive(false);
+        _loadingScreen.SetActive(false);
+        _canvasGroup.gameObject.SetActive(false);
+        _canvas.SetActive(false);
     }
 
     #region Public API
@@ -91,6 +95,9 @@ public class SceneController : MonoBehaviour
 
     private IEnumerator LoadSceneRoutine(string sceneName)
     {
+        _canvas.SetActive(true);
+        
+        _canvasGroup.gameObject.SetActive(true);
         _canvasGroup.blocksRaycasts = true;
 
         // PHASE 1: TRANSITION TO LOADING SCREEN
@@ -136,7 +143,10 @@ public class SceneController : MonoBehaviour
         yield return ScreenFader.FadeOut(_canvasGroup, _fadeDuration).WaitForCompletion();
 
         _canvasGroup.blocksRaycasts = false;
+        _canvasGroup.gameObject.SetActive(false);
+        
         _isLoading = false;
+        _canvas.SetActive(false);
     }
 
     #endregion

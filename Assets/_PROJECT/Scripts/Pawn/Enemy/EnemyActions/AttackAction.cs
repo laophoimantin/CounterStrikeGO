@@ -16,7 +16,7 @@ public class AttackAction : BaseEnemyAction
         Sequence seq = DOTween.Sequence();
         seq.Append(enemy.EnemyVisual.Wobble(true));
         seq.Join(enemy.UnitCombat.GetAttackTween(_targetNode));
-        Tween attackTween = enemy.UnitCombat.GetAttackTween(_targetNode);
+        //Tween attackTween = enemy.UnitCombat.GetAttackTween(_targetNode);
         yield return seq.WaitForCompletion();
     }
 }

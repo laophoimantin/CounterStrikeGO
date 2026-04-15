@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7cd7e863eed74e82a0a4139007fd70fd, type: 3}
-  m_Name: Eliminate All Objective
+  m_Name: Kill All
   m_EditorClassIdentifier: 
-  _icon: {fileID: 21300000, guid: ab95f504713ed764d9172a817ae23de2, type: 3}
+  _icon: {fileID: 21300000, guid: aa6c2fafdd77e304f813a06c554c8acc, type: 3}
   _description: Kill all

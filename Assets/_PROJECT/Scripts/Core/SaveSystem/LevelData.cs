@@ -27,3 +27,4 @@ public class LevelData : ScriptableObject
     public BaseObjective MainObjective => _mainObjective;
     public List<BaseObjective> OptionalObjectives => _optionalObjectives;
 }
+

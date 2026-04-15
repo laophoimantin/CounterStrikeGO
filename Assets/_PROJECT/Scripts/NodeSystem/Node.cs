@@ -143,6 +143,8 @@ public class Node : MonoBehaviour
                 other._east = this;
                 break;
         }
+
+        _isObstacle = false;
     }
 
     public void RemoveNeighbour(Direction dir)
@@ -223,7 +225,7 @@ public class Node : MonoBehaviour
     public void AddZone(BaseZone newBaseZone)
     {
         var oldZone = _activeBaseZone;
-        _activeBaseZone = newBaseZone; 
+        _activeBaseZone = newBaseZone;
         oldZone?.Expire();
     }
 
@@ -263,13 +265,85 @@ public class Node : MonoBehaviour
 #if UNITY_EDITOR
     public void IsolateNode()
     {
-        if (_north != null) { _north._south = null; _north = null; }
-        if (_south != null) { _south._north = null; _south = null; }
-        if (_east  != null) { _east._west   = null; _east  = null; }
-        if (_west  != null) { _west._east   = null; _west  = null; }
+        UnityEditor.Undo.RecordObject(this, "Isolate Node");
+
+        if (_north != null)
+        {
+            _north._south = null;
+        }
+
+        if (_south != null)
+        {
+            _south._north = null;
+        }
+
+        if (_east != null)
+        {
+            _east._west = null;
+        }
+
+        if (_west != null)
+        {
+            _west._east = null;
+        }
+
+        _north = null;
+        _south = null;
+        _east = null;
+        _west = null;
 
         _isObstacle = true;
+        UnityEditor.EditorUtility.SetDirty(this);
     }
+
+    public void ReLinkNode()
+    {
+        UnityEditor.Undo.RecordObject(this, "Relink Node");
+        _isObstacle = false;
+
+        Node[] allNodes = FindObjectsOfType<Node>();
+        Debug.Log(allNodes.Length);
+        foreach (Node n in allNodes)
+        {
+            if (n == this) continue;
+
+            UnityEditor.Undo.RecordObject(n, "Relink Neighbor");
+
+            if (n.XValue == _xValue && n.YValue == _yValue + 1)
+            {
+                _north = n;
+                n._south = this;
+                n._isObstacle = false;
+            }
+
+            else if (n.XValue == _xValue && n.YValue == _yValue - 1)
+            {
+                _south = n;
+                n._north = this;
+                n._isObstacle = false;
+            }
+
+            else if (n.XValue == _xValue + 1 && n.YValue == _yValue)
+            {
+                _east = n;
+                n._west = this;
+                n._isObstacle = false;
+            }
+
+            else if (n.XValue == _xValue - 1 && n.YValue == _yValue)
+            {
+                _west = n;
+                n._east = this;
+                n._isObstacle = false;
+            }
+
+            UnityEditor.EditorUtility.SetDirty(n);
+        }
+
+        UnityEditor.EditorUtility.SetDirty(this);
+        Debug.Log($"[Tool] Node ({XValue}, {YValue}) linked successfully");
+    }
+
     // Gizmos
     private void OnDrawGizmos()
     {

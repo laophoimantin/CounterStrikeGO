@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
+  m_Name: Level 6 (Tutorial_PatrolEnemy)
+  m_EditorClassIdentifier: 
+  _cameraSetup:
+    Distance: 32.2
+    Pitch: 72
+    Yaw: -10.8
+    CameraFocusPosition: {x: 18, y: 0, z: 11.4}
+  _mapPrefab: {fileID: 7389048512137158630, guid: 325ae0a6e7d59bf479f18492f1865745, type: 3}
+  _nextLevel: {fileID: 11400000, guid: e2ece0006e7807942b0c3219bdb97071, type: 2}
+  _isUnlockedByDefault: 0
+  _levelDisplayNumber: 4
+  _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
+  _optionalObjectives:
+  - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}
+  - {fileID: 11400000, guid: 92219cbef31bd8e4e92720306ac35424, type: 2}

@@ -74,6 +74,7 @@ public class LevelBuilderManager : MonoBehaviour
     public void AssignNodeNeighbors()
     {
         Debug.Log("Assigning neighbors...");
+        Undo.RecordObject(this, "Assigning neighbors");
         foreach (var node in _nodeManager.AllNodes)
         {
             int x = node.XValue;
@@ -84,6 +85,7 @@ public class LevelBuilderManager : MonoBehaviour
 
             if (_nodeManager.TryGetNode(x + 1, y, out Node eastNode))
                 node.AssignNeighbour(eastNode, Direction.East);
+            EditorUtility.SetDirty(node);
         }
         Debug.Log("Neighbor assignment complete.");
     }

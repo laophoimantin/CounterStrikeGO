@@ -5,7 +5,6 @@ public class BoardInspectCamera : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] private Transform _cam;
-    private Transform _target;
 
     private float _distance;
     private float _pitch;
@@ -18,9 +17,12 @@ public class BoardInspectCamera : MonoBehaviour
 
     private float _currentPitch;
     private float _currentYaw;
+    
+    private CameraSetupData _cameraSetupData;
 
     public void ApplySettings(CameraSetupData data)
     {
+        _cameraSetupData =  data;
         _distance = data.Distance;
         _pitch = data.Pitch;
         _yaw = data.Yaw;
@@ -36,7 +38,7 @@ public class BoardInspectCamera : MonoBehaviour
 
     private void HandleCameraOrbit()
     {
-        if (_target == null || GameManager.Instance.IsGameOver) return;
+        if (GameManager.Instance.IsGameOver) return;
 
         if (Input.GetMouseButton(0) && !PlayerInteractionHandler.IsPlayerInteracting)
         {
@@ -47,27 +49,24 @@ public class BoardInspectCamera : MonoBehaviour
         }
         else
         {
-            _currentYaw = Mathf.Lerp(_currentYaw, _yaw, Time.deltaTime * _snapBackSpeed);
-            _currentPitch = Mathf.Lerp(_currentPitch, _pitch, Time.deltaTime * _snapBackSpeed);
+            _currentYaw = Mathf.Lerp(_currentYaw, _cameraSetupData.Yaw, Time.deltaTime * _snapBackSpeed);
+            _currentPitch = Mathf.Lerp(_currentPitch, _cameraSetupData.Pitch, Time.deltaTime * _snapBackSpeed);
         }
 
         Quaternion rotation = Quaternion.Euler(_currentPitch, _currentYaw, 0);
-        Vector3 position = _target.position - (rotation * Vector3.forward * _distance);
+        Vector3 position = _cameraSetupData.CameraFocusPosition - (rotation * Vector3.forward * _cameraSetupData.Distance);
 
         _cam.position = position;
-        _cam.LookAt(_target);
-    }
-
-    public void AssignFocusPoint(Transform target)
-    {
-        _target = target;
+        _cam.LookAt(_cameraSetupData.CameraFocusPosition);
     }
 }
 
 [Serializable]
-public struct CameraSetupData
+public class CameraSetupData
 {
     public float Distance;
     public float Pitch;
     public float Yaw;
+    [Space(10)]
+    public Vector3 CameraFocusPosition;
 }

@@ -51,7 +51,7 @@ public class SniperBehavior : BaseEnemyBehavior
             TargetNode = targetNode
         });
 
-        if (HasOccupantOfRelation(targetNode, enemy, isEnemy: true))
+        if (HasOccupantOfRelation(targetNode, enemy, isEnemy: true) && !targetNode.IsHideable())
         {
             plan.Add(new AttackAction(targetNode));
         }

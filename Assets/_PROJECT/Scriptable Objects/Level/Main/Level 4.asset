@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
+  m_Name: Level 4
+  m_EditorClassIdentifier: 
+  _cameraSetup:
+    Distance: 25.32
+    Pitch: 61
+    Yaw: -31.8
+  _mapPrefab: {fileID: 7389048512137158630, guid: 325ae0a6e7d59bf479f18492f1865745, type: 3}
+  _nextLevel: {fileID: 11400000, guid: 58cdeb4bfd8167c44a6b0969131e9e08, type: 2}
+  _isUnlockedByDefault: 0
+  _levelDisplayNumber: 4
+  _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
+  _optionalObjectives:
+  - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}

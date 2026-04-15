@@ -40,13 +40,23 @@ public class NodeEditor : Editor
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
+        // Relink
+        EditorGUILayout.Space();
+        EditorGUILayout.BeginHorizontal();
+        GUI.backgroundColor = Color.green;
+        if (GUILayout.Button("Relink the node", GUILayout.Height(50)))
+        {
+            node.ReLinkNode();
+        }
+        EditorGUILayout.EndHorizontal();
+        
+        // Isolate
         EditorGUILayout.Space();
         EditorGUILayout.BeginHorizontal();
         GUI.backgroundColor = Color.red;
         if (GUILayout.Button("Isolate the node", GUILayout.Height(50)))
         {
             node.IsolateNode();
-            EditorUtility.SetDirty(node);
         }
 
         EditorGUILayout.EndHorizontal();

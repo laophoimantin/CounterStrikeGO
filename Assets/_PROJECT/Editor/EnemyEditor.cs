@@ -4,17 +4,19 @@ using UnityEngine;
 [CustomEditor(typeof(EnemyController))]
 public class EnemyEditor : Editor
 {
+    EnemyController  script;
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
-        var script = (EnemyController)target;
+         script = (EnemyController)target;
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Level Design Tools", EditorStyles.boldLabel);
 
         // Node Management 
         GUILayout.BeginHorizontal();
-        if (GUILayout.Button("Snap to Nearest Node"))
+        GUI.backgroundColor = Color.green;
+        if (GUILayout.Button("Snap to Nearest Node", GUILayout.Height(50)))
         {
             Undo.RecordObject(script.transform, "Snap Enemy"); // Save Transform for Undo
             Undo.RecordObject(script, "Snap Enemy State");     // Save Script variables
@@ -32,44 +34,81 @@ public class EnemyEditor : Editor
         // Direction Control (Compass Layout) 
         EditorGUILayout.LabelField("Rotate & Move", EditorStyles.boldLabel);
 
-        // Top Row (North)
+        Color defaultColor = GUI.backgroundColor;
+
+        EditorGUILayout.Space(10);
+        GUILayout.BeginVertical("box");
+        GUILayout.Space(10);
+
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Face N", GUILayout.Width(60))) 
-            ApplyDir(script, Direction.North);
-        if (GUILayout.Button("Move N", GUILayout.Width(60))) 
-            ApplyMove(script, Direction.North);
+        DrawButtonGroup("Face N", "Move N", Direction.North, isVertical: true, faceFirst: true);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
-        // Middle Row (West / East)
+        GUILayout.Space(10); 
+
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Face W", GUILayout.Width(60))) 
-            ApplyDir(script, Direction.West);
-        if (GUILayout.Button("Move W", GUILayout.Width(60))) 
-            ApplyMove(script, Direction.West);
-        
-        GUILayout.Space(20); // =============================================================
-        
-        if (GUILayout.Button("Face E", GUILayout.Width(60))) 
-            ApplyDir(script, Direction.East);
-        if (GUILayout.Button("Move E", GUILayout.Width(60))) 
-            ApplyMove(script, Direction.East);
+
+        DrawButtonGroup("Face W", "Move W", Direction.West, isVertical: false, faceFirst: true);
+
+        GUILayout.Space(40); 
+
+        DrawButtonGroup("Face E", "Move E", Direction.East, isVertical: false, faceFirst: false);
+
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
 
-        // Bottom Row (South)
+        GUILayout.Space(10); 
+
         GUILayout.BeginHorizontal();
         GUILayout.FlexibleSpace();
-        if (GUILayout.Button("Face S", GUILayout.Width(60))) 
-            ApplyDir(script, Direction.South);
-        if (GUILayout.Button("Move S", GUILayout.Width(60))) 
-            ApplyMove(script, Direction.South);
+        DrawButtonGroup("Face S", "Move S", Direction.South, isVertical: true, faceFirst: false);
         GUILayout.FlexibleSpace();
         GUILayout.EndHorizontal();
+
+        GUILayout.Space(10);
+        GUILayout.EndVertical(); 
+        EditorGUILayout.Space(10);
+
+        GUI.backgroundColor = defaultColor;
     }
 
+    void DrawButtonGroup(string faceText, string moveText, Direction dir, bool isVertical, bool faceFirst)
+    {
+        if (isVertical) GUILayout.BeginVertical();
+        else GUILayout.BeginHorizontal();
+
+        if (faceFirst)
+        {
+            DrawFaceBtn(faceText, dir);
+            DrawMoveBtn(moveText, dir);
+        }
+        else
+        {
+            DrawMoveBtn(moveText, dir);
+            DrawFaceBtn(faceText, dir);
+        }
+
+        if (isVertical) GUILayout.EndVertical();
+        else GUILayout.EndHorizontal();
+    }
+
+    void DrawFaceBtn(string text, Direction dir)
+    {
+        GUI.backgroundColor = Color.blue;
+        if (GUILayout.Button(text, GUILayout.Width(60), GUILayout.Height(25))) 
+            ApplyDir(script, dir);
+    }
+
+    void DrawMoveBtn(string text, Direction dir)
+    {
+        GUI.backgroundColor = Color.cyan;
+        if (GUILayout.Button(text, GUILayout.Width(60), GUILayout.Height(25))) 
+            ApplyMove(script, dir);
+    }
+    
     private void ApplyDir(EnemyController script, Direction dir)
     {
         Undo.RecordObject(script.transform, "Rotate Enemy");

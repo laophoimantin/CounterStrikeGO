@@ -11,13 +11,15 @@ public class PlayerEditor : Editor
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("Level Design Tools", EditorStyles.boldLabel);
 
-        if (GUILayout.Button("Snap to Nearest Node"))
+        GUILayout.BeginHorizontal();
+        GUI.backgroundColor = Color.green;
+        if (GUILayout.Button("Snap to Nearest Node", GUILayout.Height(50)))
         {
             Undo.RecordObject(script.transform, "Snap Player");
             Undo.RecordObject(script, "Snap Player");
             script.SetOrMoveNode();
         }
-        
+        GUILayout.EndHorizontal();
         EditorGUILayout.Space();
 
         // Compass Layout

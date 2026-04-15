@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 1
+  m_Name: Level 7
   m_EditorClassIdentifier: 
   _cameraSetup:
-    Distance: 30
-    Pitch: 30
-    Yaw: 60
-  _mapPrefab: {fileID: 3618012947767175392, guid: ed1c917426b308a40aa617422dda5057, type: 3}
-  _nextLevel: {fileID: 11400000, guid: e1236faeae4233c4085b2f6eb41374db, type: 2}
-  _isUnlockedByDefault: 1
-  _levelDisplayNumber: 1
+    Distance: 25.32
+    Pitch: 61
+    Yaw: -31.8
+  _mapPrefab: {fileID: 7389048512137158630, guid: 325ae0a6e7d59bf479f18492f1865745, type: 3}
+  _nextLevel: {fileID: 11400000, guid: c8467c2d8d957c14aaae65ef7fc2e496, type: 2}
+  _isUnlockedByDefault: 0
+  _levelDisplayNumber: 4
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
-  _optionalObjectives: []
+  _optionalObjectives:
+  - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}

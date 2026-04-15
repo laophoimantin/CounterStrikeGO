@@ -267,7 +267,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &220783060566047454
 RectTransform:
   m_ObjectHideFlags: 0
@@ -403,6 +403,7 @@ MonoBehaviour:
   _loadingScreen: {fileID: 2456728656207893022}
   _canvasGroup: {fileID: 3419609444558756630}
   _progressBar: {fileID: 0}
+  _canvas: {fileID: 1282704493699572588}
 --- !u!1 &8492441329866827171
 GameObject:
   m_ObjectHideFlags: 0
