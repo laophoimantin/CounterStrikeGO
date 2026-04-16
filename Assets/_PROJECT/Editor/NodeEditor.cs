@@ -48,15 +48,22 @@ public class NodeEditor : Editor
         {
             node.ReLinkNode();
         }
+
         EditorGUILayout.EndHorizontal();
-        
+
         // Isolate
         EditorGUILayout.Space();
         EditorGUILayout.BeginHorizontal();
         GUI.backgroundColor = Color.red;
         if (GUILayout.Button("Isolate the node", GUILayout.Height(50)))
         {
+            UnityEditor.Undo.RecordObject(this, "Isolate Node");
+            ApplyDisconnect(node, Direction.North);
+            ApplyDisconnect(node, Direction.South);
+            ApplyDisconnect(node, Direction.East);
+            ApplyDisconnect(node, Direction.West);
             node.IsolateNode();
+            EditorUtility.SetDirty(node);
         }
 
         EditorGUILayout.EndHorizontal();

@@ -5,6 +5,6 @@ public class EliminateNoneObjective : BaseObjective
 {
     public override bool IsComplete(LevelResult result)
     {
-        return EnemyManager.Instance.HasKilledEnemy();
+        return !EnemyManager.Instance.HasKilledEnemy();
     }
 }

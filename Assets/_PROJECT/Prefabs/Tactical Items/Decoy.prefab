@@ -202,7 +202,7 @@ MonoBehaviour:
   _currentNode: {fileID: 0}
   _visual: {fileID: 4839947585339817458}
   _team: 1
-  _throwRange: 2
+  _throwRange: 1
   _endsTurn: 0
 --- !u!114 &4839947585339817458
 MonoBehaviour:

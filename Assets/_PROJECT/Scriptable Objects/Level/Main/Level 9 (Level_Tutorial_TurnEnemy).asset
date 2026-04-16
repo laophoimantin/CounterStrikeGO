@@ -10,16 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 9
+  m_Name: Level 9 (Level_Tutorial_TurnEnemy)
   m_EditorClassIdentifier: 
   _cameraSetup:
-    Distance: 25.32
-    Pitch: 61
-    Yaw: -31.8
-  _mapPrefab: {fileID: 7389048512137158630, guid: 325ae0a6e7d59bf479f18492f1865745, type: 3}
-  _nextLevel: {fileID: 11400000, guid: 191e83db9e675e8448aaa05a7675c30f, type: 2}
+    Distance: 31.1
+    Pitch: 71.3
+    Yaw: -8.8
+    CameraFocusPosition: {x: 17.8, y: 0, z: 9.43}
+  _mapPrefab: {fileID: 8160924642210795497, guid: 10c98d24e4ca7e4478dbaaa24fe795ee, type: 3}
+  _nextLevel: {fileID: 11400000, guid: 76fc278ab5c7bd347b0a440956d28369, type: 2}
   _isUnlockedByDefault: 0
-  _levelDisplayNumber: 4
+  _levelDisplayNumber: 9
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
+  - {fileID: 11400000, guid: 85719f06c23cf8e468f2aaf428f64f34, type: 2}
   - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}

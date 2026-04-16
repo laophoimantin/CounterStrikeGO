@@ -18,7 +18,6 @@ public class GameManager : Singleton<GameManager>
     [Header("Testing")]
     [SerializeField] private bool _test;
     [SerializeField] private LevelData _testLevelData;
-    [SerializeField] private GameObject _testMap;
     
     public event Action OnPlayerPickedUp;
 

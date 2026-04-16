@@ -265,35 +265,32 @@ public class Node : MonoBehaviour
 #if UNITY_EDITOR
     public void IsolateNode()
     {
-        UnityEditor.Undo.RecordObject(this, "Isolate Node");
-
-        if (_north != null)
-        {
-            _north._south = null;
-        }
-
-        if (_south != null)
-        {
-            _south._north = null;
-        }
-
-        if (_east != null)
-        {
-            _east._west = null;
-        }
-
-        if (_west != null)
-        {
-            _west._east = null;
-        }
-
-        _north = null;
-        _south = null;
-        _east = null;
-        _west = null;
-
+        //
+        // if (_north != null)
+        // {
+        //     _north._south = null;
+        // }
+        //
+        // if (_south != null)
+        // {
+        //     _south._north = null;
+        // }
+        //
+        // if (_east != null)
+        // {
+        //     _east._west = null;
+        // }
+        //
+        // if (_west != null)
+        // {
+        //     _west._east = null;
+        // }
+        //
+        // _north = null;
+        // _south = null;
+        // _east = null;
+        // _west = null;
         _isObstacle = true;
-        UnityEditor.EditorUtility.SetDirty(this);
     }
 
     public void ReLinkNode()
@@ -343,7 +340,7 @@ public class Node : MonoBehaviour
         UnityEditor.EditorUtility.SetDirty(this);
         Debug.Log($"[Tool] Node ({XValue}, {YValue}) linked successfully");
     }
-
+ 
     // Gizmos
     private void OnDrawGizmos()
     {

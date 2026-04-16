@@ -128,6 +128,11 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         if (_isDead) return null;
         _isDead = true;
 
+        if (_currentBehavior != null)
+        {
+            _currentBehavior.OnExit(this);
+        }
+
         Tween dieTween = _enemyVisual.GetDeathAnimation();
         
         if (dieTween != null)

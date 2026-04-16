@@ -120,7 +120,7 @@ MonoBehaviour:
   _throwRange: 2
   _endsTurn: 1
   _baseZonePrefab: {fileID: 4087568586733465136, guid: d50c0e8ec92026545b528a9ea3f86bb8, type: 3}
-  _duration: 100
+  _duration: 6
 --- !u!114 &8138534694073362513
 MonoBehaviour:
   m_ObjectHideFlags: 0

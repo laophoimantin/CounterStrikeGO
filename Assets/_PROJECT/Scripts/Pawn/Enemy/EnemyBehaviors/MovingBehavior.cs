@@ -6,26 +6,34 @@ public class MovingBehavior : StandardEnemyBehavior
 {
     protected override void CustomActions(List<BaseEnemyAction> baseList, EnemyController enemy)
     {
-        Node targetNode = enemy.GetNodeInFront();
         Direction currentDir = enemy.CurrentFacingDirection;
         Direction moveDir = currentDir;
+        Node targetNode = enemy.GetNodeInFront();
 
         if (targetNode == null || !targetNode.IsWalkable())
         {
-            moveDir =  GridMathUtility.TurnAround(enemy.CurrentFacingDirection);
+            moveDir = GridMathUtility.TurnAround(currentDir);
             targetNode = enemy.GetNodeInBack();
-            baseList.Add(new RotateAction(moveDir));
+        
+            baseList.Add(new RotateAction(moveDir)); 
         }
 
         if (targetNode != null && targetNode.IsWalkable())
         {
+            if (enemy.GridSensor.ScanForEnemy(moveDir, _attackRange))
+            {
+                baseList.Add(new MoveAction(targetNode));
+                baseList.Add(new AttackAction(targetNode));
+                return; 
+            }
+        
             baseList.Add(new MoveAction(targetNode));
-
+        
             Node nodeAfterNext = targetNode.GetNodeInDirection(moveDir);
 
             if (nodeAfterNext == null || !nodeAfterNext.IsWalkable())
             {
-                Direction reverseDir = (moveDir == currentDir) ? GridMathUtility.TurnAround(enemy.CurrentFacingDirection) : currentDir;
+                Direction reverseDir = GridMathUtility.TurnAround(moveDir);
                 baseList.Add(new RotateAction(reverseDir, 0.1f));
             }
         }
