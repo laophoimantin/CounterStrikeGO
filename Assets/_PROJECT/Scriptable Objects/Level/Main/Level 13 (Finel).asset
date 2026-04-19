@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Level 13 (Finel)
   m_EditorClassIdentifier: 
   _cameraSetup:
-    Distance: 33.7
-    Pitch: 55.1
-    Yaw: -454.8
-    CameraFocusPosition: {x: 22.4, y: 0, z: 14.6}
+    Distance: 36.7
+    Pitch: 65.8
+    Yaw: -8.02
+    CameraFocusPosition: {x: 16.9, y: -0.26, z: 14.2}
   _mapPrefab: {fileID: 638290389529560865, guid: a2a167f4258d1c945ba550373f8c355a, type: 3}
   _nextLevel: {fileID: 0}
   _isUnlockedByDefault: 0

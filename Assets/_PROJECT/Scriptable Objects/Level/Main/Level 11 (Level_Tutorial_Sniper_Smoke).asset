@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 11 (Level_Tutorial_Dual_Flash)
+  m_Name: Level 11 (Level_Tutorial_Sniper_Smoke)
   m_EditorClassIdentifier: 
   _cameraSetup:
     Distance: 33.7

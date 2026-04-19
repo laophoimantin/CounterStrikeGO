@@ -30,16 +30,38 @@ public class LevelButton : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        this.Subscribe<OnSaveDataChangedEvent>(OnSaveDataChanged);
+    }
+
+    private void OnDisable()
+    {
+        this.Unsubscribe<OnSaveDataChangedEvent>(OnSaveDataChanged);
+    }
+
+    private void OnSaveDataChanged(OnSaveDataChangedEvent evt)
+    {
+        UpdateVisuals();
+    }
+
     void Start()
     {
         _levelIndexText.text = $"{_levelData.LevelDisplayNumber}";
 
+        UpdateVisuals();
+    }
+
+    private void UpdateVisuals()
+    {
         _isUnlocked = SaveManager.Instance.IsLevelUnlocked(_levelData.LevelId, _levelData.IsUnlockedByDefault);
-        // main objective
+
+        _button.interactable = _isUnlocked;
+        _buttonImage.color = _isUnlocked ? _unlockedColor : _lockedColor;
+
         bool isMainDone = SaveManager.Instance.IsObjectiveComplete(_levelData.LevelId, _levelData.MainObjective.Id);
         SetObjectiveIconsSprite(_mainObjectiveIconImage, isMainDone);
 
-        // optional objectives
         for (int i = 0; i < _levelData.OptionalObjectives.Count; i++)
         {
             _optionalObjectiveIconSpriteImage[i].gameObject.SetActive(true);
@@ -50,16 +72,7 @@ public class LevelButton : MonoBehaviour
 
             SetObjectiveIconsSprite(_optionalObjectiveIconSpriteImage[i], isOptDone);
         }
-
-        SetButtonState();
     }
-
-    private void SetButtonState()
-    {
-        _button.interactable = _isUnlocked;
-        _buttonImage.color = _isUnlocked ? _unlockedColor : _lockedColor;
-    }
-
     private void LoadLevel()
     {
         SessionData.SetCurrentLevelData(_levelData);

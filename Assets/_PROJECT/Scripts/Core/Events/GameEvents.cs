@@ -49,8 +49,15 @@ public struct OnGameEndedEvent
 }
 public struct OnSniperTargetDetectedEvent
 {
-    public EnemyController Sniper; 
-    public Node TargetNode;       
+    public EnemyController Sniper;
+    public Node TargetNode;
+}
+
+
+
+
+public struct OnSaveDataChangedEvent
+{
 }
 
 

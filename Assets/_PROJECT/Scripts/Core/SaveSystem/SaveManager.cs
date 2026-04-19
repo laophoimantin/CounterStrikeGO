@@ -33,6 +33,33 @@ public class SaveManager : Singleton<SaveManager>
     }
 #endif
 
+    // CHEAT & DEBUG METHODS
+    public void ResetSaveFile()
+    {
+        CreateNewSave();
+
+        this.SendEvent(new OnSaveDataChangedEvent());
+        Debug.Log("Reset save file");
+    }
+
+    public void UnlockAllLevels()
+    {
+        if (CurrentData == null || CurrentData.levels == null) return;
+
+        foreach (var level in CurrentData.levels.Values)
+        {
+            level.isUnlocked = true;
+        }
+
+        SaveGame();
+
+        this.SendEvent(new OnSaveDataChangedEvent());
+
+        Debug.Log("Unlock All!");
+    }
+
+
+
     private void LoadSaveFile()
     {
         if (TryLoadPlayerSave())
