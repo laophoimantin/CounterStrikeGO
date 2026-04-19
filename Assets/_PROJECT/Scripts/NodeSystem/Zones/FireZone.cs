@@ -1,5 +1,8 @@
 using DG.Tweening;
 
+/// <summary>
+/// Stop everyone from step on the node that is ocupied by this
+/// </summary>
 public class FireZone : BaseZone
 {
     public override bool IsWalkable() => false;

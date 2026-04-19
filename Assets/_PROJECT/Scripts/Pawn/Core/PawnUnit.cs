@@ -1,6 +1,9 @@
 using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// Pawn type entity
+/// </summary>
 public abstract class PawnUnit : GridOccupant
 {
     [SerializeField] protected float _actionDuration = 1;

@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Handle interaction between player and ulitities (tactiaclItems)
+/// </summary>
 public class PlayerUtilityHandler : MonoBehaviour, IUtilityEquipper
 {
     private PlayerController _controller;
@@ -10,6 +13,7 @@ public class PlayerUtilityHandler : MonoBehaviour, IUtilityEquipper
     private List<Node> _highlightedNodes = new();
     
     public bool HasItem => _currentItem != null;
+
 
     private void Awake()
     {

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Control the visual of the laser
+/// </summary>
 public class SniperLaserSight : MonoBehaviour
 {
     [SerializeField] private EnemyController _sniper;

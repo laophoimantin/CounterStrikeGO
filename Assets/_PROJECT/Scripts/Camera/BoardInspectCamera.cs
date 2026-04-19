@@ -1,6 +1,11 @@
 using System;
 using UnityEngine;
 
+
+/// <summary>
+/// Handles mouse-driven orbital camera movement around a target focus point, 
+/// with an auto-snapback feature when idle.
+/// </summary>
 public class BoardInspectCamera : MonoBehaviour
 {
     [Header("References")]

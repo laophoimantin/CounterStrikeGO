@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 
+/// <summary>
+/// utility for evaluating and executing combat interactions on grid nodes
+/// </summary>
 public static class CombatResolver
 {
     public static bool CanAttack(Node node, Team attackerTeam, bool checkHideable = true)

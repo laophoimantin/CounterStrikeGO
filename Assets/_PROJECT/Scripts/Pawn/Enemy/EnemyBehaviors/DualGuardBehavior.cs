@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Can check for player front and back
+/// </summary>
 [CreateAssetMenu(fileName = "DualGuard", menuName = "Behav/DualGuard", order = 3)]
 public class DualGuardBehavior : StandardEnemyBehavior
 {

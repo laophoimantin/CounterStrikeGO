@@ -1,8 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// Toggling specific overlays
+/// </summary>
 public class NodeVisual : MonoBehaviour
 {
-    [Header("Renderers")]
+    [Header("Visual Objects")]
     [SerializeField] private GameObject _baseRenderer;
     [SerializeField] private GameObject _exitOverlayRenderer;
     [SerializeField] private GameObject _overlayRenderer;

@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Handle mouse interaction with the players pawn
+/// </summary>
 public class PlayerInteractionHandler : MonoBehaviour
 {
     public static bool IsPlayerInteracting { get; private set; }
@@ -79,7 +82,11 @@ public class PlayerInteractionHandler : MonoBehaviour
 
         _player.OnPickedUp();
     }
-private void TryEndDrag()
+
+    /// <summary>
+    /// Try to move the pawn in the direction the mouse was dragged
+    /// </summary>
+    private void TryEndDrag()
     {
         if (!_dragging) return;
 
@@ -95,29 +102,29 @@ private void TryEndDrag()
 
         Vector2 dragDir = delta.normalized;
 
-        
+
         Vector3 playerWorldPos = _player.transform.position;
         Vector2 playerScreenPos = _cam.WorldToScreenPoint(playerWorldPos);
 
         Vector2 screenNorth = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.forward) - playerScreenPos).normalized;
         Vector2 screenSouth = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.back) - playerScreenPos).normalized;
-        Vector2 screenEast  = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.right) - playerScreenPos).normalized;
-        Vector2 screenWest  = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.left) - playerScreenPos).normalized;
+        Vector2 screenEast = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.right) - playerScreenPos).normalized;
+        Vector2 screenWest = ((Vector2)_cam.WorldToScreenPoint(playerWorldPos + Vector3.left) - playerScreenPos).normalized;
 
         float dotNorth = Vector2.Dot(dragDir, screenNorth);
         float dotSouth = Vector2.Dot(dragDir, screenSouth);
-        float dotEast  = Vector2.Dot(dragDir, screenEast);
-        float dotWest  = Vector2.Dot(dragDir, screenWest);
+        float dotEast = Vector2.Dot(dragDir, screenEast);
+        float dotWest = Vector2.Dot(dragDir, screenWest);
 
         float maxDot = Mathf.Max(dotNorth, Mathf.Max(dotSouth, Mathf.Max(dotEast, dotWest)));
 
-        if (maxDot == dotNorth) 
+        if (maxDot == dotNorth)
             _player.TryMoveTo(Direction.North);
-        else if (maxDot == dotSouth) 
+        else if (maxDot == dotSouth)
             _player.TryMoveTo(Direction.South);
-        else if (maxDot == dotEast) 
+        else if (maxDot == dotEast)
             _player.TryMoveTo(Direction.East);
-        else if (maxDot == dotWest) 
+        else if (maxDot == dotWest)
             _player.TryMoveTo(Direction.West);
     }
     // private void TryEndDrag()

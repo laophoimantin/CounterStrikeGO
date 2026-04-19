@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// If the enemy see the player infront of it, move toward and then attack
+/// </summary>
 public abstract class StandardEnemyBehavior : BaseEnemyBehavior
 {
     [SerializeField] protected int _attackRange = 1;

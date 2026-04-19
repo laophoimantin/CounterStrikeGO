@@ -1,6 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
+
 public class EnemyMovement : MonoBehaviour
 {
     private EnemyController _controller;

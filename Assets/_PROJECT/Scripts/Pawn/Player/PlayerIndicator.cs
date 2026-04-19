@@ -1,6 +1,9 @@
 using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// The arrow that show where can player move
+/// </summary>
 public class PlayerIndicator : MonoBehaviour
 {
     [Header("Arrow Object References")]

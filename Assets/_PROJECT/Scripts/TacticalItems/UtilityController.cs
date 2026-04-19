@@ -1,6 +1,5 @@
 using System;
 using DG.Tweening;
-using UnityEditor;
 using UnityEngine;
 
 public abstract class UtilityController : GridOccupant, IPickupable
@@ -115,7 +114,7 @@ public abstract class UtilityController : GridOccupant, IPickupable
         {
             _currentNode.RemoveUnit(this);
             _currentNode.RemoveItem();
-            EditorUtility.SetDirty(_currentNode);
+            UnityEditor.EditorUtility.SetDirty(_currentNode);
         }
 
         _currentNode = newNode;
@@ -124,7 +123,7 @@ public abstract class UtilityController : GridOccupant, IPickupable
         // Visual Snap
         transform.position = _currentNode.transform.position;
 
-        EditorUtility.SetDirty(this);
+        UnityEditor.EditorUtility.SetDirty(this);
     }
 #endif
 

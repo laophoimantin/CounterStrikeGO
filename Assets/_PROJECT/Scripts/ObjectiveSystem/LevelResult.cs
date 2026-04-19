@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 
+/// <summary>
+/// A dynamic blackboard for storing end of level achievements and statistics
+/// </summary>
 public class LevelResult
 {
     private Dictionary<ContextKey, object> _data = new();

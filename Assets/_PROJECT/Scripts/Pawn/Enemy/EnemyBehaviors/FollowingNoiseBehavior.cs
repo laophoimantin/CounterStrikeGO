@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// When an enemy is distracted by the decoy, they will try to move to where the decoy landed
+/// </summary>
 [CreateAssetMenu(fileName = "Noise", menuName = "Behav/Noise", order = 10)]
 public class FollowingNoiseBehavior : StandardEnemyBehavior
 {

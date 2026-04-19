@@ -5,6 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/// <summary>
+/// Load scene + loading canvas
+/// </summary>
 [RequireComponent(typeof(CanvasGroup))]
 public class SceneController : MonoBehaviour
 {

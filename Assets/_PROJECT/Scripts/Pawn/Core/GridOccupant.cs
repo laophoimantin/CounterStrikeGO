@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Entity that can be step on a node
+/// </summary>
 public abstract class GridOccupant : MonoBehaviour
 {
     [Header("Node References")]

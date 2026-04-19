@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-using UnityEditor;
 using UnityEngine;
 
+
+/// <summary>
+/// The main enemy's brain
+/// </summary>
 public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
 {
     [Header("References")]
@@ -14,23 +17,33 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     [SerializeField] private PathNavigator _pathNavigator;
     [SerializeField] private GridSensor _gridSensor;
 
+    // Public Fields
     public EnemyVisual EnemyVisual => _enemyVisual;
     public UnitCombat UnitCombat => _unitCombat;
     public EnemyMovement EnemyMovement => _enemyMovement;
     public PathNavigator PathNavigator => _pathNavigator;
     public GridSensor GridSensor => _gridSensor;
 
+    //==================================================================
+
     [Header("Facing Direction")]
     [SerializeField] private Direction _facingDirection = Direction.None;
     public Direction CurrentFacingDirection => _facingDirection;
 
-    public int ExecutionPriority => _currentBehavior.ExecutionPriority;
+
+    //==================================================================
+
     [Header("Enemy State")]
     private IEnemyState _currentState;
+
+    //==================================================================
+
     [Header("State Instances")]
     public readonly NormalState StateNormal = new NormalState();
     public readonly FlashedState StateFlashed = new FlashedState();
     public readonly DistractedState StateDistracted = new DistractedState();
+
+    //==================================================================
 
     [Header("Behavior")]
     private BaseEnemyBehavior _currentBehavior;
@@ -38,14 +51,21 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
     [SerializeField] private FollowingNoiseBehavior _noiseBehavior;
     [SerializeField] private FlashedBehavior _flashedBehavior;
 
+    // Public Fields
     public BaseEnemyBehavior CurrentBehavior => _currentBehavior;
     public BaseEnemyBehavior DefaultBehavior => _defaultBehavior;
     public FollowingNoiseBehavior FollowingNoiseBehavior => _noiseBehavior;
     public FlashedBehavior FlashedBehavior => _flashedBehavior;
     private bool IsFlashed => _currentState == StateFlashed;
 
+
+    //==================================================================
+
     public Action<EnemyController> OnDeath;
 
+    public int ExecutionPriority => _currentBehavior.ExecutionPriority;
+
+    //==================================================================
 
     void OnEnable()
     {
@@ -221,11 +241,11 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         return _currentNode.GetNodeInDirection(GridMathUtility.TurnAround(_facingDirection));
     }
 
-    // Editor ====================================================================================
 
     #region Editor Methods
 
 #if UNITY_EDITOR
+    // Editor ====================================================================================
     public void SetDirection(Direction dir)
     {
         _visual.SetRotation(GridMathUtility.GetRotation(dir));
@@ -265,14 +285,14 @@ public class EnemyController : PawnUnit, INoiseListener, IFlashable, IBurnable
         if (_currentNode != null)
         {
             _currentNode.RemoveUnit(this);
-            EditorUtility.SetDirty(_currentNode);
+            UnityEditor.EditorUtility.SetDirty(_currentNode);
         }
 
         ChangeNode(newNode);
         transform.position = newNode.WorldPos;
         _visual.SetPosition(transform.position);
 
-        EditorUtility.SetDirty(this);
+        UnityEditor.EditorUtility.SetDirty(this);
     }
 #endif
 

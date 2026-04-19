@@ -1,6 +1,10 @@
 using DG.Tweening;
 using UnityEngine;
 
+
+/// <summary>
+/// The visual controller for entity that on the board
+/// </summary>
 public class GridUnitVisual : MonoBehaviour
 {
     [Header("References")]

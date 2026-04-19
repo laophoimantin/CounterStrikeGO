@@ -1,6 +1,9 @@
 using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// Handle anim
+/// </summary>
 public class EnemyVisual : GridUnitVisual
 {
     [Header("Enemy Model")]

@@ -1,3 +1,7 @@
+/// <summary>
+/// Runtime version of objective
+/// </summary>
+
 public class RuntimeObjective
 {
     public BaseObjective Blueprint { get; }

@@ -2,6 +2,9 @@ using UnityEngine;
 using DG.Tweening;
 using UnityEngine.Rendering.Universal;
 
+/// <summary>
+/// Create decal for the nodes and the lines connecting the nodes
+/// </summary>
 public class GridVisualizer : MonoBehaviour
 {
     [SerializeField] private GameObject _linePrefab;

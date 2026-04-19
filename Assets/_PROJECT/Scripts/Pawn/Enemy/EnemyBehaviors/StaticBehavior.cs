@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Stand still
+/// </summary>
 [CreateAssetMenu(fileName = "Stand", menuName = "Behav/Stand", order = 1)]
 public class StaticBehavior : StandardEnemyBehavior
 {

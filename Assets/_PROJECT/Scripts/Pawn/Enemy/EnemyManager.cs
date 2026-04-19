@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Manage all the enemies, execute each enemy when it is enemy turn 
+/// </summary>
 public class EnemyManager : Singleton<EnemyManager>
 {
     private readonly List<EnemyController> _activeEnemiesList = new();

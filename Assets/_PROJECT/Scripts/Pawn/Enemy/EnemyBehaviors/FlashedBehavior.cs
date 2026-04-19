@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Stand still and do absolutely nothing
+/// </summary>
 [CreateAssetMenu(fileName = "Flashed", menuName = "Behav/Flashed", order = 11)]
 public class FlashedBehavior : StandardEnemyBehavior
 {

@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Plan the sequence of actions the enemy will take when it's their turn
+/// </summary>
 public abstract class BaseEnemyBehavior : ScriptableObject
 {
     public virtual int ExecutionPriority => 0;

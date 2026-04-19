@@ -1,6 +1,9 @@
 using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// Special grid unit that change the behaviour of the node
+/// </summary>
 public abstract class BaseZone : MonoBehaviour
 {
     private int _duration;

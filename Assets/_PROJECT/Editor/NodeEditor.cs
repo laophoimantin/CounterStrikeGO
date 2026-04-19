@@ -57,7 +57,7 @@ public class NodeEditor : Editor
         GUI.backgroundColor = Color.red;
         if (GUILayout.Button("Isolate the node", GUILayout.Height(50)))
         {
-            UnityEditor.Undo.RecordObject(this, "Isolate Node");
+            Undo.RecordObject(this, "Isolate Node");
             ApplyDisconnect(node, Direction.North);
             ApplyDisconnect(node, Direction.South);
             ApplyDisconnect(node, Direction.East);

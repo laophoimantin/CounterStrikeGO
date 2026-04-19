@@ -1,6 +1,10 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Core utility for grid-based mathematics, handling directional translations, 
+/// node-relative orientations, and 90-degree step rotations.
+/// </summary>
 public static class GridMathUtility
 {
     private static readonly Direction[] Dirs = 

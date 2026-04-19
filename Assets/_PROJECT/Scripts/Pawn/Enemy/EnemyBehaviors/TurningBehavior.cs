@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Rotate in place
+/// </summary>
 [CreateAssetMenu(fileName = "Turnning", menuName = "Behav/Turnning", order = 2)]
 public class TurningBehavior : StandardEnemyBehavior
 {

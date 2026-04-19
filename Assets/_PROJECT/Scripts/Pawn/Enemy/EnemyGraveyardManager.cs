@@ -1,6 +1,9 @@
 using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// Place for the enemies to rest
+/// </summary>
 public class EnemyGraveyardManager : Singleton<EnemyGraveyardManager>
 {
     [Header("Graveyard Settings")]

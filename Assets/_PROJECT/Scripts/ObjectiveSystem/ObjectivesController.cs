@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Manages the runtime state of level objectives. 
+/// Evaluates win conditions based on gameplay results and synchronizes data with the UI
+/// </summary>
 public class ObjectivesController : MonoBehaviour
 {
     private RuntimeObjective _mainObjective;

@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Stoore immutable configuration data for a single level
+/// </summary>
 [CreateAssetMenu(fileName = "Level X", menuName = "Level Data")]
 public class LevelData : ScriptableObject
 {

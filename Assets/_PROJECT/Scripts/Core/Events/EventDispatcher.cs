@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Event Bus
+/// </summary>
 public class EventDispatcher : Singleton<EventDispatcher>
 {
     private readonly Dictionary<Type, List<object>> _eventHandlers = new();

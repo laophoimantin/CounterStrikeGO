@@ -265,31 +265,6 @@ public class Node : MonoBehaviour
 #if UNITY_EDITOR
     public void IsolateNode()
     {
-        //
-        // if (_north != null)
-        // {
-        //     _north._south = null;
-        // }
-        //
-        // if (_south != null)
-        // {
-        //     _south._north = null;
-        // }
-        //
-        // if (_east != null)
-        // {
-        //     _east._west = null;
-        // }
-        //
-        // if (_west != null)
-        // {
-        //     _west._east = null;
-        // }
-        //
-        // _north = null;
-        // _south = null;
-        // _east = null;
-        // _west = null;
         _isObstacle = true;
     }
 

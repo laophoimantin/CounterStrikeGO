@@ -1,6 +1,9 @@
 using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// Stop the affected enemies in x turn
+/// </summary>
 public class Flash : UtilityController
 {
     [SerializeField] private int _flashAmount = 2;

@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
-#if UNITY_EDITOR
 using UnityEditor;
-#endif
 
+/// <summary>
+/// Handles the generation, destruction, and linkage of grid nodes for level building.
+/// Contains preprocessor directives to support both Editor tooling and Runtime generation.
+/// </summary>
 public class LevelBuilderManager : MonoBehaviour
 {
     [Header("References")]
@@ -44,12 +46,8 @@ public class LevelBuilderManager : MonoBehaviour
         Vector3 localPos = new Vector3(x, 0, y) * cellSize;
         Node node;
 
-#if UNITY_EDITOR
         node = (Node)PrefabUtility.InstantiatePrefab(_nodePrefab, _cellContainer);
         Undo.RegisterCreatedObjectUndo(node.gameObject, "Spawn Node");
-#else
-        node = Instantiate(_nodePrefab, _cellContainer);
-#endif
 
         node.transform.localPosition = localPos;
         node.gameObject.name = $"Node ({x}, {y})";
@@ -62,11 +60,8 @@ public class LevelBuilderManager : MonoBehaviour
         for (int i = _cellContainer.childCount - 1; i >= 0; i--)
         {
             GameObject child = _cellContainer.GetChild(i).gameObject;
-#if UNITY_EDITOR
             Undo.DestroyObjectImmediate(child);
-#else
-            Destroy(child);
-#endif
+
         }
         _nodeManager.ClearGridData();
     }

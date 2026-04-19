@@ -1,5 +1,9 @@
 using DG.Tweening;
 
+
+/// <summary>
+/// Try to drag the enemy into the decoys place
+/// </summary>
 public class Decoy : UtilityController
 {
     protected override Tween GetOnLandedSequence(Node targetNode, Team team)

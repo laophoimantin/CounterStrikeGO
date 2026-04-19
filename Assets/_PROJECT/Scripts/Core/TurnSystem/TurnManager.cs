@@ -1,10 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A centralized state machine for managing turn phases (Player/Enemy, Planning/Action).
+/// </summary>
 public class TurnManager : Singleton<TurnManager>
 {
     private TurnType _currentTurn = TurnType.None;
-    private bool _lock = false;
+    private bool _isLocked = false;
 
     public int StepCount { get; private set; }
 
@@ -41,7 +44,7 @@ public class TurnManager : Singleton<TurnManager>
 
     private void Lock(OnGameEndedEvent eventData)
     {
-        _lock = true;
+        _isLocked = true;
     }
 
     private void StartActionPhase(TurnType nextActionTurn)
@@ -54,21 +57,13 @@ public class TurnManager : Singleton<TurnManager>
         SetTurn(nextPlanningTurn);
     }
 
-    // private void SetTurn(TurnType next)
-    // {
-    //     if (_lock) return;
-    //
-    //     if (!IsValidTransition(_currentTurn, next)) return;
-    //
-    //     _currentTurn = next;
-    //     this.SendEvent(new OnTurnChangedEvent { NewTurn = _currentTurn });
-    //
-    // }
     private bool _isTransitioning = false;
-    private Queue<TurnType> _pendingTurns = new Queue<TurnType>(); // Hàng đợi cho bọn nôn nóng
+    private Queue<TurnType> _pendingTurns = new Queue<TurnType>();
+
+    // Processes queued turn transitions safely to prevent recursive event loops
     private void SetTurn(TurnType next)
     {
-        if (_lock) return;
+        if (_isLocked) return;
         _pendingTurns.Enqueue(next);
 
         if (_isTransitioning) return; 
@@ -91,14 +86,6 @@ public class TurnManager : Singleton<TurnManager>
 
         _isTransitioning = false;
     }
-    
-    
-    
-    
-    
-    
-    
-    
 
     // Player Turn Events
     private void HandlePlayerStarted(OnPlayerActionStartedEvent eventData)

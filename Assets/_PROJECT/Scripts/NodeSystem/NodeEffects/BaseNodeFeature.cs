@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Special node (Exit, spawn objective)
+/// </summary>
 public abstract class BaseNodeFeature : ScriptableObject
 {
     private Node _currentNode;

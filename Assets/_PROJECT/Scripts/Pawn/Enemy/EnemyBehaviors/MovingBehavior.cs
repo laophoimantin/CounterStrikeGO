@@ -1,6 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+/// <summary>
+/// Move in a straight line, turn around if the next node is blocked
+/// </summary>
 [CreateAssetMenu(fileName = "Moving", menuName = "Behav/Moving", order = 3)]
 public class MovingBehavior : StandardEnemyBehavior
 {

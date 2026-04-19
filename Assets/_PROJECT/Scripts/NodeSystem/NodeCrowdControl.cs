@@ -2,6 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Rearrange all grid units standing on the same node
+/// </summary>
 [RequireComponent(typeof(Node))]
 public class NodeCrowdControl : MonoBehaviour
 {

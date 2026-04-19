@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Store current level data to load
+/// </summary>
 public static class SessionData
 {
     public static LevelData CurrentLevelData { get; private set; }

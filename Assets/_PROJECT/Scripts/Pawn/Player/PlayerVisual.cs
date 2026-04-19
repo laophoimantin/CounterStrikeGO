@@ -2,6 +2,9 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// Control the visual movel of the players pawn
+/// </summary>
 public class PlayerVisual : GridUnitVisual
 {
     [Header("Player Model")]

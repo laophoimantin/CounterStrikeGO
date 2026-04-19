@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Attack range acrross the map
+/// </summary>
 [CreateAssetMenu(fileName = "Sniper", menuName = "Behav/Sniper", order = 2)]
 public class SniperBehavior : BaseEnemyBehavior
 {

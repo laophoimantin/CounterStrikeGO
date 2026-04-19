@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+
+/// <summary>
+/// Linear line-of-sight and identifying valid escape routes.
+/// </summary>
 public class GridSensor : MonoBehaviour
 {
     private PawnUnit _controller;
@@ -60,38 +64,6 @@ public class GridSensor : MonoBehaviour
         // return false;
     }
 
-    public bool ScanForEnemy2(Direction facingDir, int range)
-    {
-        int checkX = _controller.CurrentNode.XValue;
-        int checkY = _controller.CurrentNode.YValue;
-
-        
-        Vector2Int step = GridMathUtility.DirectionToVector(facingDir);
-        for (int i = 0; i < range; i++)
-        {
-            checkX += step.x;
-            checkY += step.y;
-
-            if (!NodeManager.Instance.TryGetNode(checkX, checkY, out Node nodeToScan))
-            {
-                return false;
-            }
-
-            if (!nodeToScan.IsWalkable() || nodeToScan.IsHideable())
-                return false;
-
-            foreach (GridOccupant occupant in nodeToScan.GetAllOccupants())
-            {
-                if (occupant is PawnUnit victim && _controller.IsEnemyOf(victim))
-                {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public Node FindEscapeNode(Direction currentFacing)
     {
         for (int i = 0; i < 4; i++)
@@ -104,6 +76,37 @@ public class GridSensor : MonoBehaviour
         }
         return null;
     }
-    
+
+    //public bool ScanForEnemy2(Direction facingDir, int range)
+    //{
+    //    int checkX = _controller.CurrentNode.XValue;
+    //    int checkY = _controller.CurrentNode.YValue;
+
+
+    //    Vector2Int step = GridMathUtility.DirectionToVector(facingDir);
+    //    for (int i = 0; i < range; i++)
+    //    {
+    //        checkX += step.x;
+    //        checkY += step.y;
+
+    //        if (!NodeManager.Instance.TryGetNode(checkX, checkY, out Node nodeToScan))
+    //        {
+    //            return false;
+    //        }
+
+    //        if (!nodeToScan.IsWalkable() || nodeToScan.IsHideable())
+    //            return false;
+
+    //        foreach (GridOccupant occupant in nodeToScan.GetAllOccupants())
+    //        {
+    //            if (occupant is PawnUnit victim && _controller.IsEnemyOf(victim))
+    //            {
+    //                return true;
+    //            }
+    //        }
+    //    }
+
+    //    return false;
+    //}
 
 }

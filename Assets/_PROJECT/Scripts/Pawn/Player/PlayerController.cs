@@ -1,20 +1,25 @@
 using System.Collections;
 using DG.Tweening;
-using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+///  Players main brain
+/// </summary>
 public class PlayerController : PawnUnit
 {
+
     private PlayerVisual _playerVisual;
     public PlayerVisual PlayerVisual => _playerVisual;
+
+    // =================================================================
 
     [Header("References")]
     [SerializeField] private UnitCombat _unitCombat;
     [SerializeField] private PlayerMovement _playerMovement;
     [SerializeField] private PlayerUtilityHandler _utilityHandler;
 
+    // =================================================================
     private bool _canAct = true;
-
     private Direction _tempMoveDirection = Direction.None;
     public bool HasUtility => _utilityHandler.HasItem;
 
@@ -64,7 +69,7 @@ public class PlayerController : PawnUnit
         }
 
         _tempMoveDirection = Direction.None;
-        
+
         StartAction();
         PlayMoveSequence(target);
     }
@@ -116,7 +121,7 @@ public class PlayerController : PawnUnit
         bool isSuccess = _utilityHandler.TryUseUtility(targetNode, (endsTurn) => FinishAction(endsTurn));
         if (isSuccess)
         {
-            StartAction(); 
+            StartAction();
         }
     }
 
@@ -141,17 +146,16 @@ public class PlayerController : PawnUnit
     //     ChangeNode(node);
     // }
 
-    // Editor ====================================================================================
 
     #region Editor Methods
-
 #if UNITY_EDITOR
+    // Editor ====================================================================================
     public void SetOrMoveNode(Direction? dir = null)
     {
         NodeManager manager = NodeManager.Instance;
         if (manager == null)
             manager = FindObjectOfType<NodeManager>();
-        
+
         if (manager == null)
         {
             Debug.LogError("No NodeManager found in scene. Cannot move.", this);
@@ -179,14 +183,14 @@ public class PlayerController : PawnUnit
         if (_currentNode != null)
         {
             _currentNode.RemoveUnit(this);
-            EditorUtility.SetDirty(_currentNode);
+            UnityEditor.EditorUtility.SetDirty(_currentNode);
         }
 
         ChangeNode(newNode);
         transform.position = newNode.WorldPos;
         _visual.SetPosition(transform.position);
 
-        EditorUtility.SetDirty(this);
+        UnityEditor.EditorUtility.SetDirty(this);
     }
 #endif
 
