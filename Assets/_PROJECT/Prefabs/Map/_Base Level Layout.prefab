@@ -437,10 +437,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 591901398305337467}
-  - component: {fileID: 7056911451351081382}
+  - component: {fileID: 8942883607986909130}
   m_Layer: 0
   m_Name: LevelBuilder
-  m_TagString: EditorOnly
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -460,7 +460,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2095927707096550225}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7056911451351081382
+--- !u!114 &8942883607986909130
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -473,10 +473,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _nodeManager: {fileID: 452522167828615341}
-  _cellContainer: {fileID: 8102988486670240571}
+  _cellContainer: {fileID: 83220521000133739}
   _nodePrefab: {fileID: 9014059609191413951, guid: 0aadea8f2711c1144b614c18b7665254, type: 3}
-  _mapWidth: 1
-  _mapHeight: 1
+  _mapWidth: 0
+  _mapHeight: 0
 --- !u!1 &8611792582219810793
 GameObject:
   m_ObjectHideFlags: 0
