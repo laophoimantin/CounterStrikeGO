@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 8 (Level_Tutorial_Grenade)
+  m_Name: Level 8 (Level_Tutorial_TurnEnemy)
   m_EditorClassIdentifier: 
   _cameraSetup:
-    Distance: 32.7
-    Pitch: 61
-    Yaw: 12.7
-    CameraFocusPosition: {x: 13.2, y: 0, z: 10.89}
-  _mapPrefab: {fileID: 6346045124685679790, guid: f64357a4bdf80514c9aaf34f167778ef, type: 3}
-  _nextLevel: {fileID: 11400000, guid: 83f4574ad1020b24abb7e62dc7817a33, type: 2}
+    Distance: 31.1
+    Pitch: 71.3
+    Yaw: -8.8
+    CameraFocusPosition: {x: 17.8, y: 0, z: 9.43}
+  _mapPrefab: {fileID: 8160924642210795497, guid: 10c98d24e4ca7e4478dbaaa24fe795ee, type: 3}
+  _nextLevel: {fileID: 11400000, guid: 76fc278ab5c7bd347b0a440956d28369, type: 2}
   _isUnlockedByDefault: 0
   _levelDisplayNumber: 8
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
-  - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}
-  - {fileID: 11400000, guid: 7440b19b090b5bc49a2c09ad3829d8b7, type: 2}
+  - {fileID: 11400000, guid: 85719f06c23cf8e468f2aaf428f64f34, type: 2}
+  - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}

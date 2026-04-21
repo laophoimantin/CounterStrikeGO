@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 9 (Level_Tutorial_TurnEnemy)
+  m_Name: Level 10 (Level_Tutorial_Sniper_Smoke)
   m_EditorClassIdentifier: 
   _cameraSetup:
-    Distance: 31.1
-    Pitch: 71.3
-    Yaw: -8.8
-    CameraFocusPosition: {x: 17.8, y: 0, z: 9.43}
-  _mapPrefab: {fileID: 8160924642210795497, guid: 10c98d24e4ca7e4478dbaaa24fe795ee, type: 3}
-  _nextLevel: {fileID: 11400000, guid: 76fc278ab5c7bd347b0a440956d28369, type: 2}
+    Distance: 33.7
+    Pitch: 72.2
+    Yaw: -381.6
+    CameraFocusPosition: {x: 14.5, y: 0, z: 13.7}
+  _mapPrefab: {fileID: 851922787612144808, guid: 953aab6997ab5c94796ccf3d168dc7d3, type: 3}
+  _nextLevel: {fileID: 11400000, guid: e48014b40a10fa44096c0dd8a366fd1a, type: 2}
   _isUnlockedByDefault: 0
-  _levelDisplayNumber: 9
+  _levelDisplayNumber: 10
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
-  - {fileID: 11400000, guid: 85719f06c23cf8e468f2aaf428f64f34, type: 2}
-  - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}
+  - {fileID: 11400000, guid: 2356b0ef4f1ecbf40b1625975caab8cb, type: 2}
+  - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}

@@ -10,7 +10,7 @@ public class NodeCrowdControl : MonoBehaviour
 {
     [SerializeField] private float _crowdRadius = 0.35f;
     private Node _node;
-
+    private List<GridOccupant> _activeUnits = new List<GridOccupant>(4);
     private void Awake()
     {
         _node = GetComponent<Node>();
@@ -28,10 +28,34 @@ public class NodeCrowdControl : MonoBehaviour
 
     private void RearrangeUnits()
     {
-        var activeUnits = _node.GetAllOccupants().Where(o => o.OccupiesSpace).ToList();
-        int count = activeUnits.Count;
-        
+        _activeUnits.Clear();
+        foreach (var occupant in _node.GetAllOccupants())
+        {
+            if (occupant.OccupiesSpace)
+            {
+                _activeUnits.Add(occupant);
+            }
+        }
+
+        int count = _activeUnits.Count;
         if (count == 0) return;
+
+        //if (count == 1)
+        //{
+        //    _activeUnits[0].SetVisualOffset(Vector3.zero);
+        //    return;
+        //}
+
+        //float angleStep = 360f / count;
+
+        //for (int i = 0; i < count; i++)
+        //{
+        //    float angle = i * angleStep * Mathf.Deg2Rad;
+        //    float x = Mathf.Cos(angle) * _crowdRadius;
+        //    float z = Mathf.Sin(angle) * _crowdRadius;
+
+        //    _activeUnits[i].SetVisualOffset(new Vector3(x, 0, z));
+        //}
 
         List<Vector3> slots = new List<Vector3>();
 
@@ -51,7 +75,7 @@ public class NodeCrowdControl : MonoBehaviour
             }
         }
 
-        List<GridOccupant> sortedUnits = activeUnits.OrderByDescending(u =>
+        List<GridOccupant> sortedUnits = _activeUnits.OrderByDescending(u =>
             Vector3.SqrMagnitude(u.transform.position - transform.position)
         ).ToList();
 

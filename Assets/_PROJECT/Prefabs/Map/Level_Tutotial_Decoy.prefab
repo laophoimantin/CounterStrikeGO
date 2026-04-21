@@ -1161,7 +1161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6243185814084811967, guid: 2456685050119ca4891f63c62fbb8e5e, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7056911451351081382, guid: 2456685050119ca4891f63c62fbb8e5e, type: 3}
       propertyPath: _mapWidth
@@ -2076,19 +2076,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4984519014652329021, guid: e0d36558408012143bac092e90f43dc6, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7978253
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4984519014652329021, guid: e0d36558408012143bac092e90f43dc6, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4984519014652329021, guid: e0d36558408012143bac092e90f43dc6, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.6028888
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4984519014652329021, guid: e0d36558408012143bac092e90f43dc6, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4984519014652329021, guid: e0d36558408012143bac092e90f43dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2096,7 +2096,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4984519014652329021, guid: e0d36558408012143bac092e90f43dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -74.154
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4984519014652329021, guid: e0d36558408012143bac092e90f43dc6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -2106,6 +2106,22 @@ PrefabInstance:
       propertyPath: _currentNode
       value: 
       objectReference: {fileID: 3532070729413282670}
+    - target: {fileID: 7659109337994905597, guid: e0d36558408012143bac092e90f43dc6, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7659109337994905597, guid: e0d36558408012143bac092e90f43dc6, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7659109337994905597, guid: e0d36558408012143bac092e90f43dc6, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 7659109337994905597, guid: e0d36558408012143bac092e90f43dc6, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
     - target: {fileID: 7782800529152530791, guid: e0d36558408012143bac092e90f43dc6, type: 3}
       propertyPath: m_Name
       value: Moving Enemy (CT)

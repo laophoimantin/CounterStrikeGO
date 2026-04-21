@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 11 (Level_Tutorial_Sniper_Smoke)
+  m_Name: Level 11 (Tutorial_Molotov)
   m_EditorClassIdentifier: 
   _cameraSetup:
     Distance: 33.7
-    Pitch: 72.2
-    Yaw: -381.6
-    CameraFocusPosition: {x: 14.5, y: 0, z: 13.7}
-  _mapPrefab: {fileID: 851922787612144808, guid: 953aab6997ab5c94796ccf3d168dc7d3, type: 3}
-  _nextLevel: {fileID: 11400000, guid: e48014b40a10fa44096c0dd8a366fd1a, type: 2}
+    Pitch: 55.1
+    Yaw: -454.8
+    CameraFocusPosition: {x: 22.4, y: 0, z: 14.6}
+  _mapPrefab: {fileID: 638290389529560865, guid: a2a167f4258d1c945ba550373f8c355a, type: 3}
+  _nextLevel: {fileID: 0}
   _isUnlockedByDefault: 0
   _levelDisplayNumber: 11
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
+  - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}
   - {fileID: 11400000, guid: 2356b0ef4f1ecbf40b1625975caab8cb, type: 2}
-  - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}

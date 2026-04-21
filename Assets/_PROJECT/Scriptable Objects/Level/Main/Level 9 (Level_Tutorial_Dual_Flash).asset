@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 7 (Level_Tutotial_Decoy)
+  m_Name: Level 9 (Level_Tutorial_Dual_Flash)
   m_EditorClassIdentifier: 
   _cameraSetup:
-    Distance: 25.32
-    Pitch: 67
-    Yaw: -46
-    CameraFocusPosition: {x: 12.2, y: 1.23, z: 10.26}
-  _mapPrefab: {fileID: 3998282052684265566, guid: c4f914aa3559f954db4eb09c02a6c829, type: 3}
-  _nextLevel: {fileID: 11400000, guid: c8467c2d8d957c14aaae65ef7fc2e496, type: 2}
+    Distance: 33.7
+    Pitch: 73.6
+    Yaw: 37.4
+    CameraFocusPosition: {x: 14.4, y: 0, z: 16.4}
+  _mapPrefab: {fileID: 2860464049855162806, guid: 3e5a4562837257b459b79367df340e5f, type: 3}
+  _nextLevel: {fileID: 11400000, guid: 191e83db9e675e8448aaa05a7675c30f, type: 2}
   _isUnlockedByDefault: 0
-  _levelDisplayNumber: 7
+  _levelDisplayNumber: 9
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
-  - {fileID: 11400000, guid: 137f079bbed7a874b899dca6b7b58be8, type: 2}
-  - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}
+  - {fileID: 11400000, guid: 23715a65dec363147aba1b942db1d816, type: 2}
+  - {fileID: 11400000, guid: 7440b19b090b5bc49a2c09ad3829d8b7, type: 2}

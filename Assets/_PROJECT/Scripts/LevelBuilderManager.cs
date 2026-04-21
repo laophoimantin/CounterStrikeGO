@@ -23,6 +23,7 @@ public class LevelBuilderManager : MonoBehaviour
 
     public void GenerateNodeMap()
     {
+#if UnityEditor
         DeleteMap(); 
 
         List<Node> newNodes = new List<Node>();
@@ -39,17 +40,17 @@ public class LevelBuilderManager : MonoBehaviour
         _nodeManager.SetupGridData(_mapWidth, _mapHeight, CELL_SIZE, newNodes);
 
         AssignNodeNeighbors();
+#endif
     }
 
+#if UNITY_EDITOR
     private Node SpawnNode(int x, int y, float cellSize)
     {
         Vector3 localPos = new Vector3(x, 0, y) * cellSize;
         Node node;
 
-#if UNITY_EDITOR
         node = (Node)UnityEditor.PrefabUtility.InstantiatePrefab(_nodePrefab, _cellContainer);
         UnityEditor.Undo.RegisterCreatedObjectUndo(node.gameObject, "Spawn Node");
-#endif 
 
         node.transform.localPosition = localPos;
         node.gameObject.name = $"Node ({x}, {y})";
@@ -57,6 +58,7 @@ public class LevelBuilderManager : MonoBehaviour
 
         return node;
     }
+#endif 
     public void DeleteMap()
     {
 #if UNITY_EDITOR

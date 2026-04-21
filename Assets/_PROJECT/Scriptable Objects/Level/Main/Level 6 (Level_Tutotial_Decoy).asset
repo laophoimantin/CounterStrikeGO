@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd55857eb6d843d39056d41806a4a05a, type: 3}
-  m_Name: Level 6 (Tutorial_PatrolEnemy)
+  m_Name: Level 6 (Level_Tutotial_Decoy)
   m_EditorClassIdentifier: 
   _cameraSetup:
-    Distance: 32.2
-    Pitch: 72
-    Yaw: -10.8
-    CameraFocusPosition: {x: 18, y: 0, z: 11.4}
+    Distance: 25.32
+    Pitch: 67
+    Yaw: -46
+    CameraFocusPosition: {x: 12.2, y: 1.23, z: 10.26}
   _mapPrefab: {fileID: 3998282052684265566, guid: c4f914aa3559f954db4eb09c02a6c829, type: 3}
-  _nextLevel: {fileID: 11400000, guid: e2ece0006e7807942b0c3219bdb97071, type: 2}
+  _nextLevel: {fileID: 11400000, guid: c8467c2d8d957c14aaae65ef7fc2e496, type: 2}
   _isUnlockedByDefault: 0
   _levelDisplayNumber: 6
   _mainObjective: {fileID: 11400000, guid: 18d59828c945a4444860388a6740d85f, type: 2}
   _optionalObjectives:
+  - {fileID: 11400000, guid: 137f079bbed7a874b899dca6b7b58be8, type: 2}
   - {fileID: 11400000, guid: c8b96893032156149b0fc2fc1ef81e1b, type: 2}
-  - {fileID: 11400000, guid: 92219cbef31bd8e4e92720306ac35424, type: 2}

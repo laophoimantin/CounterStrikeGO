@@ -72,6 +72,7 @@ public class Node : MonoBehaviour
         _textMesh.text = name;
     }
 
+
     public Vector2Int Get2DCoordinate()
     {
         Vector2Int coordinate = new Vector2Int(_xValue, _yValue);

@@ -30,21 +30,21 @@ public class GridVisualizer : MonoBehaviour
         float flatDistance = Vector3.Distance(flatPosA, flatPosB);
         float lineLength = flatDistance - _nodePadding;
 
-        Vector3 midPointXZ = (flatPosA + flatPosB) / 2f;
+        Vector3 realMidPoint = (fromNode.WorldPos + toNode.WorldPos) / 2f;
+        float highestY = Mathf.Max(fromNode.WorldPos.y, toNode.WorldPos.y);
+        float lowestY = Mathf.Min(fromNode.WorldPos.y, toNode.WorldPos.y);
 
-        GameObject lineObj = Instantiate(_linePrefab, midPointXZ, Quaternion.identity, _gridLinesContainer);
+        Vector3 spawnPos = new Vector3(realMidPoint.x, highestY, realMidPoint.z);
+
+        GameObject lineObj = Instantiate(_linePrefab, spawnPos, Quaternion.identity, _gridLinesContainer);
 
         DecalProjector decal = lineObj.GetComponent<DecalProjector>();
-        if (decal == null)
-        {
-            return;
-        }
+        if (decal == null) return;
 
         Vector3 dirToTarget = (flatPosB - flatPosA).normalized;
         lineObj.transform.rotation = Quaternion.LookRotation(Vector3.down, dirToTarget);
 
-        float lowestY = Mathf.Min(fromNode.WorldPos.y, toNode.WorldPos.y);
-        float calculatedDepth = (midPointXZ.y - lowestY) + 2f;
+        float calculatedDepth = (highestY - lowestY) + 2f;
         float thickness = _width;
 
         Vector3 initialSize = new Vector3(thickness, 0f, calculatedDepth);
