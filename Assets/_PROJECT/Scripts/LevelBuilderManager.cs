@@ -23,7 +23,7 @@ public class LevelBuilderManager : MonoBehaviour
 
     public void GenerateNodeMap()
     {
-#if UnityEditor
+#if UNITY_EDITOR
         DeleteMap(); 
 
         List<Node> newNodes = new List<Node>();
